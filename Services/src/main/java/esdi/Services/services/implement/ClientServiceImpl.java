@@ -35,6 +35,11 @@ public class ClientServiceImpl implements ClientService {
     public Client getUserByDNI(String dni) {return clientRepository.findByDni(dni);}
 
     @Override
+    public Client getUserByUserName(String userName) {
+        return clientRepository.findByUser(userName);
+    }
+
+    @Override
     public ClientDTO getUserDTO(Long id) {return clientRepository.findById(id).map(ClientDTO::new).orElse(null); }
 
     @Override
@@ -64,6 +69,40 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void updateLastName(Client client, String lastName) {
         client.setLastName(lastName);
+    }
+
+    @Override
+    public void updateAddress(Client client, String address) {
+        client.setAddress(address);
+    }
+
+    @Override
+    public void updatePhone(Client client, String phone) {
+        client.setPhone(phone);
+    }
+
+    @Override
+    public void updateCellPhone(Client client, String cellphone) {
+        client.setCellphone(cellphone);
+    }
+
+    @Override
+    public void updateNeighborhood(Client client, String neighborhood) {
+    }
+
+    @Override
+    public void updateEmail(Client client, String email) {
+        client.setEmail(email);
+    }
+
+    @Override
+    public void updateUserName(Client client, String userName) {
+        client.setUser(userName);
+    }
+
+    @Override
+    public void updatePassword(Client client, String password) {
+        client.setPassword(password);
     }
 
 

@@ -80,8 +80,10 @@ public class ClientController {
     @PatchMapping("/clients/modify")
     public ResponseEntity<?> editClient(
             @RequestParam String dni,
-            @RequestParam(required = false) String firstName,@RequestParam(required = false) String lastName,@RequestParam(required = false) String address,
-            @RequestParam(required = false) String phone, @RequestParam(required = false) String cellPhone, @RequestParam(required = false) String neighborhood,
+            @RequestParam(required = false) String firstName
+//            , @RequestParam(required = false) String neighborhood
+            ,@RequestParam(required = false) String lastName,@RequestParam(required = false) String address,
+            @RequestParam(required = false) String phone, @RequestParam(required = false) String cellPhone,
             @RequestParam(required = false) String email, @RequestParam(required = false) String userName, @RequestParam(required = false) String password
             ){
 
@@ -95,38 +97,65 @@ public class ClientController {
             return new ResponseEntity<>("No se encontró cliente",HttpStatus.FORBIDDEN);
         }
 
-//        if (firstName == null && lastName == null && address == null && phone == null && cellPhone == null && neighborhood == null && email == null && userName == null && password == null){
-//            return new ResponseEntity<>("No property was supplied to change", HttpStatus.FORBIDDEN);
-//
-//        }
-// && lastName == null
-        if (firstName == null && lastName == null){
+        if (firstName == null && lastName == null && address == null && phone == null && cellPhone == null && email == null && userName == null && password == null){
             return new ResponseEntity<>("No se ha proporcionado ningun cambio", HttpStatus.FORBIDDEN);
         }
-
         if (firstName == null){
-            return new ResponseEntity<>("No se puede enviar un nombre vacio ", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("No se puede enviar un nombre vacio ", HttpStatus.BAD_REQUEST);
         }
-//
-        if (lastName == null){
-            return new ResponseEntity<>("No se puede enviar un apellido vacio", HttpStatus.FORBIDDEN);
+        if (address == null){
+            return new ResponseEntity<>("No se puede enviar una direccion vacia", HttpStatus.BAD_REQUEST);
+        }
+        if (phone == null){
+            return new ResponseEntity<>("No se puede enviar un telefono vacio", HttpStatus.BAD_REQUEST);
+        }
+        if (cellPhone == null){
+            return new ResponseEntity<>("No se puede enviar un celular vacio", HttpStatus.BAD_REQUEST);
+        }
+//        if (neighborhood == null){
+//            return new ResponseEntity<>("No se puede enviar un barrio vacio ", HttpStatus.FORBIDDEN);
+//        }
+        if (email == null){
+            return new ResponseEntity<>("No se puede enviar un email vacio", HttpStatus.BAD_REQUEST);
+        }
+        if (userName == null){
+            return new ResponseEntity<>("No se puede enviar un nombre de usuario vacio ", HttpStatus.BAD_REQUEST);
+        }
+        if (password == null){
+            return new ResponseEntity<>("No se puede enviar una contraseña vacia", HttpStatus.BAD_REQUEST);
+        }
+
+        if (clientService.getAllUsers().stream().filter(client1 -> client1.getUser().equals(userName)).count() > 0){
+            return new ResponseEntity<>("nombre de usuario existente", HttpStatus.BAD_REQUEST);
         }
 
         if (firstName != null && !firstName.isEmpty()){
             clientService.updateFirstName(client,firstName);
         }
-
         if (lastName != null && !lastName.isEmpty()){
             clientService.updateLastName(client,lastName);
         }
-//        clientService.updateLastName(client,lastName);
-//        clientService.updateFirstName(client,firstName);
-
-
+        if (address != null && !address.isEmpty()){
+            clientService.updateAddress(client,address);
+        }
+        if (phone != null && !phone.isEmpty()){
+            clientService.updatePhone(client,phone);
+        }
+        if (cellPhone != null && !cellPhone.isEmpty()){
+            clientService.updateCellPhone(client,cellPhone);
+        }
+        if (email != null && !email.isEmpty()){
+            clientService.updateEmail(client,email);
+        }
+        if (userName != null && !userName.isEmpty()){
+            clientService.updateUserName(client,userName);
+        }
+        if (password != null && !password.isEmpty()){
+            clientService.updatePassword(client,password);
+        }
         clientService.saveChanges(client);
 
         return new ResponseEntity<>("Cliente modificado con éxito",HttpStatus.OK);
     }
-
 
 }

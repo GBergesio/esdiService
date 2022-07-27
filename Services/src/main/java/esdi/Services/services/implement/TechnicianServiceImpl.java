@@ -9,11 +9,18 @@ import esdi.Services.services.TechnicianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TechnicianServiceImpl implements TechnicianService {
 
     @Autowired
     TechnicianRepository technicianRepository;
+
+    @Override
+    public List<Technician> getAllTech() {
+        return technicianRepository.findAll();
+    }
 
     @Override
     public void saveTechnician(TechnicianDTO technicianDTO) {
