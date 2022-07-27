@@ -2,7 +2,7 @@ package esdi.Services.dtos;
 
 import esdi.Services.enums.Neighborhood;
 import esdi.Services.enums.UserType;
-import esdi.Services.models.User;
+import esdi.Services.models.Client;
 import lombok.Data;
 
 @Data
@@ -23,19 +23,19 @@ public class ClientDTO {
 
     public ClientDTO(){}
 
-    public ClientDTO(User user){
-        this.id = user.getId();
-        this.dni = user.getDni();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.address = user.getAddress();
-        this.neighborhood = user.getNeighborhood();
-        this.phone = user.getPhone();
-        this.cellphone = user.getCellphone();
-        this.email = user.getEmail();
-        this.user = user.getUser();
-        this.password = user.getPassword();
-        this.userType = user.getUserType();
+    public ClientDTO(Client client){
+        this.id = client.getId();
+        this.dni = client.getDni();
+        this.firstName = client.getFirstName();
+        this.lastName = client.getLastName();
+        this.address = client.getAddress();
+        this.neighborhood = client.getNeighborhood();
+        this.phone = client.getPhone();
+        this.cellphone = client.getCellphone();
+        this.email = client.getEmail();
+        this.user = client.getUser();
+        this.password = client.getPassword();
+        this.userType = client.getUserType();
     }
 
 
