@@ -18,4 +18,13 @@ public interface AdminService {
     Admin getAdminByUserName(String admin);
 
     void saveAdmin(AdminDTO adminDTO);
+
+    void saveChanges(Admin admin);
+    void updateFirstName(Admin admin, String firstName);
+    void updateLastName(Admin admin, String lastName);
+    void updateEmail(Admin admin,String email);
+    void updateUserName(Admin admin,String userName);
+    void updatePassword(Admin admin,String password);
+
+    void delete(Admin admin);
 }

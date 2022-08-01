@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -46,6 +48,18 @@ public class Client {
         this.userType = userType;
     }
 
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<Order> orders = new HashSet<>();
 
+    public void addOrder (Order order){
+        order.setClient(this);
+        orders.add(order);
+    }
 
 }
+
+
+//    public void addPurchase (Purchase purchase){
+//        purchase.setClient(this);
+//        purchases.add(purchase);
+//    }

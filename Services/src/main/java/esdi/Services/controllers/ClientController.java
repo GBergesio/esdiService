@@ -19,7 +19,7 @@ public class ClientController {
 //  TODOS LOS CLIENTES
     @GetMapping("/clients/")
     ResponseEntity<?> getAllUsers(){
-        return new ResponseEntity<>(clientService.getAllUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(clientService.getAllClients(), HttpStatus.OK);
     }
 
 //  TODOS LOS CLIENTES DTO
@@ -39,6 +39,13 @@ public class ClientController {
 //agregar otro responseEntity para cuando no haya usuario con ese dni
     @GetMapping("/clients/dni/{dni}")
     public ResponseEntity<?> getUserByDni(@PathVariable String dni) {
+
+        Client client = clientService.getUserByDNI(dni);
+
+        if (client == null){
+            return new ResponseEntity<>("No se encontró cliente con el DNI ingresado",HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(clientService.getUserByDNI(dni), HttpStatus.OK);
     }
 
@@ -51,26 +58,26 @@ public class ClientController {
 //        }
         //que devuelva como mensaje DNI ya existente y el nombre del cliente existente
         if(clientService.getUserByDNI(clientDTO.getDni()) != null){
-            return new ResponseEntity<>("DNI ya existente",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("DNI ya existente",HttpStatus.BAD_REQUEST);
         }
         if (clientDTO.getFirstName().isEmpty()){
-            return new ResponseEntity<>("Nombre requerido",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Nombre requerido",HttpStatus.BAD_REQUEST);
         }
         if (clientDTO.getLastName().isEmpty()){
-            return new ResponseEntity<>("Apellido requerido",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Apellido requerido",HttpStatus.BAD_REQUEST);
         }
         if (clientDTO.getAddress().isEmpty()){
-            return new ResponseEntity<>("Direccion requerida",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Direccion requerida",HttpStatus.BAD_REQUEST);
         }
         if (clientDTO.getCellphone().isEmpty()){
-            return new ResponseEntity<>("Celular requerido",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Celular requerido",HttpStatus.BAD_REQUEST);
         }
         //me tira error 400
         if (clientDTO.getNeighborhood().equals(null)){
-            return new ResponseEntity<>("Barrio requerido",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Barrio requerido",HttpStatus.BAD_REQUEST);
         }
         if (clientDTO.getDni().isEmpty()){
-            return new ResponseEntity<>("DNI requerido",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("DNI requerido",HttpStatus.BAD_REQUEST);
         }
         clientService.saveClient(clientDTO);
         return new ResponseEntity<>("Cliente registrado con éxito", HttpStatus.CREATED);
@@ -88,16 +95,19 @@ public class ClientController {
             ){
 
         if (dni.isEmpty()){
-            return new ResponseEntity<>("No se encontró DNI",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("No se encontró DNI",HttpStatus.BAD_REQUEST);
         }
 
         Client client = clientService.getUserByDNI(dni);
 
         if (client == null){
-            return new ResponseEntity<>("No se encontró cliente",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("No se encontró cliente",HttpStatus.BAD_REQUEST);
         }
 
         if (firstName == null && lastName == null && address == null && phone == null && cellPhone == null && email == null && userName == null && password == null){
+            return new ResponseEntity<>("No se ha proporcionado ningun cambio", HttpStatus.BAD_REQUEST);
+        }
+        if (firstName.isEmpty() && lastName.isEmpty() && address.isEmpty() && phone.isEmpty() && cellPhone.isEmpty() && email.isEmpty() && userName.isEmpty() && password.isEmpty()){
             return new ResponseEntity<>("No se ha proporcionado ningun cambio", HttpStatus.FORBIDDEN);
         }
         if (firstName == null){
@@ -125,7 +135,7 @@ public class ClientController {
             return new ResponseEntity<>("No se puede enviar una contraseña vacia", HttpStatus.BAD_REQUEST);
         }
 
-        if (clientService.getAllUsers().stream().filter(client1 -> client1.getUser().equals(userName)).count() > 0){
+        if (clientService.getAllClients().stream().filter(client1 -> client1.getUser().equals(userName)).count() > 0){
             return new ResponseEntity<>("nombre de usuario existente", HttpStatus.BAD_REQUEST);
         }
 

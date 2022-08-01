@@ -27,6 +27,8 @@ public class Admin {
     private String password;
     private UserType userType;
 
+    private boolean deleted;
+
 
     public Admin(){}
 
@@ -38,5 +40,6 @@ public class Admin {
         this.user = user;
         this.password = password;
         this.userType = userType;
+        this.deleted = false;
     }
 }

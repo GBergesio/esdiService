@@ -14,5 +14,10 @@ public interface TechnicianService {
         Technician getTechDNI(String dni);
 
         Technician getTechUserName(String user);
-        //    void saveTechnician(ClientDTO clientDTO);
+        void saveChanges(Technician technician);
+        void updateFirstName(Technician technician, String firstName);
+        void updateLastName(Technician technician, String lastName);
+        void updateEmail(Technician technician,String email);
+        void updateUserName(Technician technician,String userName);
+        void updatePassword(Technician technician,String password);
 }

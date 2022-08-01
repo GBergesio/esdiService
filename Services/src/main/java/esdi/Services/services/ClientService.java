@@ -1,7 +1,5 @@
 package esdi.Services.services;
 
-import esdi.Services.dtos.AdminDTO;
-import esdi.Services.dtos.TechnicianDTO;
 import esdi.Services.dtos.ClientDTO;
 import esdi.Services.models.Client;
 
@@ -9,7 +7,7 @@ import java.util.List;
 
 public interface ClientService {
 
-    List<Client> getAllUsers();
+    List<Client> getAllClients();
 
     List<ClientDTO> getClientsDTO();
 

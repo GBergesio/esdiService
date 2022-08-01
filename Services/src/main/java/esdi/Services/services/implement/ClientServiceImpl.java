@@ -23,7 +23,7 @@ public class ClientServiceImpl implements ClientService {
     ClientRepository clientRepository;
 
     @Override
-    public List<Client> getAllUsers() {
+    public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
 

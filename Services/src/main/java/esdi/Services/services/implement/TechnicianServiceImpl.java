@@ -36,4 +36,29 @@ public class TechnicianServiceImpl implements TechnicianService {
     public Technician getTechUserName(String user) {
         return technicianRepository.findByUser(user);
     }
+
+    @Override
+    public void saveChanges(Technician technician) {
+        technicianRepository.save(technician);
+    }
+    @Override
+    public void updateFirstName(Technician technician, String firstName) {
+        technician.setFirstName(firstName);
+    }
+    @Override
+    public void updateLastName(Technician technician, String lastName) {
+        technician.setLastName(lastName);
+    }
+    @Override
+    public void updateEmail(Technician technician, String email) {
+        technician.setEmail(email);
+    }
+    @Override
+    public void updateUserName(Technician technician, String userName) {
+        technician.setUser(userName);
+    }
+    @Override
+    public void updatePassword(Technician technician, String password) {
+        technician.setPassword(password);
+    }
 }
