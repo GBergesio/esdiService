@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -32,6 +33,9 @@ public class Client {
     private String password;
     private UserType userType;
 
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<Order> orders = new HashSet<>();
+
     public Client(){}
 
     public Client(String dni, String firstName, String lastName, String address, Neighborhood neighborhood, String phone, String cellphone, String email, String user, String password, UserType userType) {
@@ -48,10 +52,7 @@ public class Client {
         this.userType = userType;
     }
 
-    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    private Set<Order> orders = new HashSet<>();
-
-    public void addOrder (Order order){
+    public void addOrder(Order order){
         order.setClient(this);
         orders.add(order);
     }

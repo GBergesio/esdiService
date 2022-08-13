@@ -2,6 +2,8 @@ package esdi.Services.utils;
 
 import com.sun.istack.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public final class UserUtils {
@@ -18,4 +20,50 @@ public final class UserUtils {
     }
 
 
+
+//    @NotNull
+//    public static int generateNro(){
+//
+//        int k,num, suma=0;
+//
+//        for (k=13000;k>=0;k++){
+//            return k;
+//        }
+//
+//        return k;
+//    }
+
+    private static List<Integer> ordenercreadas = new ArrayList<>();
+
+    public static int newOrder(){
+
+            int order = 13000;
+            do {
+                order++;
+            }while (ordenercreadas.contains(order));
+            ordenercreadas.add(order);
+            return order;
+
+    }
+
+
+
+
 }
+
+
+
+
+//    public static int newOrder(int start){
+//
+//        if (start > 1){
+//            int order = 13000;
+//            do {
+//                order++;
+//            }while (ordenercreadas.contains(order));
+//            ordenercreadas.add(order);
+//            return order;
+//        } else {
+//        return 1;
+//        }
+//    }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TechnicianService {
 
-        List<Technician> getAllTech();
+        List<TechnicianDTO> getAllTech();
 
         void saveTechnician(TechnicianDTO technicianDTO);
 

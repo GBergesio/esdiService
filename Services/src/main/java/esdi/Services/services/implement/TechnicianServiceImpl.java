@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TechnicianServiceImpl implements TechnicianService {
@@ -18,13 +19,13 @@ public class TechnicianServiceImpl implements TechnicianService {
     TechnicianRepository technicianRepository;
 
     @Override
-    public List<Technician> getAllTech() {
-        return technicianRepository.findAll();
+    public List<TechnicianDTO> getAllTech() {
+        return technicianRepository.findAll().stream().map(TechnicianDTO::new).collect(Collectors.toList());
     }
 
     @Override
     public void saveTechnician(TechnicianDTO technicianDTO) {
-        technicianRepository.save(new Technician(technicianDTO.getDni(),technicianDTO.getFirstName(),technicianDTO.getLastName(), technicianDTO.getAddress(),technicianDTO.getNeighborhood(), technicianDTO.getPhone(),technicianDTO.getCellphone(), technicianDTO.getEmail(), technicianDTO.getUser(), technicianDTO.getPassword(), UserType.TECHNICIAN));
+        technicianRepository.save(new Technician(technicianDTO.getDni(),technicianDTO.getFirstName(),technicianDTO.getLastName(), technicianDTO.getEmail(), technicianDTO.getUser(), technicianDTO.getPassword(), UserType.TECHNICIAN));
     }
 
     @Override

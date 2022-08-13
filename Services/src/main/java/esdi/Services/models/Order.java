@@ -1,5 +1,4 @@
 package esdi.Services.models;
-
 import esdi.Services.enums.OrderType;
 import esdi.Services.enums.Priority;
 import esdi.Services.enums.Status;
@@ -11,17 +10,16 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @Getter
 @Setter
 public class Order {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    private int order;
+    private int orderNumber;
     private Status status;
     private Priority priority;
     private OrderType orderType;
@@ -29,22 +27,45 @@ public class Order {
     private LocalDateTime outDate;
     private String comments;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="client_id")
+    private Client client;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="technician_id")
+    private Technician technician;
+
     public Order() {}
 
-    public Order(int order,Status status,Priority priority,OrderType orderType,LocalDateTime joinDate,LocalDateTime outDate,String comments) {
-        this.order = order;
+    public Order(int orderNumber, Status status, Priority priority, OrderType orderType, LocalDateTime joinDate, LocalDateTime outDate, String comments){
+        this.orderNumber = orderNumber;
         this.status = status;
         this.priority = priority;
         this.orderType = orderType;
         this.joinDate = joinDate;
         this.outDate = outDate;
         this.comments = comments;
+//        this.technician = technician;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "client_id")
-    private Client client;
+    public void setClient(Client client) {
+        this.client = client;
+    }
 
+
+    public void setTechnician(Technician technician){
+        this.technician = technician;
+    }
 
 
 }
+
+
+//public Object process() throws Exception {
+//    Object result = doSomething();
+//    if (result == null) {
+//        throw new Exception("Processing fail. Got a null response");
+//    } else {
+//        return result;
+//    }
+//}

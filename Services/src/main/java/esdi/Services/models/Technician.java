@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "technicians")
@@ -27,10 +29,12 @@ public class Technician {
     private String password;
     private UserType userType;
 
+    @OneToMany(mappedBy = "technician", fetch = FetchType.EAGER)
+    private Set<Order> orders = new HashSet<>();
 
-        public Technician(){}
+    public Technician(){}
 
-        public Technician(String dni, String firstName, String lastName, String address, Neighborhood neighborhood, String phone, String cellphone, String email, String user, String password, UserType userType) {
+    public Technician(String dni, String firstName, String lastName, String email, String user, String password, UserType userType) {
             this.dni = dni;
             this.firstName = firstName;
             this.lastName = lastName;
@@ -38,5 +42,11 @@ public class Technician {
             this.user = user;
             this.password = password;
             this.userType = userType;
-        }
+    }
+
+    public void addOrder(Order order){
+        order.setTechnician(this);
+        orders.add(order);
+    }
+
 }
