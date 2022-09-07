@@ -19,46 +19,46 @@ import java.time.LocalDateTime;
 @SpringBootApplication
 public class SystemServiceApplication {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		SpringApplication.run(SystemServiceApplication.class, args);
-		System.out.println("Application started");
-	}
+        SpringApplication.run(SystemServiceApplication.class, args);
+        System.out.println("Application started");
+    }
 
-	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AdminRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository) {
-		return (args) -> {
+    @Bean
+    public CommandLineRunner initData(ClientRepository clientRepository, AdminRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository) {
+        return (args) -> {
 
-			Admin admin = new Admin("001","Admin","Administrador","bergesiog1@gmail.com","admin1","admin123", UserType.ADMIN);
-			adminRepository.save(admin);
+            Admin admin = new Admin("001", "Admin", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
+            adminRepository.save(admin);
 
-			Client client = new Client("001","Cliente","Bergesio","Santillan 35", Neighborhood.NORTE,"","3547654824","bergesiog1@gmail.com","39323158","cliente123", UserType.CLIENT);
-			clientRepository.save(client);
+            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", Neighborhood.NORTE, "", "3547654824", "bergesiog1@gmail.com", "39323158", "cliente123", UserType.CLIENT);
+            clientRepository.save(client);
 
-			Client client2 = new Client("003","Cliente2","Bergesio2","Santillan 35", Neighborhood.NORTE,"","3547654824","bergesiog1@gmail.com","393231582","cliente123", UserType.CLIENT);
-			clientRepository.save(client2);
+            Client client2 = new Client("003", "Cliente2", "Bergesio2", "Santillan 35", Neighborhood.NORTE, "", "3547654824", "bergesiog1@gmail.com", "393231582", "cliente123", UserType.CLIENT);
+            clientRepository.save(client2);
 
-			Technician technician = new Technician("55","Tecnico","Bergesio","bergesiog1@gmail.com","tecni1","tecnico123", UserType.TECHNICIAN);
-			technicianRepository.save(technician);
+            Technician technician = new Technician("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);
+            technicianRepository.save(technician);
 
 
-			// ORDENES DE TRABAJO //
+            // ORDENES DE TRABAJO //
 
-			Order order1 = new Order(4500, Status.ON_HOLD, Priority.NORMAL, OrderType.NORMAL, LocalDateTime.now(),null,"AAA");
-			order1.setClient(client);
+            Order order1 = new Order(4500, Status.ON_HOLD, Priority.NORMAL, OrderType.NORMAL, LocalDateTime.now(), null, "AAA");
+            order1.setClient(client);
 //			order1.setTechnician(technician);
-			orderRepository.save(order1);
+            orderRepository.save(order1);
 
-			Order order2 = new Order(4501, Status.ON_HOLD, Priority.NORMAL, OrderType.NORMAL, LocalDateTime.now(),null,"AAA");
-			order2.setClient(client2);
+            Order order2 = new Order(4501, Status.ON_HOLD, Priority.NORMAL, OrderType.NORMAL, LocalDateTime.now(), null, "AAA");
+            order2.setClient(client2);
 //			order2.setTechnician(technician);
-			orderRepository.save(order2);
+            orderRepository.save(order2);
 
 
-			clientRepository.save(client);
-			clientRepository.save(client2);
+            clientRepository.save(client);
+            clientRepository.save(client2);
 //			technicianRepository.save(technician);
-		};
-	}
+        };
+    }
 
 }

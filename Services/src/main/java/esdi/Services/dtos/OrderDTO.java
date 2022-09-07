@@ -43,7 +43,6 @@ public class OrderDTO {
 //        this.technicianDTO = new TechnicianDTO(order.getTechnician());
         //asi lo deja null a todos, probar si despues se puede setear
 //        this.technicianDTO = null;
-        this.technicia
     }
 
 }
