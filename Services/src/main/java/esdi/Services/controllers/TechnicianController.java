@@ -18,8 +18,8 @@ public class TechnicianController {
     TechnicianService technicianService;
 
     //  TODOS LOS TECNICOS
-        @GetMapping("/technicians/")
-        ResponseEntity<?> getAllTech(){
+    @GetMapping("/technicians/")
+    ResponseEntity<?> getAllTech(){
             return new ResponseEntity<>(technicianService.getAllTech(), HttpStatus.OK);
         }
 
@@ -66,7 +66,7 @@ public class TechnicianController {
     }
 
     @Transactional
-        @PatchMapping("/technician/modify")
+    @PatchMapping("/technician/modify")
         public ResponseEntity<?> editTechnician(
                 @RequestParam String dni,
                 @RequestParam(required = false) String firstName,@RequestParam(required = false) String lastName,@RequestParam(required = false) String email,

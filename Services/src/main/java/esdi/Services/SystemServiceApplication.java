@@ -1,14 +1,8 @@
 package esdi.Services;
 
 import esdi.Services.enums.*;
-import esdi.Services.models.Admin;
-import esdi.Services.models.Client;
-import esdi.Services.models.Order;
-import esdi.Services.models.Technician;
-import esdi.Services.repositories.AdminRepository;
-import esdi.Services.repositories.ClientRepository;
-import esdi.Services.repositories.OrderRepository;
-import esdi.Services.repositories.TechnicianRepository;
+import esdi.Services.models.*;
+import esdi.Services.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,7 +20,7 @@ public class SystemServiceApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(ClientRepository clientRepository, AdminRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository) {
+    public CommandLineRunner initData(ClientRepository clientRepository, AdminRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository) {
         return (args) -> {
 
             Admin admin = new Admin("001", "Admin", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
@@ -58,6 +52,27 @@ public class SystemServiceApplication {
             clientRepository.save(client);
             clientRepository.save(client2);
 //			technicianRepository.save(technician);
+
+            // IVA //
+
+            Iva iva10 = new Iva(1.105);
+            Iva iva21 = new Iva(1.21);
+            ivaRepository.save(iva10);
+            ivaRepository.save(iva21);
+
+            // PRODUCTOS //
+
+            Product product1 = new Product();
+            product1.setProductNumber("R5-5600x");
+            product1.setDescription("Microprocesador AMD Ryzen 5 5600x");
+            product1.setCostPrice(240);
+            product1.setSalePrice(42440);
+            product1.setUtility(1.20);
+            product1.setIva(iva10);
+
+            productRepository.save(product1);
+            ivaRepository.save(iva10);
+
         };
     }
 
