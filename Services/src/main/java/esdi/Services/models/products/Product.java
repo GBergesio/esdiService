@@ -1,10 +1,9 @@
-package esdi.Services.models;
-
+package esdi.Services.models.products;
+import esdi.Services.models.Currency;
+import esdi.Services.models.Dolar;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -28,16 +27,31 @@ public class Product {
 
     private double utility;
 
+    private Currency currency;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Iva iva;
 
-    public Product(String productNumber, String description, double costPrice, double salePrice, double utility, Iva iva){
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Dolar dolar;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Brand brand;
+
+    public Product(String productNumber, String description, Brand brand, Category category,Currency currency,Dolar dolar,Iva iva,double costPrice,double utility,double salePrice){
         this.productNumber = productNumber;
         this.description = description;
         this.costPrice = costPrice;
         this.salePrice = salePrice;
         this.utility = utility;
+        this.currency = currency;
         this.iva = iva;
+        this.category = category;
+        this.dolar = dolar;
+        this.brand = brand;
     }
 
 

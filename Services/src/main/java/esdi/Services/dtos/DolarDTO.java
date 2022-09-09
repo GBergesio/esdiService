@@ -1,13 +1,15 @@
 package esdi.Services.dtos;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @NoArgsConstructor
-public class IvaDTO {
+public class DolarDTO {
 
-    private double iva;
+    private double price;
+
+    private LocalDateTime date;
 }

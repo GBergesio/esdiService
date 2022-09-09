@@ -1,4 +1,5 @@
-package esdi.Services.dtos;
+package esdi.Services.dtos.request;
+
 import esdi.Services.models.Currency;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,8 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class ProductDTO {
-
+public class ProductDTORequest {
     private String productNumber;
 
     private String description;
@@ -21,11 +21,12 @@ public class ProductDTO {
 
     private Currency currency;
 
-    private IvaDTO iva;
+    private Long ivaId;
 
-    private CategoryDTO category;
+    private Long categoryId;
 
-    private DolarDTO dolar;
+    private Long dolarId;
 
-    private BrandDTO brand;
+    private Long brandId;
+
 }

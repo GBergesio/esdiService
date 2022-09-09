@@ -7,7 +7,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class IvaDTO {
+public class CategoryDTO {
 
-    private double iva;
+    private long id;
+    private String nameCategory;
 }

@@ -1,5 +1,4 @@
 package esdi.Services.dtos;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,7 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class IvaDTO {
+public class BrandDTO {
 
-    private double iva;
+    private String nameBrand;
 }
