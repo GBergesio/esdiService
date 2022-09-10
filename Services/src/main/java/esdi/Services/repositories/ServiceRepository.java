@@ -1,11 +1,8 @@
 package esdi.Services.repositories;
-
-import esdi.Services.models.products.Product;
+import esdi.Services.models.products.ServiceArt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface ProductRepository extends JpaRepository<Product, Long> {
-
-    public Product findByProductNumber(String productNumber);
+public interface ServiceRepository extends JpaRepository<ServiceArt,Long> {
 }

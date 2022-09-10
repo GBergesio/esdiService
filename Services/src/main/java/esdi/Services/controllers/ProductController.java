@@ -1,5 +1,4 @@
 package esdi.Services.controllers;
-
 import esdi.Services.dtos.request.ProductDTORequest;
 import esdi.Services.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,29 @@ public class ProductController {
         return new ResponseEntity<>(productService.findAllDTO(), HttpStatus.OK);
     }
 
+//LO REEMPLACE CON EL DE ABAJO
+//    @GetMapping("/pn/{pn}")
+//    ResponseEntity<?> getProductByPN(@PathVariable String pn){
+//
+//        ProductDTO product = productService.getProductByPN(pn);
+//
+//        if (product == null){
+//            return new ResponseEntity<>("No se encontró producto con el codigo ingresado",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        return new ResponseEntity<>(productService.getProductByPN(pn), HttpStatus.OK);
+//    }
+
+    @GetMapping("/{productNumber}")
+    ResponseEntity<?> getProductBy(@PathVariable String productNumber){
+        return productService.findPN(productNumber);
+    }
+
     @PostMapping()
     ResponseEntity<?> newProduct(@RequestBody ProductDTORequest productDTORequest){
         return productService.createProduct(productDTORequest);
     }
+
 
 
 }

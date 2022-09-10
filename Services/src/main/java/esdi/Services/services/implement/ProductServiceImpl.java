@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -50,10 +52,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductDTO getProductByPN(String productNumber) {
+        return productMapper.toDTO(productRepository.findByProductNumber(productNumber));
+    }
+
+    @Override
     public List<ProductDTO> findAllDTO() {
         List<Product> allprod = productRepository.findAll();
         return productMapper.toDTO(allprod);
     }
+
+    @Override
+    public ResponseEntity<?> findPN(@PathVariable String productNumber) {
+        try{
+            ProductDTO product =  getProductByPN(productNumber);
+
+            if (product == null){
+                return new ResponseEntity<>("No se encontró producto con el codigo ingresado",HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(getProductByPN(productNumber), HttpStatus.OK);
+        } catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
+    }
+
     @Override
     public ResponseEntity<?> createProduct(ProductDTORequest productDTORequest) {
 
@@ -67,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
                 return new ResponseEntity<>("Ingrese Iva",HttpStatus.BAD_REQUEST);
 
             if (category == null)
-                return new ResponseEntity<>("Ingrese invalido",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Ingrese categoria",HttpStatus.BAD_REQUEST);
 
             if (brand == null)
                 return new ResponseEntity<>("Ingrese marca",HttpStatus.BAD_REQUEST);

@@ -3,6 +3,7 @@ import esdi.Services.dtos.ProductDTO;
 import esdi.Services.dtos.request.ProductDTORequest;
 import esdi.Services.models.products.Product;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -12,7 +13,11 @@ public interface ProductService {
 
     ProductDTO getProductDTO(Product product);
 
+    ProductDTO getProductByPN(String productNumber);
+
     List<ProductDTO> findAllDTO();
+
+    ResponseEntity<?> findPN(@PathVariable String productNumber);
 
     ResponseEntity<?> createProduct(ProductDTORequest productDTORequest);
 
