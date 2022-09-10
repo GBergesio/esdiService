@@ -1,4 +1,4 @@
-package esdi.Services.controllers;
+package esdi.Services.controllers.articleControllers;
 import esdi.Services.dtos.request.ProductDTORequest;
 import esdi.Services.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

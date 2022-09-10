@@ -3,13 +3,15 @@ package esdi.Services;
 import esdi.Services.enums.*;
 import esdi.Services.models.*;
 import esdi.Services.models.products.*;
+import esdi.Services.models.users.Admin;
+import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Technician;
 import esdi.Services.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.security.Provider;
 import java.time.LocalDateTime;
 
 @SpringBootApplication
@@ -69,6 +71,11 @@ public class SystemServiceApplication {
 
             Category category2 = new Category("Servicio tecnico PC De Escritorio");
             categoryRepository.save(category2);
+
+            Category category3 = new Category("Servicio tecnico Notebooks");
+            categoryRepository.save(category3);
+
+
             // DOLAR //
 
             Dolar dolar1 = new Dolar(145,LocalDateTime.now());

@@ -1,7 +1,7 @@
 package esdi.Services.services;
 
 import esdi.Services.dtos.TechnicianDTO;
-import esdi.Services.models.Technician;
+import esdi.Services.models.users.Technician;
 
 import java.util.List;
 

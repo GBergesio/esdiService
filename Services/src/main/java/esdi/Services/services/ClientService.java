@@ -1,7 +1,7 @@
 package esdi.Services.services;
 
 import esdi.Services.dtos.ClientDTO;
-import esdi.Services.models.Client;
+import esdi.Services.models.users.Client;
 
 import java.util.List;
 

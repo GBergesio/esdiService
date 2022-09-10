@@ -2,6 +2,8 @@ package esdi.Services.models;
 import esdi.Services.enums.OrderType;
 import esdi.Services.enums.Priority;
 import esdi.Services.enums.Status;
+import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Technician;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;

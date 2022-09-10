@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-public class ServiceServiceImpl implements ServiceService {
+public class  ServiceServiceImpl implements ServiceService {
 
     @Autowired
     ServiceRepository serviceRepository;
@@ -53,38 +53,42 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public ResponseEntity<?> findById(Long id) {
 
-            ServiceDTO serviceDTO = serviceMapper.toDTO(serviceRepository.findById(id).orElse(null));
+        ServiceDTO serviceDTO = serviceMapper.toDTO(serviceRepository.findById(id).orElse(null));
 
-            if (serviceDTO == null){
-                return new ResponseEntity<>("No se encontró service con el codigo ingresado", HttpStatus.BAD_REQUEST);
-            }
-                return new ResponseEntity<>(serviceDTO, HttpStatus.OK);
+        if (serviceDTO == null) {
+            return new ResponseEntity<>("No se encontró service con el codigo ingresado", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(serviceDTO, HttpStatus.OK);
     }
 
-//    @Override
-//    public ResponseEntity<?> createProduct(ServiceDTORequest serviceDTORequest) {
-//
-//        try{
-//
-//            Iva iva = ivaRepository.findById(serviceDTORequest.getIvaId()).orElse(null);
-//            Category category = categoryRepository.findById(serviceDTORequest.getCategoryId()).orElse(null);
-//
-//            if (iva == null)
-//                return new ResponseEntity<>("Ingrese Iva",HttpStatus.BAD_REQUEST);
-//
-//            if (category == null)
-//                return new ResponseEntity<>("Ingrese categoria",HttpStatus.BAD_REQUEST);
-//
-//            serviceDTORequest.setSalePrice((serviceDTORequest.getCostPrice() * iva.getIva()) * serviceDTORequest.getUtility());
-//
-//            ServiceArt service = new ServiceArt();
-//
-//
-//
-//        } catch(Exception e){
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-//        }
-//
-//    }
+    @Override
+    public ResponseEntity<?> createService(ServiceDTORequest serviceDTORequest) {
+        try {
+
+            Iva iva = ivaRepository.findById(serviceDTORequest.getIvaId()).orElse(null);
+            Category category = categoryRepository.findById(serviceDTORequest.getCategoryId()).orElse(null);
+
+            if (iva == null)
+                return new ResponseEntity<>("Ingrese Iva", HttpStatus.BAD_REQUEST);
+
+            if (category == null)
+                return new ResponseEntity<>("Ingrese categoria", HttpStatus.BAD_REQUEST);
+
+            serviceDTORequest.setSalePrice((serviceDTORequest.getCostPrice() * iva.getIva()) * serviceDTORequest.getUtility());
+
+            ServiceArt service = new ServiceArt();
+            service.setDescription(serviceDTORequest.getDescription());
+            service.setCostPrice(serviceDTORequest.getCostPrice());
+            service.setSalePrice(serviceDTORequest.getSalePrice());
+            service.setUtility(serviceDTORequest.getUtility());
+            service.setCategory(category);
+            service.setIva(iva);
+
+            return new ResponseEntity<>(this.saveService(service), HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
 
 }

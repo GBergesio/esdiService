@@ -1,8 +1,7 @@
 package esdi.Services.dtos;
 
-import esdi.Services.enums.Neighborhood;
 import esdi.Services.enums.UserType;
-import esdi.Services.models.Client;
+import esdi.Services.models.users.Client;
 import lombok.Data;
 
 @Data

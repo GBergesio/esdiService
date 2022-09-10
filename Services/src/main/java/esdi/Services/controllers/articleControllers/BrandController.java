@@ -1,4 +1,4 @@
-package esdi.Services.controllers;
+package esdi.Services.controllers.articleControllers;
 import esdi.Services.services.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,5 +18,7 @@ public class BrandController {
     ResponseEntity<?> getAllBrands(){
         return new ResponseEntity<>(brandService.findAllDTO(), HttpStatus.OK);
     }
+
+
 
 }

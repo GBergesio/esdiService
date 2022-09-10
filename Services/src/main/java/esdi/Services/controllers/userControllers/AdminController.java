@@ -1,9 +1,8 @@
-package esdi.Services.controllers;
+package esdi.Services.controllers.userControllers;
 
 import esdi.Services.dtos.AdminDTO;
-import esdi.Services.models.Admin;
+import esdi.Services.models.users.Admin;
 import esdi.Services.services.AdminService;
-import esdi.Services.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

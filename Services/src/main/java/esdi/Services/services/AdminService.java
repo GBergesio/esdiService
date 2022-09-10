@@ -1,7 +1,7 @@
 package esdi.Services.services;
 
 import esdi.Services.dtos.AdminDTO;
-import esdi.Services.models.Admin;
+import esdi.Services.models.users.Admin;
 
 import java.util.List;
 
