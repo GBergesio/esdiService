@@ -1,7 +1,8 @@
-package esdi.Services.models;
+package esdi.Services.models.users;
 
 import esdi.Services.enums.Neighborhood;
 import esdi.Services.enums.UserType;
+import esdi.Services.models.Order;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;

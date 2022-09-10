@@ -1,17 +1,14 @@
 package esdi.Services.services.implement;
 
 import esdi.Services.dtos.AdminDTO;
-import esdi.Services.dtos.ClientDTO;
 import esdi.Services.enums.UserType;
-import esdi.Services.models.Admin;
-import esdi.Services.models.Client;
+import esdi.Services.models.users.Admin;
 import esdi.Services.repositories.AdminRepository;
 import esdi.Services.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AdminServiceImpl implements AdminService {

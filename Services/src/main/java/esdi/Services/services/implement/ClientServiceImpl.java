@@ -1,10 +1,7 @@
 package esdi.Services.services.implement;
 
-import esdi.Services.dtos.AdminDTO;
-import esdi.Services.dtos.TechnicianDTO;
 import esdi.Services.dtos.ClientDTO;
-import esdi.Services.enums.UserType;
-import esdi.Services.models.Client;
+import esdi.Services.models.users.Client;
 import esdi.Services.repositories.ClientRepository;
 import esdi.Services.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;

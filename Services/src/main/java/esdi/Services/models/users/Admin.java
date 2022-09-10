@@ -1,4 +1,4 @@
-package esdi.Services.models;
+package esdi.Services.models.users;
 
 import esdi.Services.enums.Neighborhood;
 import esdi.Services.enums.UserType;

@@ -1,5 +1,6 @@
 package esdi.Services.services;
 import esdi.Services.dtos.ServiceDTO;
+import esdi.Services.dtos.request.ServiceDTORequest;
 import esdi.Services.models.products.ServiceArt;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,7 @@ public interface ServiceService {
 
         ResponseEntity<?> findById(@PathVariable Long id);
     //
-    //    ResponseEntity<?> createProduct(ProductDTORequest productDTORequest);
+        ResponseEntity<?> createService(ServiceDTORequest serviceDTORequest);
     //
     //    ProductDTO saveProductDTO(Product product);
 }

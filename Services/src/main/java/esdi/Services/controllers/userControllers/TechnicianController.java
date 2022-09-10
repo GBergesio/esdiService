@@ -1,7 +1,7 @@
-package esdi.Services.controllers;
+package esdi.Services.controllers.userControllers;
 
 import esdi.Services.dtos.TechnicianDTO;
-import esdi.Services.models.Technician;
+import esdi.Services.models.users.Technician;
 import esdi.Services.services.TechnicianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

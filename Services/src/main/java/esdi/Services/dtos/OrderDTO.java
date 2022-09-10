@@ -3,12 +3,8 @@ package esdi.Services.dtos;
 import esdi.Services.enums.OrderType;
 import esdi.Services.enums.Priority;
 import esdi.Services.enums.Status;
-import esdi.Services.models.Client;
 import esdi.Services.models.Order;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 

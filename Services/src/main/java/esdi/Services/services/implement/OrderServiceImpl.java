@@ -1,19 +1,13 @@
 package esdi.Services.services.implement;
 
 import esdi.Services.dtos.OrderDTO;
-import esdi.Services.dtos.TechnicianDTO;
-import esdi.Services.enums.OrderType;
-import esdi.Services.enums.Status;
-import esdi.Services.models.Client;
 import esdi.Services.models.Order;
-import esdi.Services.models.Technician;
-import esdi.Services.repositories.ClientRepository;
+import esdi.Services.models.users.Technician;
 import esdi.Services.repositories.OrderRepository;
 import esdi.Services.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import static esdi.Services.utils.UserUtils.newOrder;
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
