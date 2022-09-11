@@ -2,8 +2,7 @@ package esdi.Services.services.implement;
 
 import esdi.Services.dtos.TechnicianDTO;
 import esdi.Services.enums.UserType;
-import esdi.Services.models.Client;
-import esdi.Services.models.Technician;
+import esdi.Services.models.users.Technician;
 import esdi.Services.repositories.TechnicianRepository;
 import esdi.Services.services.TechnicianService;
 import org.springframework.beans.factory.annotation.Autowired;

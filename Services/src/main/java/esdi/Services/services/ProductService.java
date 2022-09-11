@@ -17,7 +17,7 @@ public interface ProductService {
 
     List<ProductDTO> findAllDTO();
 
-    ResponseEntity<?> findPN(@PathVariable String productNumber);
+    ResponseEntity<?> findPN(String productNumber);
 
     ResponseEntity<?> createProduct(ProductDTORequest productDTORequest);
 

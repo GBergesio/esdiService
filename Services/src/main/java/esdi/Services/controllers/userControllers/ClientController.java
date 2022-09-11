@@ -1,7 +1,7 @@
-package esdi.Services.controllers;
+package esdi.Services.controllers.userControllers;
 
 import esdi.Services.dtos.ClientDTO;
-import esdi.Services.models.Client;
+import esdi.Services.models.users.Client;
 import esdi.Services.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/clients")
 public class ClientController {
 
     @Autowired

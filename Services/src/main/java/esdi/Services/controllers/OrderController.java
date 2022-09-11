@@ -1,13 +1,9 @@
 package esdi.Services.controllers;
 
-import antlr.Utils;
-import esdi.Services.dtos.ClientDTO;
 import esdi.Services.dtos.OrderDTO;
-import esdi.Services.dtos.TechnicianDTO;
-import esdi.Services.enums.OrderType;
-import esdi.Services.models.Client;
+import esdi.Services.models.users.Client;
 import esdi.Services.models.Order;
-import esdi.Services.models.Technician;
+import esdi.Services.models.users.Technician;
 import esdi.Services.services.ClientService;
 import esdi.Services.services.OrderService;
 import esdi.Services.services.TechnicianService;
