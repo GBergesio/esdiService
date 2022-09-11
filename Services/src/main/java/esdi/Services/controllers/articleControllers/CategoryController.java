@@ -1,4 +1,5 @@
 package esdi.Services.controllers.articleControllers;
+
 import esdi.Services.dtos.CategoryDTO;
 import esdi.Services.services.CategoryService;
 import org.hibernate.annotations.Cascade;
@@ -15,8 +16,8 @@ public class CategoryController {
     CategoryService categoryService;
 
     @GetMapping()
-    ResponseEntity<?> getAllCategories(){
-    return categoryService.allCategories();
+    ResponseEntity<?> getAllCategories() {
+        return categoryService.allCategories();
     }
 
     @GetMapping("/{id}")
@@ -25,13 +26,13 @@ public class CategoryController {
     }
 
     @PostMapping()
-    ResponseEntity<?> createCategory(@RequestBody CategoryDTO categoryDTO){
+    ResponseEntity<?> createCategory(@RequestBody CategoryDTO categoryDTO) {
         return categoryService.createCategory(categoryDTO);
     }
 
     @PatchMapping("/{id}")
-    ResponseEntity<?> renameCategory(@PathVariable Long id, @RequestParam String name){
-        return categoryService.renameCategory(id,name);
+    ResponseEntity<?> renameCategory(@PathVariable Long id, @RequestParam String name) {
+        return categoryService.renameCategory(id, name);
     }
 
     @DeleteMapping("/{id}")
@@ -39,7 +40,10 @@ public class CategoryController {
         return categoryService.deleteCategory(id);
     }
 
-
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        return categoryService.deleteCategory(id);
+    }
 
 
 }

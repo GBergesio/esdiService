@@ -5,9 +5,8 @@ import esdi.Services.models.users.Client;
 import lombok.Data;
 
 @Data
-public class AdminDTO {
+public class StaffDTO {
     private long id;
-
     private String dni;
     private String firstName;
     private String lastName;
@@ -16,9 +15,9 @@ public class AdminDTO {
     private String password;
     private UserType userType;
 
-    public AdminDTO(){}
+    public StaffDTO(){}
 
-    public AdminDTO(Client client){
+    public StaffDTO(Client client){
         this.id = client.getId();
         this.dni = client.getDni();
         this.firstName = client.getFirstName();
