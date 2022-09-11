@@ -1,6 +1,5 @@
 package esdi.Services.models.users;
 
-import esdi.Services.enums.Neighborhood;
 import esdi.Services.enums.UserType;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "admins")
 @Getter
 @Setter
-public class Admin {
+public class Staff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
@@ -30,9 +29,9 @@ public class Admin {
     private boolean deleted;
 
 
-    public Admin(){}
+    public Staff(){}
 
-    public Admin(String dni, String firstName, String lastName,String email, String user, String password, UserType userType) {
+    public Staff(String dni, String firstName, String lastName, String email, String user, String password, UserType userType) {
         this.dni = dni;
         this.firstName = firstName;
         this.lastName = lastName;
