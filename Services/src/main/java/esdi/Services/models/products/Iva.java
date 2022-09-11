@@ -6,6 +6,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "iva")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Iva {

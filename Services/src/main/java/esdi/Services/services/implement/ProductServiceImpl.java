@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> findPN(@PathVariable String productNumber) {
+    public ResponseEntity<?> findPN(String productNumber) {
         try{
             ProductDTO product =  getProductByPN(productNumber);
 
@@ -127,4 +127,24 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO saveProductDTO(Product product) {
         return productMapper.toDTO(productRepository.save(product));
     }
+
+    @Override
+    public ResponseEntity<?> findById(Long id) {
+
+        ProductDTO productDTO = productMapper.toDTO(productRepository.findById(id).orElse(null));
+
+        if (productDTO == null)
+            return new ResponseEntity<>("No se encontro producto con el id ingresado",HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(productDTO, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> editProduct(Long id, ProductDTORequest productDTORequest) {
+        return null;
+    }
+
+
 }
+
+
