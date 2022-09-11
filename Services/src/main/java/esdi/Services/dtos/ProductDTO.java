@@ -25,7 +25,7 @@ public class ProductDTO {
 
     private CategoryDTO category;
 
-    private DolarDTO dolar;
+    private Double dolar;
 
     private BrandDTO brand;
 }

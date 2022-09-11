@@ -97,7 +97,7 @@ public class SystemServiceApplication {
             product1.setIva(iva10);
             product1.setCurrency(Currency.DOLAR);
             product1.setCategory(category1);
-            product1.setDolar(dolar1);
+            product1.setDolar(dolar1.getPrice());
             product1.setBrand(brand1);
 
             productRepository.save(product1);

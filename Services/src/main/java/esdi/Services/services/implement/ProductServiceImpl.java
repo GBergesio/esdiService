@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> findPN(@PathVariable String productNumber) {
+    public ResponseEntity<?> findPN(String productNumber) {
         try{
             ProductDTO product =  getProductByPN(productNumber);
 
@@ -95,6 +95,7 @@ public class ProductServiceImpl implements ProductService {
                 return new ResponseEntity<>("Ingrese marca",HttpStatus.BAD_REQUEST);
 
             if (productDTORequest.getCurrency().equals(Currency.DOLAR)){
+                assert dolar != null;
                 productDTORequest.setSalePrice(((productDTORequest.getCostPrice() * dolar.getPrice()) * iva.getIva()) * productDTORequest.getUtility());
             }
 
@@ -115,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
             product.setBrand(brand);
 
             if (dolar != null)
-                product.setDolar(dolar);
+                product.setDolar(dolar.getPrice());
 
             return new ResponseEntity<>(this.saveProductDTO(product),HttpStatus.CREATED);
 
