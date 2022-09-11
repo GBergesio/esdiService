@@ -3,7 +3,7 @@ package esdi.Services;
 import esdi.Services.enums.*;
 import esdi.Services.models.*;
 import esdi.Services.models.products.*;
-import esdi.Services.models.users.Admin;
+import esdi.Services.models.users.Staff;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Technician;
 import esdi.Services.repositories.*;
@@ -24,16 +24,16 @@ public class SystemServiceApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(ClientRepository clientRepository, AdminRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository, CategoryRepository categoryRepository,DolarRepository dolarRepository, BrandRepository brandRepository, ServiceRepository serviceRepository) {
+    public CommandLineRunner initData(ClientRepository clientRepository, StaffRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository, CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository, ServiceRepository serviceRepository) {
         return (args) -> {
 
-            Admin admin = new Admin("001", "Admin", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
+            Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
             adminRepository.save(admin);
 
             Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", Neighborhood.NORTE, "", "3547654824", "bergesiog1@gmail.com", "39323158", "cliente123", UserType.CLIENT);
             clientRepository.save(client);
 
-            Client client2 = new Client("003", "Cliente2", "Bergesio2", "Santillan 35", Neighborhood.NORTE, "", "3547654824", "bergesiog1@gmail.com", "393231582", "cliente123", UserType.CLIENT);
+            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", Neighborhood.NORTE, "", "3814052408", "santiago.aragon.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
             clientRepository.save(client2);
 
             Technician technician = new Technician("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);
