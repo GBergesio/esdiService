@@ -1,9 +1,6 @@
 package esdi.Services.controllers.articleControllers;
-import esdi.Services.dtos.ProductDTO;
-import esdi.Services.dtos.request.ProductDTORequest;
+import esdi.Services.dtos.request.ProductRequest;
 import esdi.Services.mappers.ProductMapper;
-import esdi.Services.models.products.Iva;
-import esdi.Services.models.products.Product;
 import esdi.Services.repositories.ProductRepository;
 import esdi.Services.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +37,13 @@ public class ProductController {
     }
 
     @PostMapping()
-    ResponseEntity<?> newProduct(@RequestBody ProductDTORequest productDTORequest){
-        return productService.createProduct(productDTORequest);
+    ResponseEntity<?> newProduct(@RequestBody ProductRequest productRequest){
+        return productService.createProduct(productRequest);
     }
 
-
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+        return productService.updateProduct(id, productRequest);
+    }
 
 }

@@ -1,6 +1,5 @@
 package esdi.Services.services.implement;
 import esdi.Services.dtos.ServiceDTO;
-import esdi.Services.dtos.request.ProductDTORequest;
 import esdi.Services.dtos.request.ServiceDTORequest;
 import esdi.Services.mappers.ServiceMapper;
 import esdi.Services.models.products.Category;
