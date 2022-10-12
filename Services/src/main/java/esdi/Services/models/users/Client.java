@@ -1,6 +1,5 @@
 package esdi.Services.models.users;
 
-import esdi.Services.enums.Neighborhood;
 import esdi.Services.enums.UserType;
 import esdi.Services.models.Order;
 import lombok.Getter;

@@ -1,37 +1,19 @@
 package esdi.Services.services;
 
-import esdi.Services.dtos.ClientDTO;
-import esdi.Services.models.users.Client;
-
-import java.util.List;
+import esdi.Services.dtos.request.ClientRequest;
+import org.springframework.http.ResponseEntity;
 
 public interface ClientService {
 
-    List<Client> getAllClients();
+    ResponseEntity<?> getAllClients();
 
-    List<ClientDTO> getClientsDTO();
+    ResponseEntity<?> getClientById(Long id);
 
-    ClientDTO getUserDTO(Long id);
-//
-    Client getUserByID(Long id);
+    ResponseEntity<?> getClientByDni(String dni);
 
-    Client getUserByDNI(String dni);
+    ResponseEntity<?> createNewClient(ClientRequest clientRequest);
 
-    Client getUserByUserName(String userName);
+    ResponseEntity<?> updateClient(Long id, ClientRequest clientRequest);
 
-    void saveClient(ClientDTO clientDTO);
-
-    void saveChanges(Client client);
-
-    void updateFirstName(Client client, String firstName);
-
-    void updateLastName(Client client, String lastName);
-
-    void updateAddress(Client client,String address);
-    void updatePhone(Client client,String phone);
-    void updateCellPhone(Client client,String cellphone);
-    void updateNeighborhood(Client client,String neighborhood);
-    void updateEmail(Client client,String email);
-    void updateUserName(Client client,String userName);
-    void updatePassword(Client client,String password);
+    ResponseEntity<?> deleteStaff(Long id);
 }

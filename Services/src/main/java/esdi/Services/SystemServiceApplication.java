@@ -3,6 +3,7 @@ package esdi.Services;
 import esdi.Services.enums.*;
 import esdi.Services.models.*;
 import esdi.Services.models.products.*;
+import esdi.Services.models.users.Neighborhood;
 import esdi.Services.models.users.Staff;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Technician;

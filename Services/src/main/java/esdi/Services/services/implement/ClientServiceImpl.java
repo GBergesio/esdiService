@@ -1,10 +1,16 @@
 package esdi.Services.services.implement;
 
 import esdi.Services.dtos.ClientDTO;
+import esdi.Services.dtos.request.ClientRequest;
+import esdi.Services.mappers.ClientMapper;
 import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Neighborhood;
 import esdi.Services.repositories.ClientRepository;
+import esdi.Services.repositories.NeighborhoodRepository;
 import esdi.Services.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,88 +24,98 @@ import static esdi.Services.utils.UserUtils.generatePassword;
 public class ClientServiceImpl implements ClientService {
     @Autowired
     ClientRepository clientRepository;
+    @Autowired
+    ClientMapper clientMapper;
+    @Autowired
+    NeighborhoodRepository neighborhoodRepository;
 
     @Override
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
+    public ResponseEntity<?> getAllClients() {
+        return new ResponseEntity<>(clientMapper.toDTO(clientRepository.findAll()), HttpStatus.OK);
     }
 
     @Override
-    public List<ClientDTO> getClientsDTO() {
-        return clientRepository.findAll().stream().map(ClientDTO::new).collect(Collectors.toList()); }
-
-    @Override
-    public Client getUserByDNI(String dni) {return clientRepository.findByDni(dni);}
-
-    @Override
-    public Client getUserByUserName(String userName) {
-        return clientRepository.findByUser(userName);
-    }
-
-    @Override
-    public ClientDTO getUserDTO(Long id) {return clientRepository.findById(id).map(ClientDTO::new).orElse(null); }
-
-    @Override
-    public Client getUserByID(Long id) {
+    public ResponseEntity<?> getClientById(Long id) {
         Client client = clientRepository.findById(id).orElse(null);
-//        if (user =! null){
-//            return hacer cuando el cliente se elimine, si es que lo hacemos
-//        }
-        return null;
+        if (client == null) {
+            return new ResponseEntity<>("Cliente no encontrado", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(clientMapper.toDTO(client), HttpStatus.OK);
     }
 
     @Override
-    public void saveClient(ClientDTO clientDTO) {
-        clientRepository.save(new Client(clientDTO.getDni(), clientDTO.getFirstName(), clientDTO.getLastName(), clientDTO.getAddress(), clientDTO.getNeighborhood(), clientDTO.getPhone(), clientDTO.getCellphone(), clientDTO.getEmail(), clientDTO.getDni(), generatePassword(7), CLIENT));
+    public ResponseEntity<?> getClientByDni(String dni) {
+        Client client = clientRepository.findByDni(dni);
+        if (client == null) {
+            return new ResponseEntity<>("Cliente no encontrado", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(clientMapper.toDTO(client), HttpStatus.OK);
     }
 
     @Override
-    public void saveChanges(Client client) {
-        clientRepository.save(client);
+    public ResponseEntity<?> createNewClient(ClientRequest clientRequest) {
+
+        if (clientRequest.getDni() == null || clientRequest.getDni().isEmpty() || clientRequest.getDni().isBlank())
+            return new ResponseEntity<>("Dni requerido", HttpStatus.BAD_REQUEST);
+        if (clientRepository.findByDni(clientRequest.getDni()) != null)
+            return new ResponseEntity<>("Dni en uso", HttpStatus.BAD_REQUEST);
+        if (clientRequest.getEmail() == null || clientRequest.getEmail().isEmpty() || clientRequest.getEmail().isBlank())
+            return new ResponseEntity<>("Email requerida", HttpStatus.BAD_REQUEST);
+        if (clientRepository.findByEmail(clientRequest.getEmail().toLowerCase()) != null)
+            return new ResponseEntity<>("Email en uso", HttpStatus.BAD_REQUEST);
+        if (clientRequest.getFirstName() == null || clientRequest.getFirstName().isEmpty() || clientRequest.getFirstName().isBlank())
+            return new ResponseEntity<>("Nombre requerido", HttpStatus.BAD_REQUEST);
+        if (clientRequest.getLastName() == null || clientRequest.getLastName().isEmpty() || clientRequest.getLastName().isBlank())
+            return new ResponseEntity<>("Apellido requerido", HttpStatus.BAD_REQUEST);
+        if (clientRequest.getAddress() == null || clientRequest.getAddress().isEmpty() || clientRequest.getAddress().isBlank())
+            return new ResponseEntity<>("Direccion requerida", HttpStatus.BAD_REQUEST);
+        if (clientRequest.getCellphone() == null || clientRequest.getCellphone().isEmpty() || clientRequest.getCellphone().isBlank())
+            return new ResponseEntity<>("Celular requerido", HttpStatus.BAD_REQUEST);
+        if (clientRequest.getPassword() == null || clientRequest.getPassword().isEmpty() || clientRequest.getPassword().isBlank())
+            return new ResponseEntity<>("Contraseña requerida", HttpStatus.BAD_REQUEST);
+        if (clientRequest.getUser() == null || clientRequest.getUser().isEmpty() || clientRequest.getUser().isBlank())
+            return new ResponseEntity<>("Usuario requerido", HttpStatus.BAD_REQUEST);
+        if (clientRepository.findByUser(clientRequest.getUser().toLowerCase()) != null)
+            return new ResponseEntity<>("Usuario en uso", HttpStatus.BAD_REQUEST);
+
+        Neighborhood neighborhood = neighborhoodRepository.findById(clientRequest.getNeighborhoodId()).orElse(null);
+        if (neighborhood == null)
+            return new ResponseEntity<>("Barrio no encontrado", HttpStatus.BAD_REQUEST);
+
+        Client newClient = new Client();
+        newClient.setDni(clientRequest.getDni());
+        newClient.setFirstName(clientRequest.getFirstName());
+        newClient.setLastName(clientRequest.getLastName());
+        newClient.setAddress(clientRequest.getAddress());
+        newClient.setNeighborhood(neighborhood);
+        newClient.setPhone(clientRequest.getPhone());
+        newClient.setCellphone(clientRequest.getCellphone());
+        newClient.setEmail(clientRequest.getEmail().toLowerCase());
+        newClient.setUser(clientRequest.getUser());
+        newClient.setPassword(clientRequest.getPassword());
+        newClient.setPassword(clientRequest.getUserType().toString());
+
+        clientRepository.save(newClient);
+        return new ResponseEntity<>(clientMapper.toDTO(newClient), HttpStatus.CREATED);
     }
 
     @Override
-    public void updateFirstName(Client client, String firstName) {
-        client.setFirstName(firstName);
+    public ResponseEntity<?> updateClient(Long id, ClientRequest clientRequest) {
+        Client clientDB = clientRepository.findById(id).orElse(null);
+        if (clientDB == null)
+            return new ResponseEntity<>("Cliente no encontrado", HttpStatus.BAD_REQUEST);
+
+
+        return new ResponseEntity<>(clientMapper.toDTO(clientDB), HttpStatus.OK);
     }
 
     @Override
-    public void updateLastName(Client client, String lastName) {
-        client.setLastName(lastName);
-    }
+    public ResponseEntity<?> deleteStaff(Long id) {
+        Client clientDB = clientRepository.findById(id).orElse(null);
+        if (clientDB == null)
+            return new ResponseEntity<>("Cliente no encontrado", HttpStatus.BAD_REQUEST);
 
-    @Override
-    public void updateAddress(Client client, String address) {
-        client.setAddress(address);
-    }
-
-    @Override
-    public void updatePhone(Client client, String phone) {
-        client.setPhone(phone);
-    }
-
-    @Override
-    public void updateCellPhone(Client client, String cellphone) {
-        client.setCellphone(cellphone);
-    }
-
-    @Override
-    public void updateNeighborhood(Client client, String neighborhood) {
-    }
-
-    @Override
-    public void updateEmail(Client client, String email) {
-        client.setEmail(email);
-    }
-
-    @Override
-    public void updateUserName(Client client, String userName) {
-        client.setUser(userName);
-    }
-
-    @Override
-    public void updatePassword(Client client, String password) {
-        client.setPassword(password);
+        return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
     }
 
 
