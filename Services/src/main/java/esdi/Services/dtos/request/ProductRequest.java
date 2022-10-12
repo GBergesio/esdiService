@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class ProductDTORequest {
+public class ProductRequest {
     private String productNumber;
 
     private String description;

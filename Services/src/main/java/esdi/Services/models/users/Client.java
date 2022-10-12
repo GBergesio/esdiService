@@ -1,6 +1,5 @@
 package esdi.Services.models.users;
 
-import esdi.Services.enums.Neighborhood;
 import esdi.Services.enums.UserType;
 import esdi.Services.models.Order;
 import lombok.Getter;
@@ -26,6 +25,7 @@ public class Client {
     private String firstName;
     private String lastName;
     private String address;
+    @ManyToOne(fetch = FetchType.LAZY)
     private Neighborhood neighborhood;
     private String phone;
     private String cellphone;

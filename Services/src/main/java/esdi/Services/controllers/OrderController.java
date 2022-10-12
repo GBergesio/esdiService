@@ -4,6 +4,7 @@ import esdi.Services.dtos.OrderDTO;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.Order;
 import esdi.Services.models.users.Technician;
+import esdi.Services.repositories.ClientRepository;
 import esdi.Services.services.ClientService;
 import esdi.Services.services.OrderService;
 import esdi.Services.services.TechnicianService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/orders")
 public class OrderController {
 
     @Autowired
@@ -27,18 +28,20 @@ public class OrderController {
     ClientService clientService;
 
     @Autowired
+    ClientRepository clientRepository;
+    @Autowired
     TechnicianService technicianService;
 
-    @GetMapping("/orders/")
+    @GetMapping("")
     ResponseEntity<?> getAllOrders(){
         return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
         }
 
     @Transactional
-    @PostMapping("/orders")
+    @PostMapping("")
     ResponseEntity<Object> newOrder(@RequestBody OrderDTO orderDTO, @RequestParam String dni){
 
-        Client client = clientService.getUserByDNI(dni);
+        Client client = clientRepository.findByDni(dni);
 
         if (orderDTO.getOrderType().equals(null)){
             return new ResponseEntity<>("Tipo de orden requerido",HttpStatus.BAD_REQUEST);
@@ -60,7 +63,7 @@ public class OrderController {
 
         client.addOrder(order);
 
-        clientService.saveChanges(client);
+        clientRepository.save(client);
 
         orderService.saveOrder(order);
 
@@ -68,7 +71,7 @@ public class OrderController {
     }
 
     @Transactional
-    @PatchMapping("/orders/modify")
+    @PatchMapping("/modify")
     ResponseEntity<Object> newOrder(@RequestParam String orderNumber,@RequestParam(required = false) String technicianName){
 
         if (orderNumber.isEmpty()){

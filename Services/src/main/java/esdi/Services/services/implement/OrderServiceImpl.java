@@ -1,6 +1,7 @@
 package esdi.Services.services.implement;
 
 import esdi.Services.dtos.OrderDTO;
+import esdi.Services.mappers.OrderMapper;
 import esdi.Services.models.Order;
 import esdi.Services.models.users.Technician;
 import esdi.Services.repositories.OrderRepository;
@@ -16,10 +17,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    OrderMapper orderMapper;
 
     @Override
     public List<OrderDTO> getAllOrders() {
-        return orderRepository.findAll().stream().map(OrderDTO::new).collect(Collectors.toList());
+        return orderMapper.toDTO(orderRepository.findAll()) ;
     }
 
     @Override

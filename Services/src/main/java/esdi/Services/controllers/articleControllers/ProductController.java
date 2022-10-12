@@ -1,5 +1,7 @@
 package esdi.Services.controllers.articleControllers;
-import esdi.Services.dtos.request.ProductDTORequest;
+import esdi.Services.dtos.request.ProductRequest;
+import esdi.Services.mappers.ProductMapper;
+import esdi.Services.repositories.ProductRepository;
 import esdi.Services.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,34 +15,35 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
+    ProductMapper productMapper;
+
     @GetMapping()
     ResponseEntity<?> getAllOrders(){
         return new ResponseEntity<>(productService.findAllDTO(), HttpStatus.OK);
     }
 
-//LO REEMPLACE CON EL DE ABAJO
-//    @GetMapping("/pn/{pn}")
-//    ResponseEntity<?> getProductByPN(@PathVariable String pn){
-//
-//        ProductDTO product = productService.getProductByPN(pn);
-//
-//        if (product == null){
-//            return new ResponseEntity<>("No se encontró producto con el codigo ingresado",HttpStatus.BAD_REQUEST);
-//        }
-//
-//        return new ResponseEntity<>(productService.getProductByPN(pn), HttpStatus.OK);
-//    }
-
-    @GetMapping("/{productNumber}")
+    @GetMapping("/pn/{productNumber}")
     ResponseEntity<?> getProductBy(@PathVariable String productNumber){
         return productService.findPN(productNumber);
     }
 
-    @PostMapping()
-    ResponseEntity<?> newProduct(@RequestBody ProductDTORequest productDTORequest){
-        return productService.createProduct(productDTORequest);
+    @GetMapping("/id/{id}")
+    ResponseEntity<?> getProductByID(@PathVariable Long id){
+        return productService.findById(id);
     }
 
+    @PostMapping()
+    ResponseEntity<?> newProduct(@RequestBody ProductRequest productRequest){
+        return productService.createProduct(productRequest);
+    }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+        return productService.updateProduct(id, productRequest);
+    }
 
 }

@@ -3,6 +3,8 @@ import esdi.Services.dtos.CategoryDTO;
 import esdi.Services.mappers.CategoryMapper;
 import esdi.Services.models.products.Category;
 import esdi.Services.repositories.CategoryRepository;
+import esdi.Services.repositories.ProductRepository;
+import esdi.Services.repositories.ServiceRepository;
 import esdi.Services.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -20,6 +23,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
+    ServiceRepository serviceRepository;
 
     @Override
     public Category saveCategory(Category category) {
@@ -98,7 +107,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<?> deleteCategory(Long id) {
-        return null;
+
+        Category category = categoryRepository.findById(id).orElse(null);
+
+//        if (productRepository.findByCategory(category).size() > 0 || serviceRepository.findByCategory(category).size() > 0)
+//            return new ResponseEntity<>("Categoria asignada a un producto o servicio",HttpStatus.BAD_REQUEST);
+
+        if (category == null)
+            return new ResponseEntity<>("No existe categoria",HttpStatus.BAD_REQUEST);
+
+
+        categoryRepository.delete(category);
+        return new ResponseEntity<>("Eliminado exitosamente",HttpStatus.OK);
     }
 
 }

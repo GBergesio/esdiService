@@ -2,11 +2,16 @@ package esdi.Services;
 
 import esdi.Services.enums.*;
 import esdi.Services.models.*;
+import esdi.Services.models.devices.DeviceCategory;
+import esdi.Services.models.devices.DeviceModel;
 import esdi.Services.models.products.*;
+import esdi.Services.models.users.Neighborhood;
 import esdi.Services.models.users.Staff;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Technician;
 import esdi.Services.repositories.*;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import java.time.LocalDateTime;
 
 @SpringBootApplication
+@OpenAPIDefinition(info = @Info(title = "System service API Doc", version = "0.0", description = "System service API documentation"))
 public class SystemServiceApplication {
 
     public static void main(String[] args) {
@@ -24,16 +30,22 @@ public class SystemServiceApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(ClientRepository clientRepository, StaffRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository, CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository, ServiceRepository serviceRepository) {
+    public CommandLineRunner initData(ClientRepository clientRepository,StaffRepository adminRepository,TechnicianRepository technicianRepository,
+                                      OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository,
+                                      CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository,
+                                      ServiceRepository serviceRepository, DeviceModelRepository deviceModelRepository, DeviceCategoryRepository deviceCategoryRepository,NeighborhoodRepository neighborhoodRepository) {
         return (args) -> {
 
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
             adminRepository.save(admin);
 
-            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", Neighborhood.NORTE, "", "3547654824", "bergesiog1@gmail.com", "39323158", "cliente123", UserType.CLIENT);
+            Neighborhood neighborhood1 = new Neighborhood();
+            neighborhood1.setName("Norte");
+            neighborhoodRepository.save(neighborhood1);
+            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", neighborhood1, "", "3547654824", "bergesiog1@gmail.com", "39323158", "cliente123", UserType.CLIENT);
             clientRepository.save(client);
 
-            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", Neighborhood.NORTE, "", "3814052408", "santiago.aragon.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
+            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", neighborhood1, "", "3814052408", "santiago.aragon.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
             clientRepository.save(client2);
 
             Technician technician = new Technician("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);
@@ -114,9 +126,34 @@ public class SystemServiceApplication {
 
             serviceRepository.save(service1);
 
+            // DEVICES //
 
+            //DEVICES MODELS//
 
+            DeviceModel deviceModel1 = new DeviceModel();
+            deviceModel1.setModel("X541HJ");
 
+            DeviceModel deviceModel2 = new DeviceModel();
+            deviceModel2.setModel("TUF GAMING 22X");
+
+            DeviceModel deviceModel3 = new DeviceModel();
+            deviceModel3.setModel("dy2061la");
+
+            deviceModelRepository.save(deviceModel1);
+            deviceModelRepository.save(deviceModel2);
+            deviceModelRepository.save(deviceModel3);
+
+            //DEVICES CATEGORIES//
+
+            DeviceCategory deviceCategory1 = new DeviceCategory("PC de escritorio");
+            DeviceCategory deviceCategory2 = new DeviceCategory("Notebook");
+            DeviceCategory deviceCategory3 = new DeviceCategory("Netbook");
+            DeviceCategory deviceCategory4 = new DeviceCategory("Impresora multifuncion");
+
+            deviceCategoryRepository.save(deviceCategory1);
+            deviceCategoryRepository.save(deviceCategory2);
+            deviceCategoryRepository.save(deviceCategory3);
+            deviceCategoryRepository.save(deviceCategory4);
         };
     }
 

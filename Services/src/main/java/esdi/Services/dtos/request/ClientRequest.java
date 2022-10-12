@@ -1,29 +1,23 @@
-package esdi.Services.dtos;
+package esdi.Services.dtos.request;
 
-import esdi.Services.models.users.Neighborhood;
 import esdi.Services.enums.UserType;
-import esdi.Services.models.users.Client;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-public class ClientDTO {
-    private long id;
+public class ClientRequest {
     private String dni;
     private String firstName;
     private String lastName;
     private String address;
-    private NeighborhoodDTO neighborhood;
+    private Long neighborhoodId;
     private String phone;
     private String cellphone;
     private String email;
     private String user;
     private String password;
     private UserType userType;
-
-
 }
