@@ -8,6 +8,8 @@ import esdi.Services.models.users.Staff;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Technician;
 import esdi.Services.repositories.*;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import java.time.LocalDateTime;
 
 @SpringBootApplication
+@OpenAPIDefinition(info = @Info(title = "System service API Doc", version = "0.0", description = "System service API documentation"))
 public class SystemServiceApplication {
 
     public static void main(String[] args) {
@@ -25,16 +28,19 @@ public class SystemServiceApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(ClientRepository clientRepository, StaffRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository, CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository, ServiceRepository serviceRepository) {
+    public CommandLineRunner initData(ClientRepository clientRepository, StaffRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository, CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository, ServiceRepository serviceRepository, NeighborhoodRepository neighborhoodRepository) {
         return (args) -> {
 
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
             adminRepository.save(admin);
 
-            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", Neighborhood.NORTE, "", "3547654824", "bergesiog1@gmail.com", "39323158", "cliente123", UserType.CLIENT);
+            Neighborhood neighborhood1 = new Neighborhood();
+            neighborhood1.setName("Norte");
+            neighborhoodRepository.save(neighborhood1);
+            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", neighborhood1, "", "3547654824", "bergesiog1@gmail.com", "39323158", "cliente123", UserType.CLIENT);
             clientRepository.save(client);
 
-            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", Neighborhood.NORTE, "", "3814052408", "santiago.aragon.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
+            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", neighborhood1, "", "3814052408", "santiago.aragon.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
             clientRepository.save(client2);
 
             Technician technician = new Technician("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);

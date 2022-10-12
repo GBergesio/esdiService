@@ -25,6 +25,7 @@ public class Client {
     private String firstName;
     private String lastName;
     private String address;
+    @ManyToOne(fetch = FetchType.LAZY)
     private Neighborhood neighborhood;
     private String phone;
     private String cellphone;

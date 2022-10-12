@@ -4,6 +4,7 @@ import esdi.Services.dtos.OrderDTO;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.Order;
 import esdi.Services.models.users.Technician;
+import esdi.Services.repositories.ClientRepository;
 import esdi.Services.services.ClientService;
 import esdi.Services.services.OrderService;
 import esdi.Services.services.TechnicianService;
@@ -27,6 +28,8 @@ public class OrderController {
     ClientService clientService;
 
     @Autowired
+    ClientRepository clientRepository;
+    @Autowired
     TechnicianService technicianService;
 
     @GetMapping("/orders/")
@@ -38,7 +41,7 @@ public class OrderController {
     @PostMapping("/orders")
     ResponseEntity<Object> newOrder(@RequestBody OrderDTO orderDTO, @RequestParam String dni){
 
-        Client client = clientService.getUserByDNI(dni);
+        Client client = clientRepository.findByDni(dni);
 
         if (orderDTO.getOrderType().equals(null)){
             return new ResponseEntity<>("Tipo de orden requerido",HttpStatus.BAD_REQUEST);
@@ -60,7 +63,7 @@ public class OrderController {
 
         client.addOrder(order);
 
-        clientService.saveChanges(client);
+        clientRepository.save(client);
 
         orderService.saveOrder(order);
 
