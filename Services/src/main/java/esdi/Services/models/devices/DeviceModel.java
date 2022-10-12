@@ -1,23 +1,24 @@
-package esdi.Services.models.products;
-import lombok.*;
+package esdi.Services.models.devices;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name = "iva")
+@Table(name = "deviceModel")
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Iva {
+public class DeviceModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    private double iva;
+    private String model;
 
-    public Iva(double iva) {
-        this.iva = iva;
+    public DeviceModel(String model) {
+        this.model = model;
     }
 }

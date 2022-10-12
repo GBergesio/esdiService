@@ -16,7 +16,7 @@ public interface CategoryService {
 
         ResponseEntity<?> allCategories();
 
-        ResponseEntity<?> findById(@PathVariable Long id);
+        ResponseEntity<?> findById(Long id);
 
         ResponseEntity<?> createCategory(CategoryDTO categoryDTO);
 

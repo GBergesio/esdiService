@@ -20,19 +20,6 @@ public final class UserUtils {
     }
 
 
-
-//    @NotNull
-//    public static int generateNro(){
-//
-//        int k,num, suma=0;
-//
-//        for (k=13000;k>=0;k++){
-//            return k;
-//        }
-//
-//        return k;
-//    }
-
     private static List<Integer> ordenercreadas = new ArrayList<>();
 
     public static int newOrder(){

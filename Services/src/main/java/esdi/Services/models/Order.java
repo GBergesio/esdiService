@@ -54,20 +54,7 @@ public class Order {
         this.client = client;
     }
 
-
     public void setTechnician(Technician technician){
         this.technician = technician;
     }
-
-
 }
-
-
-//public Object process() throws Exception {
-//    Object result = doSomething();
-//    if (result == null) {
-//        throw new Exception("Processing fail. Got a null response");
-//    } else {
-//        return result;
-//    }
-//}
