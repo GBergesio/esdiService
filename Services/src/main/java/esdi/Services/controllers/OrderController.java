@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/orders")
 public class OrderController {
 
     @Autowired
@@ -29,13 +29,13 @@ public class OrderController {
     @Autowired
     TechnicianService technicianService;
 
-    @GetMapping("/orders/")
+    @GetMapping("")
     ResponseEntity<?> getAllOrders(){
         return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
         }
 
     @Transactional
-    @PostMapping("/orders")
+    @PostMapping("")
     ResponseEntity<Object> newOrder(@RequestBody OrderDTO orderDTO, @RequestParam String dni){
 
         Client client = clientService.getUserByDNI(dni);
@@ -68,7 +68,7 @@ public class OrderController {
     }
 
     @Transactional
-    @PatchMapping("/orders/modify")
+    @PatchMapping("/modify")
     ResponseEntity<Object> newOrder(@RequestParam String orderNumber,@RequestParam(required = false) String technicianName){
 
         if (orderNumber.isEmpty()){

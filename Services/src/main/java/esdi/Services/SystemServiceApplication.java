@@ -2,6 +2,8 @@ package esdi.Services;
 
 import esdi.Services.enums.*;
 import esdi.Services.models.*;
+import esdi.Services.models.devices.DeviceCategory;
+import esdi.Services.models.devices.DeviceModel;
 import esdi.Services.models.products.*;
 import esdi.Services.models.users.Staff;
 import esdi.Services.models.users.Client;
@@ -24,7 +26,10 @@ public class SystemServiceApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(ClientRepository clientRepository, StaffRepository adminRepository, TechnicianRepository technicianRepository, OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository, CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository, ServiceRepository serviceRepository) {
+    public CommandLineRunner initData(ClientRepository clientRepository,StaffRepository adminRepository,TechnicianRepository technicianRepository,
+                                      OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository,
+                                      CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository,
+                                      ServiceRepository serviceRepository, DeviceModelRepository deviceModelRepository, DeviceCategoryRepository deviceCategoryRepository) {
         return (args) -> {
 
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
@@ -114,10 +119,36 @@ public class SystemServiceApplication {
 
             serviceRepository.save(service1);
 
+            // DEVICES //
 
+            //DEVICES MODELS//
 
+            DeviceModel deviceModel1 = new DeviceModel();
+            deviceModel1.setModel("X541HJ");
 
+            DeviceModel deviceModel2 = new DeviceModel();
+            deviceModel2.setModel("TUF GAMING 22X");
+
+            DeviceModel deviceModel3 = new DeviceModel();
+            deviceModel3.setModel("dy2061la");
+
+            deviceModelRepository.save(deviceModel1);
+            deviceModelRepository.save(deviceModel2);
+            deviceModelRepository.save(deviceModel3);
+
+            //DEVICES CATEGORIES//
+
+            DeviceCategory deviceCategory1 = new DeviceCategory("PC de escritorio");
+            DeviceCategory deviceCategory2 = new DeviceCategory("Notebook");
+            DeviceCategory deviceCategory3 = new DeviceCategory("Netbook");
+            DeviceCategory deviceCategory4 = new DeviceCategory("Impresora multifuncion");
+
+            deviceCategoryRepository.save(deviceCategory1);
+            deviceCategoryRepository.save(deviceCategory2);
+            deviceCategoryRepository.save(deviceCategory3);
+            deviceCategoryRepository.save(deviceCategory4);
         };
+
     }
 
 }

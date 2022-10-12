@@ -16,28 +16,22 @@ public class ClientController {
     @Autowired
     ClientService clientService;
 
-//  TODOS LOS CLIENTES
-    @GetMapping("/clients/")
-    ResponseEntity<?> getAllUsers(){
-        return new ResponseEntity<>(clientService.getAllClients(), HttpStatus.OK);
-    }
-
 //  TODOS LOS CLIENTES DTO
-    @GetMapping("/clientsDTO/")
+    @GetMapping("")
     ResponseEntity<?> getUsers(){
         return new ResponseEntity<>(clientService.getClientsDTO(), HttpStatus.OK);
     }
 
 //  CLIENTE POR ID
     //agregar otro responseEntity para cuando no haya usuario con ese id
-    @GetMapping("/clients/{id}")
+    @GetMapping("/{id}")
     ResponseEntity<?> getUserDTO(@PathVariable Long id){
         return new ResponseEntity<>(clientService.getUserDTO(id), HttpStatus.OK);
     }
 
 //  CLIENTE POR DNI
 //agregar otro responseEntity para cuando no haya usuario con ese dni
-    @GetMapping("/clients/dni/{dni}")
+    @GetMapping("/dni/{dni}")
     public ResponseEntity<?> getUserByDni(@PathVariable String dni) {
 
         Client client = clientService.getUserByDNI(dni);
@@ -50,7 +44,7 @@ public class ClientController {
     }
 
     @Transactional
-    @PostMapping("/clients")
+    @PostMapping("")
     public ResponseEntity<Object> newClient(@RequestBody ClientDTO clientDTO){
 
 //        if(clientDTO.getEmail().isEmpty()){
@@ -84,7 +78,7 @@ public class ClientController {
     }
 
     @Transactional
-    @PatchMapping("/clients/modify")
+    @PatchMapping("/modify")
     public ResponseEntity<?> editClient(
             @RequestParam String dni,
             @RequestParam(required = false) String firstName
