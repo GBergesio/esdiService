@@ -2,9 +2,12 @@ package esdi.Services.models;
 import esdi.Services.enums.OrderType;
 import esdi.Services.enums.Priority;
 import esdi.Services.enums.Status;
+import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Technician;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,6 +18,8 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
@@ -37,7 +42,11 @@ public class Order {
     @JoinColumn(name="technician_id")
     private Technician technician;
 
-    public Order() {}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="device_id")
+    private Device device;
+
+//    public Order() {}
 
     public Order(int orderNumber, Status status, Priority priority, OrderType orderType, LocalDateTime joinDate, LocalDateTime outDate, String comments){
         this.orderNumber = orderNumber;
@@ -47,7 +56,6 @@ public class Order {
         this.joinDate = joinDate;
         this.outDate = outDate;
         this.comments = comments;
-//        this.technician = technician;
     }
 
     public void setClient(Client client) {
@@ -57,4 +65,6 @@ public class Order {
     public void setTechnician(Technician technician){
         this.technician = technician;
     }
+
+    public void setDevice(Device device){ this.device = device;}
 }

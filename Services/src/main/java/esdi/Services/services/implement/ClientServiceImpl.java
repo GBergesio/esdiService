@@ -30,8 +30,14 @@ public class ClientServiceImpl implements ClientService {
     NeighborhoodRepository neighborhoodRepository;
 
     @Override
-    public ResponseEntity<?> getAllClients() {
-        return new ResponseEntity<>(clientMapper.toDTO(clientRepository.findAll()), HttpStatus.OK);
+    public List<ClientDTO> findAllDTO(){
+        List<Client> allClients = clientRepository.findAll();
+        return clientMapper.toDTO(allClients);
+    }
+
+    @Override
+    public ResponseEntity<?> allClients() {
+        return new ResponseEntity<>(findAllDTO(), HttpStatus.OK);
     }
 
     @Override

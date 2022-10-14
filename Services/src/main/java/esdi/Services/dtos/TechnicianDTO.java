@@ -11,10 +11,6 @@ public class TechnicianDTO {
     private String dni;
     private String firstName;
     private String lastName;
-//    private String address;
-//    private Neighborhood neighborhood;
-//    private String phone;
-//    private String cellphone;
     private String email;
     private String user;
     private String password;

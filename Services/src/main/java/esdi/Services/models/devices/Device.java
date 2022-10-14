@@ -1,5 +1,6 @@
 package esdi.Services.models.devices;
 
+import esdi.Services.models.Order;
 import esdi.Services.models.products.Brand;
 import esdi.Services.models.users.Client;
 import lombok.AllArgsConstructor;
@@ -21,10 +22,16 @@ public class Device {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
+    private String serial;
+    private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="client_id")
     private Client client;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="device_id")
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private DeviceCategory category;
@@ -35,16 +42,13 @@ public class Device {
     @ManyToOne(fetch = FetchType.LAZY)
     private DeviceModel model;
 
-    private String serial;
-
-    private String description;
-
-    public Device(Client client, DeviceCategory category, Brand brand, DeviceModel model, String serial, String description) {
-        this.client = client;
+    public Device(String serial, String description, DeviceCategory category, Brand brand, DeviceModel model) {
+        this.serial = serial;
+        this.description = description;
         this.category = category;
         this.brand = brand;
         this.model = model;
-        this.serial = serial;
-        this.description = description;
     }
+
+
 }

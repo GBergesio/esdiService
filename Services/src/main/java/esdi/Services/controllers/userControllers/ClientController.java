@@ -20,7 +20,7 @@ public class ClientController {
     //  TODOS LOS CLIENTES
     @GetMapping()
     ResponseEntity<?> getAllUsers() {
-        return clientService.getAllClients();
+        return clientService.allClients();
     }
 
     @GetMapping("/id/{id}")

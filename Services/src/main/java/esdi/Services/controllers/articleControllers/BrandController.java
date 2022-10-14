@@ -19,6 +19,4 @@ public class BrandController {
         return new ResponseEntity<>(brandService.findAllDTO(), HttpStatus.OK);
     }
 
-
-
 }

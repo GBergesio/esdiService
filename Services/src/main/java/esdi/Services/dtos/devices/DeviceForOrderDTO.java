@@ -1,18 +1,14 @@
 package esdi.Services.dtos.devices;
 
 import esdi.Services.dtos.BrandDTO;
-import esdi.Services.dtos.ClientDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Setter
 @Getter
 @NoArgsConstructor
-public class DeviceDTO {
+public class DeviceForOrderDTO {
 
     private long id;
     private DeviceCategoryDTO category;
@@ -20,6 +16,5 @@ public class DeviceDTO {
     private DeviceModelDTO model;
     private String description;
     private String serial;
-    private ClientDTO client;
 
 }

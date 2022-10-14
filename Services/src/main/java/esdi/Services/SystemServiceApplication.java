@@ -2,6 +2,7 @@ package esdi.Services;
 
 import esdi.Services.enums.*;
 import esdi.Services.models.*;
+import esdi.Services.models.devices.Device;
 import esdi.Services.models.devices.DeviceCategory;
 import esdi.Services.models.devices.DeviceModel;
 import esdi.Services.models.products.*;
@@ -33,7 +34,8 @@ public class SystemServiceApplication {
     public CommandLineRunner initData(ClientRepository clientRepository,StaffRepository adminRepository,TechnicianRepository technicianRepository,
                                       OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository,
                                       CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository,
-                                      ServiceRepository serviceRepository, DeviceModelRepository deviceModelRepository, DeviceCategoryRepository deviceCategoryRepository,NeighborhoodRepository neighborhoodRepository) {
+                                      ServiceRepository serviceRepository, DeviceModelRepository deviceModelRepository, DeviceCategoryRepository deviceCategoryRepository,
+                                      DeviceRepository deviceRepository,NeighborhoodRepository neighborhoodRepository) {
         return (args) -> {
 
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
@@ -51,16 +53,83 @@ public class SystemServiceApplication {
             Technician technician = new Technician("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);
             technicianRepository.save(technician);
 
+            // MARCAS //
+
+            Brand brand1 = new Brand("AMD");
+            brandRepository.save(brand1);
+
+            // DEVICES //
+
+            //DEVICES MODELS//
+
+            DeviceModel deviceModel1 = new DeviceModel();
+            deviceModel1.setModel("X541HJ");
+
+            DeviceModel deviceModel2 = new DeviceModel();
+            deviceModel2.setModel("TUF GAMING 22X");
+
+            DeviceModel deviceModel3 = new DeviceModel();
+            deviceModel3.setModel("dy2061la");
+
+            deviceModelRepository.save(deviceModel1);
+            deviceModelRepository.save(deviceModel2);
+            deviceModelRepository.save(deviceModel3);
+
+            //DEVICES CATEGORIES//
+
+            DeviceCategory deviceCategory1 = new DeviceCategory("PC de escritorio");
+            DeviceCategory deviceCategory2 = new DeviceCategory("Notebook");
+            DeviceCategory deviceCategory3 = new DeviceCategory("Netbook");
+            DeviceCategory deviceCategory4 = new DeviceCategory("Impresora multifuncion");
+
+            deviceCategoryRepository.save(deviceCategory1);
+            deviceCategoryRepository.save(deviceCategory2);
+            deviceCategoryRepository.save(deviceCategory3);
+            deviceCategoryRepository.save(deviceCategory4);
+
+            //DEVICES//
+            Device device1 = new Device();
+            device1.setBrand(brand1);
+            device1.setCategory(deviceCategory2);
+            device1.setDescription("Notebook Gamer");
+            device1.setModel(deviceModel1);
+            device1.setClient(client);
+            device1.setSerial("123124DGASDGA");
+
+            deviceRepository.save(device1);
+
+            Device device2 = new Device();
+            device2.setBrand(brand1);
+            device2.setCategory(deviceCategory1);
+            device2.setDescription("PC Gamer");
+            device2.setModel(deviceModel2);
+            device2.setClient(client2);
+            device2.setSerial("blablalba");
+
+            deviceRepository.save(device2);
+
+            Device device3 = new Device();
+            device3.setBrand(brand1);
+            device3.setCategory(deviceCategory1);
+            device3.setDescription("PC Gamer 2");
+            device3.setModel(deviceModel2);
+            device3.setClient(client);
+            device3.setSerial("jujuju");
+
+            deviceRepository.save(device3);
+
 
             // ORDENES DE TRABAJO //
 
             Order order1 = new Order(4500, Status.ON_HOLD, Priority.NORMAL, OrderType.NORMAL, LocalDateTime.now(), null, "AAA");
             order1.setClient(client);
-//			order1.setTechnician(technician);
+            order1.setDevice(device1);
+			order1.setTechnician(technician);
             orderRepository.save(order1);
 
             Order order2 = new Order(4501, Status.ON_HOLD, Priority.NORMAL, OrderType.NORMAL, LocalDateTime.now(), null, "AAA");
             order2.setClient(client2);
+            order2.setDevice(device2);
 //			order2.setTechnician(technician);
             orderRepository.save(order2);
 
@@ -93,10 +162,6 @@ public class SystemServiceApplication {
             Dolar dolar1 = new Dolar(145,LocalDateTime.now());
             dolarRepository.save(dolar1);
 
-            // MARCAS //
-
-            Brand brand1 = new Brand("AMD");
-            brandRepository.save(brand1);
 
             // PRODUCTO ARTICULO //
 
@@ -126,34 +191,7 @@ public class SystemServiceApplication {
 
             serviceRepository.save(service1);
 
-            // DEVICES //
 
-            //DEVICES MODELS//
-
-            DeviceModel deviceModel1 = new DeviceModel();
-            deviceModel1.setModel("X541HJ");
-
-            DeviceModel deviceModel2 = new DeviceModel();
-            deviceModel2.setModel("TUF GAMING 22X");
-
-            DeviceModel deviceModel3 = new DeviceModel();
-            deviceModel3.setModel("dy2061la");
-
-            deviceModelRepository.save(deviceModel1);
-            deviceModelRepository.save(deviceModel2);
-            deviceModelRepository.save(deviceModel3);
-
-            //DEVICES CATEGORIES//
-
-            DeviceCategory deviceCategory1 = new DeviceCategory("PC de escritorio");
-            DeviceCategory deviceCategory2 = new DeviceCategory("Notebook");
-            DeviceCategory deviceCategory3 = new DeviceCategory("Netbook");
-            DeviceCategory deviceCategory4 = new DeviceCategory("Impresora multifuncion");
-
-            deviceCategoryRepository.save(deviceCategory1);
-            deviceCategoryRepository.save(deviceCategory2);
-            deviceCategoryRepository.save(deviceCategory3);
-            deviceCategoryRepository.save(deviceCategory4);
         };
     }
 

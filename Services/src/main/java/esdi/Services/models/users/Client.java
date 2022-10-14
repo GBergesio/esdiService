@@ -2,8 +2,8 @@ package esdi.Services.models.users;
 
 import esdi.Services.enums.UserType;
 import esdi.Services.models.Order;
-import lombok.Getter;
-import lombok.Setter;
+import esdi.Services.models.devices.Device;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,8 +12,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Client {
 
     @Id
@@ -37,9 +38,13 @@ public class Client {
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private Set<Order> orders = new HashSet<>();
 
-    public Client(){}
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<Device> devices = new HashSet<>();
 
-    public Client(String dni, String firstName, String lastName, String address, Neighborhood neighborhood, String phone, String cellphone, String email, String user, String password, UserType userType) {
+//    public Client(){}
+
+    public Client(String dni, String firstName, String lastName, String address, Neighborhood neighborhood, String phone,
+                  String cellphone, String email, String user, String password, UserType userType) {
         this.dni = dni;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -57,10 +62,18 @@ public class Client {
         order.setClient(this);
         orders.add(order);
     }
-
+//
+    public void addDevice(Device device){
+        device.setClient(this);
+        devices.add(device);
+    }
 }
 
-//    public void addPurchase (Purchase purchase){
-//        purchase.setClient(this);
-//        purchases.add(purchase);
+//    public Device(String serial, String description, Client client, DeviceCategory category, Brand brand, DeviceModel model) {
+//        this.serial = serial;
+//        this.description = description;
+//        this.client = client;
+//        this.category = category;
+//        this.brand = brand;
+//        this.model = model;
 //    }
