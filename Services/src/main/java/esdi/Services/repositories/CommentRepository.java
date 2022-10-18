@@ -1,12 +1,9 @@
 package esdi.Services.repositories;
 
-import esdi.Services.models.products.Brand;
+import esdi.Services.models.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface BrandRepository extends JpaRepository<Brand,Long> {
-
-    Brand findByNameBrand(String name);
+public interface CommentRepository extends JpaRepository<Comment,Long> {
 }
-

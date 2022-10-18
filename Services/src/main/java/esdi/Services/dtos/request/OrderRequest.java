@@ -20,6 +20,7 @@ public class OrderRequest {
     private OrderType orderType;
     private LocalDateTime joinDate;
     private LocalDateTime outDate;
-    private String comments;
+    private String orderDetails;
+    private String passwordDevice;
 
 }

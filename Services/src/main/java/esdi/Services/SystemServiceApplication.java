@@ -9,7 +9,6 @@ import esdi.Services.models.products.*;
 import esdi.Services.models.users.Neighborhood;
 import esdi.Services.models.users.Staff;
 import esdi.Services.models.users.Client;
-import esdi.Services.models.users.Technician;
 import esdi.Services.repositories.*;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -31,15 +30,15 @@ public class SystemServiceApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(ClientRepository clientRepository,StaffRepository adminRepository,TechnicianRepository technicianRepository,
+    public CommandLineRunner initData(ClientRepository clientRepository,StaffRepository staffRepository,
                                       OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository,
                                       CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository,
                                       ServiceRepository serviceRepository, DeviceModelRepository deviceModelRepository, DeviceCategoryRepository deviceCategoryRepository,
-                                      DeviceRepository deviceRepository,NeighborhoodRepository neighborhoodRepository) {
+                                      DeviceRepository deviceRepository,NeighborhoodRepository neighborhoodRepository, CommentRepository commentRepository) {
         return (args) -> {
 
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
-            adminRepository.save(admin);
+            staffRepository.save(admin);
 
             Neighborhood neighborhood1 = new Neighborhood();
             neighborhood1.setName("Norte");
@@ -50,8 +49,8 @@ public class SystemServiceApplication {
             Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", neighborhood1, "", "3814052408", "santiago.aragon.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
             clientRepository.save(client2);
 
-            Technician technician = new Technician("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);
-            technicianRepository.save(technician);
+            Staff technician = new Staff("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);
+            staffRepository.save(technician);
 
             // MARCAS //
 
@@ -121,22 +120,73 @@ public class SystemServiceApplication {
 
             // ORDENES DE TRABAJO //
 
-            Order order1 = new Order(4500, Status.ON_HOLD, Priority.NORMAL, OrderType.NORMAL, LocalDateTime.now(), null, "AAA");
+            Order order1 = new Order();
+            order1.setOrderNumber(12998);
+            order1.setStatus(Status.ON_HOLD);
+            order1.setOrderType(OrderType.NORMAL);
+            order1.setPriority(Priority.MEDIUM);
+            order1.setJoinDate(LocalDateTime.now());
+            order1.setOutDate(null);
+            order1.setPasswordDevice("passwordcito");
             order1.setClient(client);
             order1.setDevice(device1);
-			order1.setTechnician(technician);
+            order1.setOrderDetails("Agregar SSD");
+            order1.setStaff(technician);
+            technician.addOrder(order1);
             orderRepository.save(order1);
 
-            Order order2 = new Order(4501, Status.ON_HOLD, Priority.NORMAL, OrderType.NORMAL, LocalDateTime.now(), null, "AAA");
+            Order order2 = new Order();
+            order2.setOrderNumber(12999);
+            order2.setStatus(Status.ON_HOLD);
+            order2.setOrderType(OrderType.NORMAL);
+            order2.setPriority(Priority.HIGH);
+            order2.setJoinDate(LocalDateTime.now());
+            order2.setOutDate(null);
+            order2.setPasswordDevice("passwordcito");
+            order2.setOrderDetails("Lenta, limpiar");
             order2.setClient(client2);
             order2.setDevice(device2);
-//			order2.setTechnician(technician);
+			order2.setStaff(null);
             orderRepository.save(order2);
 
 
             clientRepository.save(client);
             clientRepository.save(client2);
-//			technicianRepository.save(technician);
+			staffRepository.save(technician);
+
+            // COMMENTS //
+
+            Comment comment1 = new Comment();
+            comment1.setComment("Comentario 1");
+            comment1.setOrder(order1);
+            comment1.setActiveUser(technician.getLastName());
+            comment1.setIdUser(technician.getId());
+            comment1.setDate(LocalDateTime.now());
+            comment1.setEdited(false);
+            comment1.setDeleted(false);
+            commentRepository.save(comment1);
+
+            Comment comment2 = new Comment();
+            comment2.setComment("Comentario 2");
+            comment2.setOrder(order1);
+            comment2.setActiveUser(technician.getLastName());
+            comment2.setIdUser(technician.getId());
+            comment2.setDate(LocalDateTime.now());
+            comment2.setEdited(true);
+            comment2.setDeleted(false);
+            commentRepository.save(comment2);
+
+            Comment comment3 = new Comment();
+            comment3.setComment("Comentario 3");
+            comment3.setOrder(order2);
+            comment3.setActiveUser(technician.getLastName());
+            comment3.setIdUser(technician.getId());
+            comment3.setDate(LocalDateTime.now());
+            comment3.setEdited(true);
+            comment3.setDeleted(true);
+            commentRepository.save(comment3);
+
+
 
             // IVA //
 

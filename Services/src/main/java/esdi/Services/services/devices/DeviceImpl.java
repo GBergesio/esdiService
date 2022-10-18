@@ -1,4 +1,4 @@
-package esdi.Services.services.implement.devices;
+package esdi.Services.services.devices;
 import esdi.Services.dtos.devices.DeviceDTO;
 import esdi.Services.dtos.request.DeviceRequest;
 import esdi.Services.mappers.DeviceMapper;

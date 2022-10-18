@@ -3,10 +3,14 @@ package esdi.Services.services.implement;
 import esdi.Services.dtos.ClientDTO;
 import esdi.Services.dtos.request.ClientRequest;
 import esdi.Services.mappers.ClientMapper;
+import esdi.Services.models.Order;
+import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Neighborhood;
 import esdi.Services.repositories.ClientRepository;
+import esdi.Services.repositories.DeviceRepository;
 import esdi.Services.repositories.NeighborhoodRepository;
+import esdi.Services.repositories.OrderRepository;
 import esdi.Services.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,14 +20,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static esdi.Services.enums.UserType.CLIENT;
-import static esdi.Services.utils.UserUtils.generatePassword;
 
 
 @Service
 public class ClientServiceImpl implements ClientService {
     @Autowired
     ClientRepository clientRepository;
+    @Autowired
+    DeviceRepository deviceRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
+
     @Autowired
     ClientMapper clientMapper;
     @Autowired
@@ -99,7 +107,7 @@ public class ClientServiceImpl implements ClientService {
         newClient.setEmail(clientRequest.getEmail().toLowerCase());
         newClient.setUser(clientRequest.getUser());
         newClient.setPassword(clientRequest.getPassword());
-        newClient.setPassword(clientRequest.getUserType().toString());
+        newClient.setUserType(clientRequest.getUserType());
 
         clientRepository.save(newClient);
         return new ResponseEntity<>(clientMapper.toDTO(newClient), HttpStatus.CREATED);
@@ -116,10 +124,22 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ResponseEntity<?> deleteStaff(Long id) {
+    public ResponseEntity<?> deleteClient(Long id) {
         Client clientDB = clientRepository.findById(id).orElse(null);
+
+        List<Device> allDevices = deviceRepository.findAll().stream().filter(device -> device.getClient().getId() == id).collect(Collectors.toList());
+        List<Order> allOrders = orderRepository.findAll().stream().filter(order -> order.getClient().getId() == id).collect(Collectors.toList());
+
         if (clientDB == null)
             return new ResponseEntity<>("Cliente no encontrado", HttpStatus.BAD_REQUEST);
+
+        if(allOrders.size() >= 1)
+            return new ResponseEntity<>("El cliente no puede eliminarse ya que posee ordenes a su nombre", HttpStatus.BAD_REQUEST);
+
+        if(allDevices.size() >= 1)
+            return new ResponseEntity<>("El cliente no puede eliminarse ya que posee dispositivos a su nombre", HttpStatus.BAD_REQUEST);
+
+        clientRepository.delete(clientDB);
 
         return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
     }

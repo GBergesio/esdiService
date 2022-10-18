@@ -19,5 +19,5 @@ public interface ClientService {
 
     ResponseEntity<?> updateClient(Long id, ClientRequest clientRequest);
 
-    ResponseEntity<?> deleteStaff(Long id);
+    ResponseEntity<?> deleteClient(Long id);
 }

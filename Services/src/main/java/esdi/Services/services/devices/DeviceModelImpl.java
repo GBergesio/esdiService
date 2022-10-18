@@ -1,9 +1,11 @@
-package esdi.Services.services.implement.devices;
+package esdi.Services.services.devices;
 
 import esdi.Services.dtos.devices.DeviceModelDTO;
 import esdi.Services.mappers.DeviceModelMapper;
+import esdi.Services.models.devices.Device;
 import esdi.Services.models.devices.DeviceModel;
 import esdi.Services.repositories.DeviceModelRepository;
+import esdi.Services.repositories.DeviceRepository;
 import esdi.Services.services.devices.DeviceModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,12 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DeviceModelImpl implements DeviceModelService {
 
     @Autowired
     DeviceModelRepository deviceModelRepository;
+    @Autowired
+    DeviceRepository deviceRepository;
 
     @Autowired
     DeviceModelMapper deviceModelMapper;
@@ -95,11 +100,15 @@ public class DeviceModelImpl implements DeviceModelService {
 
     @Override
     public ResponseEntity<?> deleteDeviceModel(Long id) {
-
         DeviceModel deviceModel = deviceModelRepository.findById(id).orElse(null);
+        List<Device> allDevices = deviceRepository.findAll().stream().filter(device -> device.getCategory().getId() == id).collect(Collectors.toList());
 
         if(deviceModel == null)
-            return new ResponseEntity<>("No existe modelo",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("No existe el modelo",HttpStatus.BAD_REQUEST);
+
+        if(allDevices.size() >= 1)
+            return new ResponseEntity<>("Modelo asociado a un dispositivo",HttpStatus.BAD_REQUEST);
+
 
         deviceModelRepository.delete(deviceModel);
         return new ResponseEntity<>("Eliminado exitosamente",HttpStatus.OK);

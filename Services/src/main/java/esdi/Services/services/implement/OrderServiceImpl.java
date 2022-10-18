@@ -1,28 +1,24 @@
 package esdi.Services.services.implement;
 
 import esdi.Services.dtos.OrderDTO;
-import esdi.Services.dtos.request.DeviceRequest;
 import esdi.Services.dtos.request.OrderRequest;
+import esdi.Services.enums.Priority;
 import esdi.Services.mappers.OrderMapper;
+import esdi.Services.models.Comment;
 import esdi.Services.models.Order;
 import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
-import esdi.Services.models.users.Technician;
-import esdi.Services.repositories.ClientRepository;
-import esdi.Services.repositories.DeviceRepository;
-import esdi.Services.repositories.OrderRepository;
-import esdi.Services.repositories.TechnicianRepository;
+import esdi.Services.models.users.Staff;
+import esdi.Services.repositories.*;
 import esdi.Services.services.OrderService;
 import esdi.Services.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,8 +31,10 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     DeviceRepository deviceRepository;
     @Autowired
-    TechnicianRepository technicianRepository;
+    CommentRepository commentRepository;
 
+    @Autowired
+    StaffRepository staffRepository;
     @Autowired
     OrderMapper orderMapper;
 
@@ -107,6 +105,7 @@ public class OrderServiceImpl implements OrderService {
         Client client = clientRepository.findByDni(dni);
         Device device = deviceRepository.findById(idDevice).orElse(null);
 
+
         if(client == null){
             return new ResponseEntity<>("Cliente no encontrado / Ingrese un cliente",HttpStatus.BAD_REQUEST);
         }
@@ -127,17 +126,32 @@ public class OrderServiceImpl implements OrderService {
             return new ResponseEntity<>("Tipo de prioridad requerida",HttpStatus.BAD_REQUEST);
         }
 
-        if (orderRequest.getComments().isEmpty()){
+        if (orderRequest.getOrderDetails().isEmpty() || orderRequest.getOrderDetails().isBlank()){
             return new ResponseEntity<>("Ingrese detalle",HttpStatus.BAD_REQUEST);
         }
 
-        Order order = new Order(UserUtils.newOrder(), orderRequest.getStatus() ,orderRequest.getPriority(), orderRequest.getOrderType(), LocalDateTime.now(),null,orderRequest.getComments());
+        if (orderRequest.getPasswordDevice().isEmpty() || orderRequest.getPasswordDevice().isBlank() || orderRequest.getPasswordDevice() == null){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
 
-        client.addOrder(order);
-        order.setDevice(device);
+        Order newOrder = new Order();
+
+        newOrder.setOrderNumber(UserUtils.newOrder());
+        newOrder.setStatus(orderRequest.getStatus());
+        newOrder.setPriority(orderRequest.getPriority());
+        newOrder.setOrderType(orderRequest.getOrderType());
+        newOrder.setJoinDate(LocalDateTime.now());
+        newOrder.setOutDate(null);
+        newOrder.setOrderDetails(orderRequest.getOrderDetails());
+        newOrder.setStaff(null);
+        newOrder.setPasswordDevice(orderRequest.getPasswordDevice());
+
+
+        client.addOrder(newOrder);
+        newOrder.setDevice(device);
 
         clientRepository.save(client);
-        saveOrder(order);
+        saveOrder(newOrder);
 
         return new ResponseEntity<>("Orden creada", HttpStatus.OK);
     }
@@ -148,21 +162,25 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(idOrder).orElse(null);
         Client client = order.getClient();
         Device deviceDB = deviceRepository.findById(idDevice).orElse(null);
-        Technician technician = technicianRepository.findById(idTechnician).orElse(null);
+        Staff technician = staffRepository.findById(idTechnician).orElse(null);
 
         if(order == null)
             return new ResponseEntity<>("Orden no encontrada | Ingrese numero de orden",HttpStatus.BAD_REQUEST);
         if(order != null){
             order.setDevice(deviceDB);
             order.setClient(client);
-            order.setTechnician(technician);
+            order.setStaff(technician);
             order.setOrderNumber(order.getOrderNumber());
             order.setOrderType(orderRequest.getOrderType());
-            order.setComments(orderRequest.getComments());
+            order.setOrderDetails(orderRequest.getOrderDetails());
+            order.setPasswordDevice(orderRequest.getPasswordDevice());
             order.setJoinDate(orderRequest.getJoinDate());
-            order.setOutDate(orderRequest.getOutDate());
             order.setPriority(orderRequest.getPriority());
             order.setStatus(orderRequest.getStatus());
+
+            // solo modificar si tiene presupuesto aprobado y si tiene tecnico asignado ↓
+            order.setOutDate(orderRequest.getOutDate());
+
             orderRepository.save(order);
         }
         return new ResponseEntity<>(orderMapper.toDTO(order), HttpStatus.OK);
@@ -170,13 +188,94 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public ResponseEntity<?> releaseOrder(Long idOrder) {
+        Order order = orderRepository.findById(idOrder).orElse(null);
+        if(order == null)
+            return new ResponseEntity<>("Orden no encontrada | Ingrese numero de orden",HttpStatus.BAD_REQUEST);
+        if(order != null){
+            order.setStaff(null);
+            orderRepository.save(order);
+        }
+        return new ResponseEntity<>(orderMapper.toDTO(order), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> switchPriority(Long idOrder) {
+        Order order = orderRepository.findById(idOrder).orElse(null);
+        Priority priority = order.getPriority();
+
+        if(order == null)
+            return new ResponseEntity<>("Orden no encontrada | Ingrese numero de orden",HttpStatus.BAD_REQUEST);
+        if(order != null){
+            switch (priority){
+                case NORMAL:
+                    order.setPriority(Priority.MEDIUM);
+                    break;
+                case MEDIUM:
+                    order.setPriority(Priority.HIGH);
+                    break;
+                case HIGH:
+                    order.setPriority(Priority.EXPRESS);
+                    break;
+                case EXPRESS:
+                    order.setPriority(Priority.NORMAL);
+                    break;
+            }
+            orderRepository.save(order);
+        }
+        return new ResponseEntity<>(orderMapper.toDTO(order), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> orderFinished(Long idOrder) {
+        Order order = orderRepository.findById(idOrder).orElse(null);
+        if(order == null)
+            return new ResponseEntity<>("Orden no encontrada | Ingrese numero de orden",HttpStatus.BAD_REQUEST);
+        if(order != null){
+            if (order.getStaff() == null){
+                return new ResponseEntity<>("Orden sin técnico asignado, por favor asigne uno para poder cambiar el estado de la orden.",HttpStatus.BAD_REQUEST);
+            }
+//            if (order...presupuesto){
+//                return new ResponseEntity<>("Orden sin presupuesto, por favor cree uno para poder cambiar el estado de la orden.",HttpStatus.BAD_REQUEST);
+//            }
+//            if (order...presupaprobado ){
+//                return new ResponseEntity<>("Orden sin presupuesto aprobado, apruebe el presupuesto para poder cambiar el estado de la orden..",HttpStatus.BAD_REQUEST);
+//            }
+        }
+        order.setOutDate(LocalDateTime.now());
+
+        return new ResponseEntity<>(orderMapper.toDTO(order), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<?> deleteOrder(Long id) {
-        return null;
+
+        Order orderDB = orderRepository.findById(id).orElse(null);
+
+        if(orderDB == null)
+            return new ResponseEntity<>("Orden no encontrada",HttpStatus.BAD_REQUEST);
+
+        if (orderDB.getComments().size() >= 1){
+            return new ResponseEntity<>("No se puede eliminar orden porque posee comentarios",HttpStatus.BAD_REQUEST);
+        }
+
+        orderDB.setClient(null);
+        orderDB.setPriority(null);
+        orderDB.setOrderType(null);
+        orderDB.setStaff(null);
+        orderDB.setStatus(null);
+        orderDB.setDevice(null);
+
+        orderRepository.save(orderDB);
+
+        orderRepository.delete(orderDB);
+        return new ResponseEntity<>("Orden eliminada exitosamente",HttpStatus.OK);
     }
 
 
     @Override
-    public void updateTechnician(Order order, Technician technician) {
-        order.setTechnician(technician);
+    public void updateTechnician(Order order, Staff technician) {
+        order.setStaff(technician);
     }
+
 }

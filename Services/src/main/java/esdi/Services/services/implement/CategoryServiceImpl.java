@@ -2,6 +2,8 @@ package esdi.Services.services.implement;
 import esdi.Services.dtos.CategoryDTO;
 import esdi.Services.mappers.CategoryMapper;
 import esdi.Services.models.products.Category;
+import esdi.Services.models.products.Product;
+import esdi.Services.models.products.ServiceArt;
 import esdi.Services.repositories.CategoryRepository;
 import esdi.Services.repositories.ProductRepository;
 import esdi.Services.repositories.ServiceRepository;
@@ -72,6 +74,9 @@ public class CategoryServiceImpl implements CategoryService {
             if (categoryDTO.getNameCategory().equals(null) || categoryDTO.getNameCategory().isEmpty() || categoryDTO.getNameCategory().isBlank())
                 return new ResponseEntity<>("Ingrese un nombre para la categoria",HttpStatus.BAD_REQUEST);
 
+            if (categoryRepository.findByNameCategory(categoryDTO.getNameCategory()) != null)
+                return new ResponseEntity<>("Nombre de categoria en uso",HttpStatus.BAD_REQUEST);
+
         Category category = new Category();
         category.setNameCategory(categoryDTO.getNameCategory());
 
@@ -110,8 +115,12 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = categoryRepository.findById(id).orElse(null);
 
-//        if (productRepository.findByCategory(category).size() > 0 || serviceRepository.findByCategory(category).size() > 0)
-//            return new ResponseEntity<>("Categoria asignada a un producto o servicio",HttpStatus.BAD_REQUEST);
+        List<Product> products = productRepository.findAll().stream().filter(product -> product.getBrand().getId() == id).collect(Collectors.toList());
+
+        List<ServiceArt> services = serviceRepository.findAll().stream().filter(serviceArt -> serviceArt.getCategory().getId() == id).collect(Collectors.toList());
+
+        if (products.size() >= 1 || services.size() >= 1)
+            return new ResponseEntity<>("No se puede borrar ya que la marca está asignada a un producto o servicio",HttpStatus.BAD_REQUEST);
 
         if (category == null)
             return new ResponseEntity<>("No existe categoria",HttpStatus.BAD_REQUEST);

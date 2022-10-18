@@ -1,14 +1,17 @@
 package esdi.Services.models.users;
 
 import esdi.Services.enums.UserType;
+import esdi.Services.models.Order;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "admins")
+@Table(name = "staff")
 @Getter
 @Setter
 public class Staff {
@@ -28,6 +31,9 @@ public class Staff {
 
     private boolean deleted;
 
+    @OneToMany(mappedBy = "staff", fetch = FetchType.EAGER)
+    private Set<Order> orders = new HashSet<>();
+
 
     public Staff(){}
 
@@ -41,4 +47,10 @@ public class Staff {
         this.userType = userType;
         this.deleted = false;
     }
+
+    public void addOrder(Order order){
+        order.setStaff(this);
+        orders.add(order);
+    }
+
 }

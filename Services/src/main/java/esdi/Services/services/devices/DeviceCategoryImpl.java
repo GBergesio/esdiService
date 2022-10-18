@@ -1,10 +1,12 @@
-package esdi.Services.services.implement.devices;
+package esdi.Services.services.devices;
 
 
 import esdi.Services.dtos.devices.DeviceCategoryDTO;
 import esdi.Services.mappers.DeviceCategoryMapper;
+import esdi.Services.models.devices.Device;
 import esdi.Services.models.devices.DeviceCategory;
 import esdi.Services.repositories.DeviceCategoryRepository;
+import esdi.Services.repositories.DeviceRepository;
 import esdi.Services.services.devices.DeviceCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,12 +15,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DeviceCategoryImpl implements DeviceCategoryService {
 
     @Autowired
     DeviceCategoryRepository deviceCategoryRepository;
+
+    @Autowired
+    DeviceRepository deviceRepository;
 
     @Autowired
     DeviceCategoryMapper deviceCategoryMapper;
@@ -96,9 +102,13 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
     @Override
     public ResponseEntity<?> deleteDeviceCategory(Long id) {
         DeviceCategory deviceCategory = deviceCategoryRepository.findById(id).orElse(null);
+        List<Device> allDevices = deviceRepository.findAll().stream().filter(device -> device.getCategory().getId() == id).collect(Collectors.toList());
 
         if(deviceCategory == null)
-            return new ResponseEntity<>("No existe modelo",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("No existe la ategoria",HttpStatus.BAD_REQUEST);
+
+        if(allDevices.size() >= 1)
+            return new ResponseEntity<>("Categoria asociada a un dispositivo",HttpStatus.BAD_REQUEST);
 
         deviceCategoryRepository.delete(deviceCategory);
         return new ResponseEntity<>("Eliminado exitosamente",HttpStatus.OK);

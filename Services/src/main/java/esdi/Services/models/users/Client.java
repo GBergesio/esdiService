@@ -41,7 +41,6 @@ public class Client {
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private Set<Device> devices = new HashSet<>();
 
-//    public Client(){}
 
     public Client(String dni, String firstName, String lastName, String address, Neighborhood neighborhood, String phone,
                   String cellphone, String email, String user, String password, UserType userType) {
@@ -62,18 +61,9 @@ public class Client {
         order.setClient(this);
         orders.add(order);
     }
-//
+
     public void addDevice(Device device){
         device.setClient(this);
         devices.add(device);
     }
 }
-
-//    public Device(String serial, String description, Client client, DeviceCategory category, Brand brand, DeviceModel model) {
-//        this.serial = serial;
-//        this.description = description;
-//        this.client = client;
-//        this.category = category;
-//        this.brand = brand;
-//        this.model = model;
-//    }

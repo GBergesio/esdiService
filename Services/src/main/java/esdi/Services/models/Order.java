@@ -4,7 +4,7 @@ import esdi.Services.enums.Priority;
 import esdi.Services.enums.Status;
 import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
-import esdi.Services.models.users.Technician;
+import esdi.Services.models.users.Staff;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +13,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -32,39 +34,51 @@ public class Order {
     private OrderType orderType;
     private LocalDateTime joinDate;
     private LocalDateTime outDate;
-    private String comments;
+    private String orderDetails;
+    private String passwordDevice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="client_id")
     private Client client;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="technician_id")
-    private Technician technician;
+    @JoinColumn(name="staff_id")
+    private Staff staff;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="device_id")
     private Device device;
 
-//    public Order() {}
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    private Set<Comment> comments = new HashSet<>();
 
-    public Order(int orderNumber, Status status, Priority priority, OrderType orderType, LocalDateTime joinDate, LocalDateTime outDate, String comments){
-        this.orderNumber = orderNumber;
-        this.status = status;
-        this.priority = priority;
-        this.orderType = orderType;
-        this.joinDate = joinDate;
-        this.outDate = outDate;
-        this.comments = comments;
-    }
+
+//    public Order(int orderNumber, Status status, Priority priority, OrderType orderType, LocalDateTime joinDate, LocalDateTime outDate, String orderDetails, String passwordDevice){
+//        this.orderNumber = orderNumber;
+//        this.status = status;
+//        this.priority = priority;
+//        this.orderType = orderType;
+//        this.joinDate = joinDate;
+//        this.outDate = outDate;
+//        this.orderDetails = orderDetails;
+//        this.passwordDevice = passwordDevice;
+//    }
 
     public void setClient(Client client) {
         this.client = client;
     }
 
-    public void setTechnician(Technician technician){
-        this.technician = technician;
+    public void setStaff(Staff staff){
+        this.staff = staff;
     }
 
     public void setDevice(Device device){ this.device = device;}
+
+    public void addComment(Comment comment){
+        comment.setOrder(this);
+        comments.add(comment);
+    }
+
+
+
 }
