@@ -2,6 +2,7 @@ package esdi.Services.models;
 import esdi.Services.enums.OrderType;
 import esdi.Services.enums.Priority;
 import esdi.Services.enums.Status;
+import esdi.Services.models.budgets.Budget;
 import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Staff;
@@ -52,6 +53,8 @@ public class Order {
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private Set<Comment> comments = new HashSet<>();
 
+    @OneToOne(mappedBy="order")
+    private Budget budget;
 
 //    public Order(int orderNumber, Status status, Priority priority, OrderType orderType, LocalDateTime joinDate, LocalDateTime outDate, String orderDetails, String passwordDevice){
 //        this.orderNumber = orderNumber;
@@ -78,6 +81,7 @@ public class Order {
         comment.setOrder(this);
         comments.add(comment);
     }
+
 
 
 

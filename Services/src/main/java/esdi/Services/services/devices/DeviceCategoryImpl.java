@@ -105,7 +105,7 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
         List<Device> allDevices = deviceRepository.findAll().stream().filter(device -> device.getCategory().getId() == id).collect(Collectors.toList());
 
         if(deviceCategory == null)
-            return new ResponseEntity<>("No existe la ategoria",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("No existe la categoria",HttpStatus.BAD_REQUEST);
 
         if(allDevices.size() >= 1)
             return new ResponseEntity<>("Categoria asociada a un dispositivo",HttpStatus.BAD_REQUEST);
@@ -113,4 +113,5 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
         deviceCategoryRepository.delete(deviceCategory);
         return new ResponseEntity<>("Eliminado exitosamente",HttpStatus.OK);
     }
+
 }

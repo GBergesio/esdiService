@@ -2,6 +2,9 @@ package esdi.Services;
 
 import esdi.Services.enums.*;
 import esdi.Services.models.*;
+import esdi.Services.models.budgets.Budget;
+import esdi.Services.models.budgets.OptionBudget;
+import esdi.Services.models.budgets.OptionComponent;
 import esdi.Services.models.devices.Device;
 import esdi.Services.models.devices.DeviceCategory;
 import esdi.Services.models.devices.DeviceModel;
@@ -18,6 +21,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "System service API Doc", version = "0.0", description = "System service API documentation"))
@@ -34,7 +39,8 @@ public class SystemServiceApplication {
                                       OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository,
                                       CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository,
                                       ServiceRepository serviceRepository, DeviceModelRepository deviceModelRepository, DeviceCategoryRepository deviceCategoryRepository,
-                                      DeviceRepository deviceRepository,NeighborhoodRepository neighborhoodRepository, CommentRepository commentRepository) {
+                                      DeviceRepository deviceRepository,NeighborhoodRepository neighborhoodRepository, CommentRepository commentRepository,
+                                      BudgetRepository budgetRepository, OptionBudgetRepository optionBudgetRepository, OptionComponentRepository optionComponentRepository) {
         return (args) -> {
 
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
@@ -186,8 +192,6 @@ public class SystemServiceApplication {
             comment3.setDeleted(true);
             commentRepository.save(comment3);
 
-
-
             // IVA //
 
             Iva iva10 = new Iva(1.105);
@@ -229,6 +233,21 @@ public class SystemServiceApplication {
 
             productRepository.save(product1);
 
+            Product product2 = new Product();
+            product2.setProductNumber("B450M");
+            product2.setDescription("Placa madre ASUS B450M");
+            product2.setCostPrice(240);
+            product2.setSalePrice(14440);
+            product2.setUtility(1.20);
+            product2.setIva(iva10);
+            product2.setCurrency(Currency.DOLAR);
+            product2.setCategory(category1);
+            product2.setDolar(dolar1.getPrice());
+            product2.setBrand(brand1);
+
+            productRepository.save(product2);
+
+
             // SERVICE ARTICULO //
 
             ServiceArt service1 = new ServiceArt();
@@ -241,6 +260,73 @@ public class SystemServiceApplication {
 
             serviceRepository.save(service1);
 
+            // PRESUPUESTO //
+            Budget budget1 = new Budget();
+            budget1.setBudgetNumber(123);
+            budget1.setOrderNumber(order1.getOrderNumber());
+            budget1.setClient(order1.getClient().getFirstName() + " " + order1.getClient().getLastName());
+            budget1.setStatusBudget(StatusBudget.APPROVED);
+            budget1.setTotal(9455);
+            budget1.setOrder(order1);
+            budgetRepository.save(budget1);
+//
+            Budget budget2 = new Budget();
+            budget2.setBudgetNumber(124);
+            budget2.setOrderNumber(order2.getOrderNumber());
+            budget2.setClient(order2.getClient().getFirstName() + " " + order2.getClient().getLastName());
+            budget2.setStatusBudget(StatusBudget.ON_HOLD);
+            budget2.setTotal(1222);
+            budget2.setOrder(order2);
+            budgetRepository.save(budget2);
+
+//            Budget budget2 = new Budget();
+//            budget2.setBudgetNumber(124);
+//            budget2.setOrderNumber(order2.getOrderNumber());
+//            budget2.setClient(order2.getClient().getFirstName() + " " + order2.getClient().getLastName());
+//            budget2.setStatusBudget(StatusBudget.ON_HOLD);
+//            budget2.setTotal(4999);
+//            budget2.setOrder(order2);
+//
+//            budgetRepository.save(budget2);
+
+            // OPTION BUDGETS //
+            OptionBudget optionBudget1 = new OptionBudget();
+
+            optionBudget1.setBudget(budget1);
+            optionBudget1.setSelected(true);
+            optionBudget1.setDeleted(false);
+            optionBudgetRepository.save(optionBudget1);
+
+            OptionBudget optionBudget2 = new OptionBudget();
+            optionBudget2.setTotal(321);
+            optionBudget2.setBudget(budget1);
+            optionBudget2.setDeleted(false);
+            optionBudgetRepository.save(optionBudget2);
+
+            // OPTION COMPONTENTS //
+            OptionComponent optionComponent1 = new OptionComponent();
+            optionComponent1.setIdPoS(product1.getId());
+            optionComponent1.setTotalPrice(product1.getSalePrice() * 3);
+            optionComponent1.setQuantity(3);
+            optionComponent1.setOptionBudget(optionBudget1);
+            optionComponentRepository.save(optionComponent1);
+
+            OptionComponent optionComponent2 = new OptionComponent();
+            optionComponent2.setIdPoS(product2.getId());
+            optionComponent2.setTotalPrice(product2.getSalePrice() * 2);
+            optionComponent2.setQuantity(2);
+            optionComponent2.setOptionBudget(optionBudget1);
+            optionComponentRepository.save(optionComponent2);
+
+            OptionComponent optionComponent3 = new OptionComponent();
+            optionComponent3.setIdPoS(product2.getId());
+            optionComponent3.setTotalPrice(product2.getSalePrice() * 2);
+            optionComponent3.setQuantity(2);
+            optionComponent3.setOptionBudget(optionBudget2);
+            optionComponentRepository.save(optionComponent3);
+
+            optionBudget1.setTotal(optionComponent1.getTotalPrice() + optionComponent2.getTotalPrice());
+            optionBudgetRepository.save(optionBudget1);
 
         };
     }

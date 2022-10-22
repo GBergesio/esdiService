@@ -1,6 +1,7 @@
 package esdi.Services.dtos;
 
 
+import esdi.Services.dtos.budget.BudgetDTO;
 import esdi.Services.dtos.devices.DeviceForOrderDTO;
 import esdi.Services.enums.OrderType;
 import esdi.Services.enums.Priority;
@@ -30,5 +31,6 @@ public class OrderDTO {
     private ClientDTO client;
     private StaffDTO staff;
     private Set<CommentDTO> comments;
+    private BudgetDTO budget;
 
 }
