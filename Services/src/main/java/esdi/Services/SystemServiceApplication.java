@@ -9,6 +9,7 @@ import esdi.Services.models.devices.Device;
 import esdi.Services.models.devices.DeviceCategory;
 import esdi.Services.models.devices.DeviceModel;
 import esdi.Services.models.products.*;
+import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Neighborhood;
 import esdi.Services.models.users.Staff;
 import esdi.Services.models.users.Client;
@@ -35,7 +36,7 @@ public class SystemServiceApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(ClientRepository clientRepository,StaffRepository staffRepository,
+    public CommandLineRunner initData(CompanyRepository companyRepository, ClientRepository clientRepository,StaffRepository staffRepository,
                                       OrderRepository orderRepository, ProductRepository productRepository, IvaRepository ivaRepository,
                                       CategoryRepository categoryRepository, DolarRepository dolarRepository, BrandRepository brandRepository,
                                       ServiceRepository serviceRepository, DeviceModelRepository deviceModelRepository, DeviceCategoryRepository deviceCategoryRepository,
@@ -43,20 +44,45 @@ public class SystemServiceApplication {
                                       BudgetRepository budgetRepository, OptionBudgetRepository optionBudgetRepository, OptionComponentRepository optionComponentRepository) {
         return (args) -> {
 
+            Company esdi = new Company();
+            esdi.setName("Electro Service");
+            esdi.setCuit("20286986669");
+            esdi.setSector("Informatica");
+            companyRepository.save(esdi);
+
+            Company tallerChapa = new Company();
+            tallerChapa.setName("Taller chapa y pintura");
+            tallerChapa.setCuit("2023233133");
+            tallerChapa.setSector("Automoviles");
+            companyRepository.save(tallerChapa);
+
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
+            admin.setCompany(esdi);
             staffRepository.save(admin);
+
+            Staff technician = new Staff("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);
+            technician.setCompany(esdi);
+            staffRepository.save(technician);
 
             Neighborhood neighborhood1 = new Neighborhood();
             neighborhood1.setName("Norte");
             neighborhoodRepository.save(neighborhood1);
             Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", neighborhood1, "", "3547654824", "bergesiog1@gmail.com", "39323158", "cliente123", UserType.CLIENT);
+            client.setCompany(esdi);
             clientRepository.save(client);
 
             Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", neighborhood1, "", "3814052408", "santiago.aragon.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
+            client2.setCompany(esdi);
             clientRepository.save(client2);
 
-            Staff technician = new Staff("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);
-            staffRepository.save(technician);
+            Client client3 = new Client("002", "pepo 3", "god", "fafaf 35", neighborhood1, "", "3814052408", "pepo9@gmail.com", "123456789", "cliente123", UserType.CLIENT);
+            client3.setCompany(tallerChapa);
+            clientRepository.save(client3);
+
+            Client client4 = new Client("002", "cuscus", "nashe", "lv cordoba 35", neighborhood1, "", "3814052408", "cuscus.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
+            client4.setCompany(tallerChapa);
+            clientRepository.save(client4);
+
 
             // MARCAS //
 

@@ -34,6 +34,9 @@ public class Staff {
     @OneToMany(mappedBy = "staff", fetch = FetchType.EAGER)
     private Set<Order> orders = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name="company_id")
+    private Company company;
 
     public Staff(){}
 
@@ -52,5 +55,7 @@ public class Staff {
         order.setStaff(this);
         orders.add(order);
     }
+
+
 
 }

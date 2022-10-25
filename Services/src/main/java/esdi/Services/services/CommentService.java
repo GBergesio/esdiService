@@ -25,6 +25,5 @@ public interface CommentService {
 
     ResponseEntity<?> editComment(CommentRequest commentRequest, Long idOrder);
 
-
     //    ResponseEntity<?> updateComment(Long idOrder,Long idDevice, Long idTechnician, OrderRequest orderRequest);
 }

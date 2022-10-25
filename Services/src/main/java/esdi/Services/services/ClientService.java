@@ -15,6 +15,9 @@ public interface ClientService {
 
     ResponseEntity<?> getClientByDni(String dni);
 
+    ResponseEntity<?> getClientsByCompany(Long id);
+
+
     ResponseEntity<?> createNewClient(ClientRequest clientRequest);
 
     ResponseEntity<?> updateClient(Long id, ClientRequest clientRequest);

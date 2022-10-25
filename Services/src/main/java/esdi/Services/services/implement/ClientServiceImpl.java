@@ -6,11 +6,9 @@ import esdi.Services.mappers.ClientMapper;
 import esdi.Services.models.Order;
 import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Neighborhood;
-import esdi.Services.repositories.ClientRepository;
-import esdi.Services.repositories.DeviceRepository;
-import esdi.Services.repositories.NeighborhoodRepository;
-import esdi.Services.repositories.OrderRepository;
+import esdi.Services.repositories.*;
 import esdi.Services.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,8 @@ public class ClientServiceImpl implements ClientService {
     ClientRepository clientRepository;
     @Autowired
     DeviceRepository deviceRepository;
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Autowired
     OrderRepository orderRepository;
@@ -64,6 +64,15 @@ public class ClientServiceImpl implements ClientService {
             return new ResponseEntity<>("Cliente no encontrado", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(clientMapper.toDTO(client), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getClientsByCompany(Long id) {
+        Company company = companyRepository.findById(id).orElse(null);
+
+        List<Client> allClients = clientRepository.findAllByCompany(company);
+
+        return new ResponseEntity<>(clientMapper.toDTO(allClients), HttpStatus.OK);
     }
 
     @Override

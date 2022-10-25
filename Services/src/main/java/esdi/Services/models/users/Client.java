@@ -41,6 +41,9 @@ public class Client {
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private Set<Device> devices = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name="company_id")
+    private Company company;
 
     public Client(String dni, String firstName, String lastName, String address, Neighborhood neighborhood, String phone,
                   String cellphone, String email, String user, String password, UserType userType) {

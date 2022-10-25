@@ -23,9 +23,15 @@ public class ClientController {
         return clientService.allClients();
     }
 
+
     @GetMapping("/id/{id}")
     ResponseEntity<?> getClientById(@PathVariable Long id) {
         return clientService.getClientById(id);
+    }
+
+    @GetMapping("/company/{id}")
+    ResponseEntity<?> getClientByCompany(@PathVariable Long id) {
+        return clientService.getClientsByCompany(id);
     }
 
 
