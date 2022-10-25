@@ -10,4 +10,6 @@ import java.util.List;
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     public Company findByCuit(String cuit);
+    public Company findByEmail(String email);
+    public Company findByUser(String user);
 }

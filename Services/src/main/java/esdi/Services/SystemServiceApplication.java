@@ -48,12 +48,16 @@ public class SystemServiceApplication {
             esdi.setName("Electro Service");
             esdi.setCuit("20286986669");
             esdi.setSector("Informatica");
+            esdi.setEmail("ventas@altaoferta.com");
+            esdi.setUser("electro001");
             companyRepository.save(esdi);
 
             Company tallerChapa = new Company();
             tallerChapa.setName("Taller chapa y pintura");
             tallerChapa.setCuit("2023233133");
             tallerChapa.setSector("Automoviles");
+            tallerChapa.setEmail("taller@chapa.com");
+            tallerChapa.setUser("taller001");
             companyRepository.save(tallerChapa);
 
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);

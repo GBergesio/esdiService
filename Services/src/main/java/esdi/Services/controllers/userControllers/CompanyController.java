@@ -24,9 +24,19 @@ public class CompanyController {
         return companyService.findById(id);
     }
 
-    @GetMapping("/id/{cuit}")
+    @GetMapping("/cuit/{cuit}")
     ResponseEntity<?> getCompanyByCuit(@PathVariable String cuit) {
         return companyService.findByCuit(cuit);
+    }
+
+    @GetMapping("/email/{email}")
+    ResponseEntity<?> getCompanyByEmail(@PathVariable String email) {
+        return companyService.findByEmail(email);
+    }
+
+    @GetMapping("/userName/{user}")
+    ResponseEntity<?> getCompanyByUserName(@PathVariable String user) {
+        return companyService.findByUser(user);
     }
 
 }

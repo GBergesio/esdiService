@@ -15,6 +15,8 @@ public interface CompanyService {
     ResponseEntity<?> allCompanies();
     ResponseEntity<?> findById(Long id);
     ResponseEntity<?> findByCuit(String cuit);
+    ResponseEntity<?> findByEmail(String email);
+    ResponseEntity<?> findByUser(String user);
     ResponseEntity<?> createCompany(CompanyRequest companyRequest);
 
 

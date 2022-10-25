@@ -75,6 +75,36 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public ResponseEntity<?> findByEmail(String email) {
+        CompanyDTO companyDTO = companyMapper.toDTO(companyRepository.findByEmail(email));
+
+        if (email.isEmpty() || email.isBlank() || email == null){
+            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
+        }
+
+        if (companyDTO == null){
+            return new ResponseEntity<>("No se encontró la compañía con el email ingresado",HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(companyDTO, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> findByUser(String user) {
+        CompanyDTO companyDTO = companyMapper.toDTO(companyRepository.findByUser(user));
+
+        if (user.isEmpty() || user.isBlank() || user == null){
+            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
+        }
+
+        if (companyDTO == null){
+            return new ResponseEntity<>("No se encontró la compañía con el nombre de usuario ingresado",HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(companyDTO, HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<?> createCompany(CompanyRequest companyRequest) {
         return null;
     }
