@@ -2,13 +2,20 @@ package esdi.Services.services.implement;
 
 import esdi.Services.dtos.request.StaffRequest;
 import esdi.Services.mappers.StaffMapper;
+import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Staff;
 import esdi.Services.repositories.StaffRepository;
+import esdi.Services.services.ClientService;
+import esdi.Services.services.CompanyService;
 import esdi.Services.services.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -18,10 +25,20 @@ public class StaffServiceImpl implements StaffService {
     @Autowired
     StaffMapper staffMapper;
 
+    @Autowired
+    CompanyService companyService;
 
     @Override
     public ResponseEntity<?> getAllStaffs() {
         return new ResponseEntity<>(staffMapper.toDTO(staffRepository.findAll()), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getAllStaffsAuth(Authentication authentication) {
+        Company company = companyService.getCurrentCompany(authentication);
+        List<Staff> staffList = company.getStaffs();
+
+        return new ResponseEntity<>(staffMapper.toDTO(staffList), HttpStatus.OK);
     }
 
     @Override

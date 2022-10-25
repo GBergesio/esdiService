@@ -4,5 +4,6 @@ public enum UserType {
     CLIENT,
     TECHNICIAN,
     ADMIN,
-    COMPANY
+    COMPANY,
+    SUPERADMIN
 }

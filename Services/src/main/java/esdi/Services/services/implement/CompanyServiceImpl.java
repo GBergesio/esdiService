@@ -10,6 +10,7 @@ import esdi.Services.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +43,11 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public ResponseEntity<?> allCompanies() {
         return new ResponseEntity<>(findAllDTO(), HttpStatus.OK);
+    }
+
+    @Override
+    public Company getCurrentCompany(Authentication authentication) {
+        return companyRepository.findByEmail(authentication.getName());
     }
 
     @Override

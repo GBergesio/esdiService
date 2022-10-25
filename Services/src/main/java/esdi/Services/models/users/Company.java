@@ -6,7 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,11 +34,11 @@ public class Company {
     private UserType userType;
     private boolean active;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
-    private Set<Staff> staffs = new HashSet<>();
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    private List<Staff> staffs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
-    private Set<Client> clients = new HashSet<>();
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    private List<Client> clients = new ArrayList<>();
 
     public void addStaff(Staff staff){
         staff.setCompany(this);

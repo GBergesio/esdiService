@@ -10,9 +10,11 @@ import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Neighborhood;
 import esdi.Services.repositories.*;
 import esdi.Services.services.ClientService;
+import esdi.Services.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +37,8 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     ClientMapper clientMapper;
     @Autowired
+    CompanyService companyService;
+    @Autowired
     NeighborhoodRepository neighborhoodRepository;
 
     @Override
@@ -46,6 +50,13 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ResponseEntity<?> allClients() {
         return new ResponseEntity<>(findAllDTO(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getAllClientsAuth(Authentication authentication) {
+        Company company = companyService.getCurrentCompany(authentication);
+        List<Client> clients = company.getClients();
+        return new ResponseEntity<>(clientMapper.toDTO(clients), HttpStatus.OK);
     }
 
     @Override

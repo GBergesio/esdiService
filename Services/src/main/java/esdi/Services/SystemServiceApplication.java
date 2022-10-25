@@ -16,10 +16,12 @@ import esdi.Services.models.users.Client;
 import esdi.Services.repositories.*;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -28,6 +30,9 @@ import java.util.Set;
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "System service API Doc", version = "0.0", description = "System service API documentation"))
 public class SystemServiceApplication {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
 
@@ -50,6 +55,8 @@ public class SystemServiceApplication {
             esdi.setSector("Informatica");
             esdi.setEmail("ventas@altaoferta.com");
             esdi.setUser("electro001");
+            esdi.setPassword(passwordEncoder.encode("electro123"));
+            esdi.setUserType(UserType.COMPANY);
             companyRepository.save(esdi);
 
             Company tallerChapa = new Company();
@@ -58,6 +65,8 @@ public class SystemServiceApplication {
             tallerChapa.setSector("Automoviles");
             tallerChapa.setEmail("taller@chapa.com");
             tallerChapa.setUser("taller001");
+            tallerChapa.setPassword(passwordEncoder.encode("taller123"));
+            tallerChapa.setUserType(UserType.COMPANY);
             companyRepository.save(tallerChapa);
 
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);

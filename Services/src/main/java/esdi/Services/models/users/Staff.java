@@ -28,7 +28,6 @@ public class Staff {
     private String user;
     private String password;
     private UserType userType;
-
     private boolean deleted;
 
     @OneToMany(mappedBy = "staff", fetch = FetchType.EAGER)

@@ -1,11 +1,10 @@
 package esdi.Services.controllers.userControllers;
+import esdi.Services.dtos.request.StaffRequest;
 import esdi.Services.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/companies")
@@ -39,4 +38,8 @@ public class CompanyController {
         return companyService.findByUser(user);
     }
 
+//    @PostMapping("/login")
+//    public ResponseEntity<?> createStaff(@RequestParam String email, @RequestParam String password) {
+//        return companyService.createStaff(staffRequest);
+//    }
 }
