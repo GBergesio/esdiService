@@ -42,6 +42,11 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public Staff getCurrentStaff(Authentication authentication) {
+        return staffRepository.findByEmail(authentication.getName());
+    }
+
+    @Override
     public ResponseEntity<?> getStaffById(Long id) {
         Staff staff = staffRepository.findById(id).orElse(null);
         if (staff == null)
@@ -56,7 +61,16 @@ public class StaffServiceImpl implements StaffService {
         if (staff == null)
             return new ResponseEntity<>("Miembro de staff no encontrado", HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity<>(staff, HttpStatus.OK);
+        return new ResponseEntity<>(staffMapper.toDTO(staff), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getStaffByUser(String user) {
+        Staff staff = staffRepository.findByUser(user);
+        if (staff == null)
+            return new ResponseEntity<>("Miembro de staff no encontrado", HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(staffMapper.toDTO(staff), HttpStatus.OK);
     }
 
     @Override

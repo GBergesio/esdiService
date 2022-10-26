@@ -49,13 +49,23 @@ public class SystemServiceApplication {
                                       BudgetRepository budgetRepository, OptionBudgetRepository optionBudgetRepository, OptionComponentRepository optionComponentRepository) {
         return (args) -> {
 
+            Company ampersand = new Company();
+            ampersand.setName("Ampersand Tech");
+            ampersand.setCuit("20393231581");
+            ampersand.setSector("Software");
+            ampersand.setEmail("admin@ampersand.com");
+            ampersand.setUser("ampersandAdmin");
+            ampersand.setPassword(passwordEncoder.encode("123"));
+            ampersand.setUserType(UserType.SUPERADMIN);
+            companyRepository.save(ampersand);
+
             Company esdi = new Company();
             esdi.setName("Electro Service");
             esdi.setCuit("20286986669");
             esdi.setSector("Informatica");
             esdi.setEmail("ventas@altaoferta.com");
-            esdi.setUser("electro001");
-            esdi.setPassword(passwordEncoder.encode("electro123"));
+            esdi.setUser("C-electro001");
+            esdi.setPassword(passwordEncoder.encode("123"));
             esdi.setUserType(UserType.COMPANY);
             companyRepository.save(esdi);
 
@@ -64,35 +74,35 @@ public class SystemServiceApplication {
             tallerChapa.setCuit("2023233133");
             tallerChapa.setSector("Automoviles");
             tallerChapa.setEmail("taller@chapa.com");
-            tallerChapa.setUser("taller001");
-            tallerChapa.setPassword(passwordEncoder.encode("taller123"));
+            tallerChapa.setUser("C-taller001");
+            tallerChapa.setPassword(passwordEncoder.encode("123"));
             tallerChapa.setUserType(UserType.COMPANY);
             companyRepository.save(tallerChapa);
 
-            Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", "admin123", UserType.ADMIN);
+            Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", passwordEncoder.encode("123"), UserType.ADMIN);
             admin.setCompany(esdi);
             staffRepository.save(admin);
 
-            Staff technician = new Staff("55", "Tecnico", "Bergesio", "bergesiog1@gmail.com", "tecni1", "tecnico123", UserType.TECHNICIAN);
+            Staff technician = new Staff("55", "Tecnico", "Bergesio", "bergesiog1@tt.com", "electro002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN);
             technician.setCompany(esdi);
             staffRepository.save(technician);
 
             Neighborhood neighborhood1 = new Neighborhood();
             neighborhood1.setName("Norte");
             neighborhoodRepository.save(neighborhood1);
-            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", neighborhood1, "", "3547654824", "bergesiog1@gmail.com", "39323158", "cliente123", UserType.CLIENT);
+            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", neighborhood1, "", "3547654824", "bergesiog1@gmail.com", "cliente1", passwordEncoder.encode("123"), UserType.CLIENT);
             client.setCompany(esdi);
             clientRepository.save(client);
 
-            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", neighborhood1, "", "3814052408", "santiago.aragon.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
+            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", neighborhood1, "", "3814052408", "santiago.aragon.99@gmail.com", "cliente2", passwordEncoder.encode("123"), UserType.CLIENT);
             client2.setCompany(esdi);
             clientRepository.save(client2);
 
-            Client client3 = new Client("002", "pepo 3", "god", "fafaf 35", neighborhood1, "", "3814052408", "pepo9@gmail.com", "123456789", "cliente123", UserType.CLIENT);
+            Client client3 = new Client("002", "pepo 3", "god", "fafaf 35", neighborhood1, "", "3814052408", "pepo9@gmail.com", "cliente3", passwordEncoder.encode("123"), UserType.CLIENT);
             client3.setCompany(tallerChapa);
             clientRepository.save(client3);
 
-            Client client4 = new Client("002", "cuscus", "nashe", "lv cordoba 35", neighborhood1, "", "3814052408", "cuscus.99@gmail.com", "123456789", "cliente123", UserType.CLIENT);
+            Client client4 = new Client("002", "cuscus", "nashe", "lv cordoba 35", neighborhood1, "", "3814052408", "cuscus.99@gmail.com", "cliente4", passwordEncoder.encode("123"), UserType.CLIENT);
             client4.setCompany(tallerChapa);
             clientRepository.save(client4);
 

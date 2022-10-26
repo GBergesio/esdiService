@@ -6,7 +6,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
 public interface StaffRepository extends JpaRepository<Staff, Long> {
-    Staff findByDni(String dni);
-    Staff findByUser(String user);
-    Staff findByEmail(String email);
+    public Staff findByDni(String dni);
+    public Staff findByUser(String user);
+    public Staff findByEmail(String email);
+
 }

@@ -1,15 +1,12 @@
 package esdi.Services.models.users;
 
 import esdi.Services.enums.UserType;
-import esdi.Services.models.Comment;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "company")

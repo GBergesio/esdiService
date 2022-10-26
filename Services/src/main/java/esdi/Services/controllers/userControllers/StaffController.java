@@ -29,6 +29,11 @@ public class StaffController {
         return staffService.getStaffByDni(dni);
     }
 
+    @GetMapping("/user/{user}")
+    public ResponseEntity<?> getStaffByUser(@PathVariable String user) {
+        return staffService.getStaffByUser(user);
+    }
+
     @GetMapping("/current/staffs")
     ResponseEntity<?> getStaffByCurrentCompany(Authentication authentication) {
         return staffService.getAllStaffsAuth(authentication);

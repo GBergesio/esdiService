@@ -12,7 +12,7 @@ public class LoginController {
 
     @Transactional
     @PostMapping()
-    ResponseEntity<?> login(@RequestParam String email, @RequestParam String password){
+    ResponseEntity<?> login(@RequestParam String user, @RequestParam String password){
         return new ResponseEntity<>("Login correcto", HttpStatus.OK);
     }
 }
