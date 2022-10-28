@@ -9,10 +9,12 @@ import esdi.Services.models.budgets.Budget;
 import esdi.Services.models.budgets.OptionBudget;
 import esdi.Services.models.budgets.OptionComponent;
 import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Company;
 import esdi.Services.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -38,6 +40,8 @@ public class BudgetServiceImpl implements BudgetService{
 
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    CompanyRepository companyRepository;
 
 
     @Autowired
@@ -111,6 +115,14 @@ public class BudgetServiceImpl implements BudgetService{
         catch(Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
+    }
+
+    @Override
+    public ResponseEntity<?> allBudgetsByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Budget> budgetsByCompany = budgetRepository.findAllByCompany(company);
+
+        return new ResponseEntity<>(budgetMapper.toDTO(budgetsByCompany), HttpStatus.OK);
     }
 
     @Override

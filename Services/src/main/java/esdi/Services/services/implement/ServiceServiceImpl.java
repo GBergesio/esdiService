@@ -5,13 +5,16 @@ import esdi.Services.mappers.ServiceMapper;
 import esdi.Services.models.products.Category;
 import esdi.Services.models.products.Iva;
 import esdi.Services.models.products.ServiceArt;
+import esdi.Services.models.users.Company;
 import esdi.Services.repositories.CategoryRepository;
+import esdi.Services.repositories.CompanyRepository;
 import esdi.Services.repositories.IvaRepository;
 import esdi.Services.repositories.ServiceRepository;
 import esdi.Services.services.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,6 +34,8 @@ public class  ServiceServiceImpl implements ServiceService {
 
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    CompanyRepository companyRepository;
 
 
     @Override
@@ -47,6 +52,14 @@ public class  ServiceServiceImpl implements ServiceService {
     public List<ServiceDTO> findAllDTO() {
         List<ServiceArt> allServiceArt = serviceRepository.findAll();
         return serviceMapper.toDTO(allServiceArt);
+    }
+
+    @Override
+    public ResponseEntity<?> allServicesByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<ServiceArt> serviceArts = serviceRepository.findAllByCompany(company);
+
+        return new ResponseEntity<>(serviceMapper.toDTO(serviceArts), HttpStatus.OK);
     }
 
     @Override

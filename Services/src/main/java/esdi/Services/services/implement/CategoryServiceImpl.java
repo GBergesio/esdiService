@@ -4,13 +4,16 @@ import esdi.Services.mappers.CategoryMapper;
 import esdi.Services.models.products.Category;
 import esdi.Services.models.products.Product;
 import esdi.Services.models.products.ServiceArt;
+import esdi.Services.models.users.Company;
 import esdi.Services.repositories.CategoryRepository;
+import esdi.Services.repositories.CompanyRepository;
 import esdi.Services.repositories.ProductRepository;
 import esdi.Services.repositories.ServiceRepository;
 import esdi.Services.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,6 +35,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     ServiceRepository serviceRepository;
 
+    @Autowired
+    CompanyRepository companyRepository;
+
     @Override
     public Category saveCategory(Category category) {
         return categoryRepository.save(category);
@@ -50,6 +56,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> allCategories() {
         return new ResponseEntity<>(findAllDTO(),HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> allCategoriesByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Category> categoriesByCompany = categoryRepository.findAllByCompany(company);
+
+        return new ResponseEntity<>(categoryMapper.toDTO(categoriesByCompany), HttpStatus.OK);
     }
 
     @Override

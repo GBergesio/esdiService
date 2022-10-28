@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 
 public interface StaffService {
     ResponseEntity<?> getAllStaffs();
-    ResponseEntity<?> getAllStaffsAuth(Authentication authentication);
+    ResponseEntity<?> getAllStaffsByCompany(Authentication authentication);
     Staff getCurrentStaff(Authentication authentication);
     ResponseEntity<?> getStaffById(Long id);
 

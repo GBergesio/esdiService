@@ -3,6 +3,7 @@ import esdi.Services.models.Comment;
 import esdi.Services.models.Currency;
 import esdi.Services.models.Dolar;
 import esdi.Services.models.budgets.OptionBudget;
+import esdi.Services.models.users.Company;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -34,16 +35,17 @@ public class Product {
 
     private Currency currency;
 
+    private Double dolar;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Iva iva;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
-//    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-//    private Set<OptionBudget> options = new HashSet<>();
-
-    private Double dolar;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Brand brand;
@@ -60,9 +62,6 @@ public class Product {
         this.dolar = dolar;
         this.brand = brand;
     }
-//        public void addOption(OptionBudget option){
-//            option.setProduct(this);
-//            options.add(option);
-//        }
+
 
 }

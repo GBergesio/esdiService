@@ -7,6 +7,7 @@ import esdi.Services.models.devices.DeviceCategory;
 import esdi.Services.models.devices.DeviceModel;
 import esdi.Services.models.products.Category;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface DeviceService {
         DeviceDTO getDeviceDTO(Device device);
         List<DeviceDTO> findAllDTO();
         ResponseEntity<?> allDevices();
+        ResponseEntity<?> allDevicesByClient(Authentication authentication);
         ResponseEntity<?> findById(Long id);
         ResponseEntity<?> findByCategory(Long category);
         ResponseEntity<?> findByModel(Long idModel);

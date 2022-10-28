@@ -2,6 +2,7 @@ package esdi.Services.models.budgets;
 
 import esdi.Services.enums.StatusBudget;
 import esdi.Services.models.Order;
+import esdi.Services.models.users.Company;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +44,10 @@ public class Budget {
 
     @OneToMany(mappedBy = "budget", fetch = FetchType.EAGER)
     private Set<OptionBudget> options = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 
 //    @OneToMany(mappedBy = "budget", fetch = FetchType.EAGER)
 //    private Set<OptionBudget> options = new HashSet<>();

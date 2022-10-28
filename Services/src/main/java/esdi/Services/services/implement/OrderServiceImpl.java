@@ -3,11 +3,13 @@ package esdi.Services.services.implement;
 import esdi.Services.dtos.OrderDTO;
 import esdi.Services.dtos.request.OrderRequest;
 import esdi.Services.enums.Priority;
+import esdi.Services.mappers.CompanyMapper;
 import esdi.Services.mappers.OrderMapper;
 import esdi.Services.models.Comment;
 import esdi.Services.models.Order;
 import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Staff;
 import esdi.Services.repositories.*;
 import esdi.Services.services.OrderService;
@@ -15,6 +17,7 @@ import esdi.Services.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,13 +33,17 @@ public class OrderServiceImpl implements OrderService {
     ClientRepository clientRepository;
     @Autowired
     DeviceRepository deviceRepository;
+
     @Autowired
-    CommentRepository commentRepository;
+    CompanyRepository companyRepository;
 
     @Autowired
     StaffRepository staffRepository;
     @Autowired
     OrderMapper orderMapper;
+
+    @Autowired
+    CompanyMapper companyMapper;
 
     @Override
     public List<OrderDTO> getAllOrders() {
@@ -66,6 +73,34 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> allOrders() {
         return new ResponseEntity<>(getAllOrders(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> allOrdersByClient(Authentication authentication) {
+        Client client = clientRepository.findByUser(authentication.getName());
+        List<Order> ordersByClient = orderRepository.findAllByClient(client);
+
+        return new ResponseEntity<>(orderMapper.toDTO(ordersByClient), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> allOrdersByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Order> ordersByCompany = orderRepository.findAllByCompany(company);
+
+        System.out.println(company);
+
+        return new ResponseEntity<>(orderMapper.toDTO(ordersByCompany), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> allOrdersByCompanyForStaff(Authentication authentication) {
+        Staff staff = staffRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByStaffs(staff);
+
+        List<Order> ordersByCompany = orderRepository.findAllByCompany(company);
+
+        return new ResponseEntity<>(orderMapper.toDTO(ordersByCompany), HttpStatus.OK);
     }
 
     @Override

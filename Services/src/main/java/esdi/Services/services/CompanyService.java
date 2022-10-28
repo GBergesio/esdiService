@@ -21,21 +21,4 @@ public interface CompanyService {
     ResponseEntity<?> findByUser(String user);
     ResponseEntity<?> createCompany(CompanyRequest companyRequest);
 
-
 }
-
-//        OptionComponent saveOptionComponent(OptionComponent optionComponent);
-//
-//        OptionComponentDTO saveOptionComponentDTO(OptionComponent optionComponent);
-//
-//        List<OptionComponentDTO> findAllDTO();
-//
-//        ResponseEntity<?> allOptionsComponent();
-//
-//        ResponseEntity<?> findById(Long id);
-//
-//        ResponseEntity<?> createOptionComponent(OptionRequest optionRequest, Long idBudget, Long idPoS);
-//    //
-//    //    ResponseEntity<?> updateOptionBudget(Long id);
-//    //
-//        ResponseEntity<?> deleteOption(Long id);

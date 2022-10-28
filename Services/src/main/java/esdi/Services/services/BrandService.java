@@ -2,6 +2,7 @@ package esdi.Services.services;
 import esdi.Services.dtos.BrandDTO;
 import esdi.Services.models.products.Brand;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface BrandService {
         ResponseEntity<?> allBrands();
 
         ResponseEntity<?> findById(Long id);
+        ResponseEntity<?> allBrandsByCompany(Authentication authentication);
 
         ResponseEntity<?> createBrand(BrandDTO brandDTO);
 

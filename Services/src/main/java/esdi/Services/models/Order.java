@@ -5,6 +5,7 @@ import esdi.Services.enums.Status;
 import esdi.Services.models.budgets.Budget;
 import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Staff;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +50,10 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="device_id")
     private Device device;
+
+    @ManyToOne
+    @JoinColumn(name="company_id")
+    private Company company;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private Set<Comment> comments = new HashSet<>();

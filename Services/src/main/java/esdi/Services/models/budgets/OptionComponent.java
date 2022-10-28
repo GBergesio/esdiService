@@ -2,6 +2,7 @@ package esdi.Services.models.budgets;
 
 import esdi.Services.models.products.Product;
 import esdi.Services.models.products.ServiceArt;
+import esdi.Services.models.users.Company;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,8 +36,12 @@ public class OptionComponent {
     @JoinColumn(name="serviceArt_id")
     private ServiceArt serviceArt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="optionBudget_id")
     private OptionBudget optionBudget;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 
 }

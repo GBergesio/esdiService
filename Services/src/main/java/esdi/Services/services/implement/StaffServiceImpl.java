@@ -4,6 +4,7 @@ import esdi.Services.dtos.request.StaffRequest;
 import esdi.Services.mappers.StaffMapper;
 import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Staff;
+import esdi.Services.repositories.CompanyRepository;
 import esdi.Services.repositories.StaffRepository;
 import esdi.Services.services.ClientService;
 import esdi.Services.services.CompanyService;
@@ -26,7 +27,7 @@ public class StaffServiceImpl implements StaffService {
     StaffMapper staffMapper;
 
     @Autowired
-    CompanyService companyService;
+    CompanyRepository companyRepository;
 
     @Override
     public ResponseEntity<?> getAllStaffs() {
@@ -34,9 +35,9 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public ResponseEntity<?> getAllStaffsAuth(Authentication authentication) {
-        Company company = companyService.getCurrentCompany(authentication);
-        List<Staff> staffList = company.getStaffs();
+    public ResponseEntity<?> getAllStaffsByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Staff> staffList = staffRepository.findAllByCompany(company);
 
         return new ResponseEntity<>(staffMapper.toDTO(staffList), HttpStatus.OK);
     }

@@ -22,9 +22,10 @@ public class WebAuthorization extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
 
-                .antMatchers("/admin/**","/rest/**","/h2-console/**").hasAuthority("SUPERADMIN")
-                .antMatchers(HttpMethod.GET, "/staff/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
-                .antMatchers(HttpMethod.GET, "/orders/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
+                .antMatchers(HttpMethod.GET, "/orders/current/ordersByClient", "/devices/current/devicesByClient").hasAnyAuthority("CLIENT")
+                .antMatchers(HttpMethod.GET, "/products/current/**", "/categories/current/**", "/dolar/current/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
+                .antMatchers(HttpMethod.GET, "/orders/current/**","/staff/current/**","/budgets/current/**","/devices/current/**","/comments/current/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
+                .antMatchers("/admin/**","/rest/**","/h2-console/**", "/companies/**", "/orders/**").hasAuthority("SUPERADMIN")
 //                .antMatchers(HttpMethod.GET, "/company/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
 //                .antMatchers("/web/index.html","/web/login.html","/web/data/index.js","/web/data/login.js").permitAll()
 //

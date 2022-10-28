@@ -87,22 +87,33 @@ public class SystemServiceApplication {
             technician.setCompany(esdi);
             staffRepository.save(technician);
 
-            Neighborhood neighborhood1 = new Neighborhood();
-            neighborhood1.setName("Norte");
-            neighborhoodRepository.save(neighborhood1);
-            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", neighborhood1, "", "3547654824", "bergesiog1@gmail.com", "cliente1", passwordEncoder.encode("123"), UserType.CLIENT);
+            Staff tecnicoAuto = new Staff("5335", "Tecnico", "Autos", "bergesiog1@tt.com", "tecniAuto002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN);
+            tecnicoAuto.setCompany(tallerChapa);
+            staffRepository.save(tecnicoAuto);
+
+            Neighborhood Norte = new Neighborhood();
+            Norte.setName("Norte");
+            Norte.setCompany(esdi);
+            neighborhoodRepository.save(Norte);
+
+            Neighborhood sur = new Neighborhood();
+            sur.setName("sur");
+            sur.setCompany(esdi);
+            neighborhoodRepository.save(sur);
+
+            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", Norte, "", "3547654824", "bergesiog1@gmail.com", "cliente1", passwordEncoder.encode("123"), UserType.CLIENT);
             client.setCompany(esdi);
             clientRepository.save(client);
 
-            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", neighborhood1, "", "3814052408", "santiago.aragon.99@gmail.com", "cliente2", passwordEncoder.encode("123"), UserType.CLIENT);
+            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", sur, "", "3814052408", "santiago.aragon.99@gmail.com", "cliente2", passwordEncoder.encode("123"), UserType.CLIENT);
             client2.setCompany(esdi);
             clientRepository.save(client2);
 
-            Client client3 = new Client("002", "pepo 3", "god", "fafaf 35", neighborhood1, "", "3814052408", "pepo9@gmail.com", "cliente3", passwordEncoder.encode("123"), UserType.CLIENT);
+            Client client3 = new Client("002", "pepo 3", "god", "fafaf 35", sur, "", "3814052408", "pepo9@gmail.com", "cliente3", passwordEncoder.encode("123"), UserType.CLIENT);
             client3.setCompany(tallerChapa);
             clientRepository.save(client3);
 
-            Client client4 = new Client("002", "cuscus", "nashe", "lv cordoba 35", neighborhood1, "", "3814052408", "cuscus.99@gmail.com", "cliente4", passwordEncoder.encode("123"), UserType.CLIENT);
+            Client client4 = new Client("002", "cuscus", "nashe", "lv cordoba 35", Norte, "", "3814052408", "cuscus.99@gmail.com", "cliente4", passwordEncoder.encode("123"), UserType.CLIENT);
             client4.setCompany(tallerChapa);
             clientRepository.save(client4);
 
@@ -110,6 +121,7 @@ public class SystemServiceApplication {
             // MARCAS //
 
             Brand brand1 = new Brand("AMD");
+            brand1.setCompany(esdi);
             brandRepository.save(brand1);
 
             // DEVICES //
@@ -149,7 +161,7 @@ public class SystemServiceApplication {
             device1.setModel(deviceModel1);
             device1.setClient(client);
             device1.setSerial("123124DGASDGA");
-
+            device1.setCompany(esdi);
             deviceRepository.save(device1);
 
             Device device2 = new Device();
@@ -159,6 +171,7 @@ public class SystemServiceApplication {
             device2.setModel(deviceModel2);
             device2.setClient(client2);
             device2.setSerial("blablalba");
+            device2.setCompany(esdi);
 
             deviceRepository.save(device2);
 
@@ -169,8 +182,17 @@ public class SystemServiceApplication {
             device3.setModel(deviceModel2);
             device3.setClient(client);
             device3.setSerial("jujuju");
+            device3.setCompany(esdi);
 
             deviceRepository.save(device3);
+
+            Device device4 = new Device();
+            device4.setDescription("Peugeot 206");
+            device4.setClient(client3);
+            device4.setSerial("jujuju");
+            device4.setCompany(tallerChapa);
+
+            deviceRepository.save(device4);
 
 
             // ORDENES DE TRABAJO //
@@ -187,6 +209,7 @@ public class SystemServiceApplication {
             order1.setDevice(device1);
             order1.setOrderDetails("Agregar SSD");
             order1.setStaff(technician);
+            order1.setCompany(esdi);
             technician.addOrder(order1);
             orderRepository.save(order1);
 
@@ -201,12 +224,28 @@ public class SystemServiceApplication {
             order2.setOrderDetails("Lenta, limpiar");
             order2.setClient(client2);
             order2.setDevice(device2);
+            order2.setCompany(esdi);
 			order2.setStaff(null);
             orderRepository.save(order2);
 
+            Order order3 = new Order();
+            order3.setOrderNumber(8888);
+            order3.setStatus(Status.ON_HOLD);
+            order3.setOrderType(OrderType.NORMAL);
+            order3.setPriority(Priority.HIGH);
+            order3.setJoinDate(LocalDateTime.now());
+            order3.setOutDate(null);
+            order3.setPasswordDevice("");
+            order3.setOrderDetails("Chocado,");
+            order3.setClient(client3);
+            order3.setCompany(tallerChapa);
+            order3.setStaff(null);
+            order3.setDevice(device4);
+            orderRepository.save(order3);
 
             clientRepository.save(client);
             clientRepository.save(client2);
+            clientRepository.save(client3);
 			staffRepository.save(technician);
 
             // COMMENTS //
@@ -219,6 +258,7 @@ public class SystemServiceApplication {
             comment1.setDate(LocalDateTime.now());
             comment1.setEdited(false);
             comment1.setDeleted(false);
+            comment1.setCompany(esdi);
             commentRepository.save(comment1);
 
             Comment comment2 = new Comment();
@@ -229,6 +269,7 @@ public class SystemServiceApplication {
             comment2.setDate(LocalDateTime.now());
             comment2.setEdited(true);
             comment2.setDeleted(false);
+            comment2.setCompany(esdi);
             commentRepository.save(comment2);
 
             Comment comment3 = new Comment();
@@ -239,6 +280,7 @@ public class SystemServiceApplication {
             comment3.setDate(LocalDateTime.now());
             comment3.setEdited(true);
             comment3.setDeleted(true);
+            comment3.setCompany(esdi);
             commentRepository.save(comment3);
 
             // IVA //
@@ -251,18 +293,22 @@ public class SystemServiceApplication {
             // CATEGORIAS //
 
             Category category1 = new Category("Microprocesadores");
+            category1.setCompany(esdi);
             categoryRepository.save(category1);
 
             Category category2 = new Category("Servicio tecnico PC De Escritorio");
+            category2.setCompany(esdi);
             categoryRepository.save(category2);
 
             Category category3 = new Category("Servicio tecnico Notebooks");
+            category3.setCompany(esdi);
             categoryRepository.save(category3);
 
 
             // DOLAR //
 
             Dolar dolar1 = new Dolar(145,LocalDateTime.now());
+            dolar1.setCompany(esdi);
             dolarRepository.save(dolar1);
 
 
@@ -279,6 +325,7 @@ public class SystemServiceApplication {
             product1.setCategory(category1);
             product1.setDolar(dolar1.getPrice());
             product1.setBrand(brand1);
+            product1.setCompany(esdi);
 
             productRepository.save(product1);
 
@@ -293,6 +340,7 @@ public class SystemServiceApplication {
             product2.setCategory(category1);
             product2.setDolar(dolar1.getPrice());
             product2.setBrand(brand1);
+            product2.setCompany(esdi);
 
             productRepository.save(product2);
 
@@ -306,6 +354,7 @@ public class SystemServiceApplication {
             service1.setUtility(1.3);
             service1.setSalePrice(5400);
             service1.setIva(iva21);
+            service1.setCompany(esdi);
 
             serviceRepository.save(service1);
 
@@ -317,6 +366,7 @@ public class SystemServiceApplication {
             budget1.setStatusBudget(StatusBudget.APPROVED);
             budget1.setTotal(9455);
             budget1.setOrder(order1);
+            budget1.setCompany(esdi);
             budgetRepository.save(budget1);
 //
             Budget budget2 = new Budget();
@@ -326,17 +376,8 @@ public class SystemServiceApplication {
             budget2.setStatusBudget(StatusBudget.ON_HOLD);
             budget2.setTotal(1222);
             budget2.setOrder(order2);
+            budget2.setCompany(esdi);
             budgetRepository.save(budget2);
-
-//            Budget budget2 = new Budget();
-//            budget2.setBudgetNumber(124);
-//            budget2.setOrderNumber(order2.getOrderNumber());
-//            budget2.setClient(order2.getClient().getFirstName() + " " + order2.getClient().getLastName());
-//            budget2.setStatusBudget(StatusBudget.ON_HOLD);
-//            budget2.setTotal(4999);
-//            budget2.setOrder(order2);
-//
-//            budgetRepository.save(budget2);
 
             // OPTION BUDGETS //
             OptionBudget optionBudget1 = new OptionBudget();
@@ -344,12 +385,14 @@ public class SystemServiceApplication {
             optionBudget1.setBudget(budget1);
             optionBudget1.setSelected(true);
             optionBudget1.setDeleted(false);
+            optionBudget1.setCompany(esdi);
             optionBudgetRepository.save(optionBudget1);
 
             OptionBudget optionBudget2 = new OptionBudget();
             optionBudget2.setTotal(321);
             optionBudget2.setBudget(budget1);
             optionBudget2.setDeleted(false);
+            optionBudget2.setCompany(esdi);
             optionBudgetRepository.save(optionBudget2);
 
             // OPTION COMPONTENTS //
@@ -358,6 +401,7 @@ public class SystemServiceApplication {
             optionComponent1.setTotalPrice(product1.getSalePrice() * 3);
             optionComponent1.setQuantity(3);
             optionComponent1.setOptionBudget(optionBudget1);
+            optionComponent1.setCompany(esdi);
             optionComponentRepository.save(optionComponent1);
 
             OptionComponent optionComponent2 = new OptionComponent();
@@ -365,6 +409,7 @@ public class SystemServiceApplication {
             optionComponent2.setTotalPrice(product2.getSalePrice() * 2);
             optionComponent2.setQuantity(2);
             optionComponent2.setOptionBudget(optionBudget1);
+            optionComponent2.setCompany(esdi);
             optionComponentRepository.save(optionComponent2);
 
             OptionComponent optionComponent3 = new OptionComponent();
@@ -372,6 +417,7 @@ public class SystemServiceApplication {
             optionComponent3.setTotalPrice(product2.getSalePrice() * 2);
             optionComponent3.setQuantity(2);
             optionComponent3.setOptionBudget(optionBudget2);
+            optionComponent3.setCompany(esdi);
             optionComponentRepository.save(optionComponent3);
 
             optionBudget1.setTotal(optionComponent1.getTotalPrice() + optionComponent2.getTotalPrice());

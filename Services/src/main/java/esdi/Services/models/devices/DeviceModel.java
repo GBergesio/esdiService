@@ -1,4 +1,5 @@
 package esdi.Services.models.devices;
+import esdi.Services.models.users.Company;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,8 @@ public class DeviceModel {
     public DeviceModel(String model) {
         this.model = model;
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 }

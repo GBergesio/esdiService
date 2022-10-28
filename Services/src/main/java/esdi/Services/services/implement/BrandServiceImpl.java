@@ -6,13 +6,16 @@ import esdi.Services.models.products.Brand;
 import esdi.Services.models.products.Category;
 import esdi.Services.models.products.Product;
 import esdi.Services.models.products.ServiceArt;
+import esdi.Services.models.users.Company;
 import esdi.Services.repositories.BrandRepository;
+import esdi.Services.repositories.CompanyRepository;
 import esdi.Services.repositories.ProductRepository;
 import esdi.Services.repositories.ServiceRepository;
 import esdi.Services.services.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,6 +30,8 @@ public class BrandServiceImpl implements BrandService {
 
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Autowired
     BrandMapper brandMapper;
@@ -49,6 +54,14 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public ResponseEntity<?> allBrands() {
         return new ResponseEntity<>(findAllDTO(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> allBrandsByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Brand> brandsByCompany = brandRepository.findAllByCompany(company);
+
+        return new ResponseEntity<>(brandMapper.toDTO(brandsByCompany), HttpStatus.OK);
     }
 
     @Override

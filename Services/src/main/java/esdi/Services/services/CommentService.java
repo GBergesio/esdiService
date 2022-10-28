@@ -4,6 +4,7 @@ import esdi.Services.dtos.CommentDTO;
 import esdi.Services.dtos.request.CommentRequest;
 import esdi.Services.models.Comment;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -15,8 +16,11 @@ public interface CommentService {
     List<CommentDTO> getAllActiveComments();
 
     ResponseEntity<?> allComments();
-
     ResponseEntity<?> allActiveComments();
+
+    ResponseEntity<?> allCommentsByCompany(Authentication authentication);
+
+    ResponseEntity<?> allActiveCommentsByCompany(Authentication authentication);
 
     ResponseEntity<?> createComment(CommentRequest commentRequest, Long idOrder, Long idActiveUser);
 

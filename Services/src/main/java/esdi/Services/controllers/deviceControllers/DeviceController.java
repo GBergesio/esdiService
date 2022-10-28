@@ -3,6 +3,7 @@ import esdi.Services.dtos.request.DeviceRequest;
 import esdi.Services.services.devices.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,6 +34,11 @@ public class DeviceController {
 
     @GetMapping("/serial/{serial}")
     ResponseEntity<?> getDevicesByModel(@PathVariable String serial) {return deviceService.findBySerial(serial);}
+
+    @GetMapping("/current/devicesByClient")
+    ResponseEntity<?> getDevicesByClient(Authentication authentication) {
+        return deviceService.allDevicesByClient(authentication);
+    }
 
     @PostMapping()
     ResponseEntity<?> newDevice(@RequestBody DeviceRequest deviceRequest) {

@@ -5,14 +5,17 @@ import esdi.Services.dtos.request.CommentRequest;
 import esdi.Services.mappers.CommentMapper;
 import esdi.Services.models.Comment;
 import esdi.Services.models.Order;
+import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Staff;
 import esdi.Services.repositories.CommentRepository;
+import esdi.Services.repositories.CompanyRepository;
 import esdi.Services.repositories.OrderRepository;
 import esdi.Services.repositories.StaffRepository;
 import esdi.Services.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +33,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     StaffRepository staffRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Autowired
     CommentMapper commentMapper;
@@ -61,6 +67,24 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseEntity<?> allActiveComments() {
         return new ResponseEntity<>(getAllActiveComments(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> allCommentsByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Comment> CommentsByCompany = commentRepository.findAllByCompany(company);
+
+        return new ResponseEntity<>(commentMapper.toDTO(CommentsByCompany), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> allActiveCommentsByCompany(Authentication authentication) {
+
+        Company company = companyRepository.findByUser(authentication.getName());
+
+        List<CommentDTO> listActiveComments = commentMapper.toDTO(commentRepository.findAllByCompany(company).stream().filter(comment -> comment.getEdited() == false && comment.getDeleted() == false).collect(Collectors.toList()));
+
+        return new ResponseEntity<>(listActiveComments, HttpStatus.OK);
     }
 
     @Override

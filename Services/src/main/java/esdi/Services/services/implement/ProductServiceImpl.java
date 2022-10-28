@@ -8,11 +8,13 @@ import esdi.Services.models.products.Brand;
 import esdi.Services.models.products.Category;
 import esdi.Services.models.products.Iva;
 import esdi.Services.models.products.Product;
+import esdi.Services.models.users.Company;
 import esdi.Services.repositories.*;
 import esdi.Services.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
@@ -38,6 +40,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     DolarRepository dolarRepository;
 
+    @Autowired
+    CompanyRepository companyRepository;
+
     @Override
     public Product saveProduct(Product product) {
         return productRepository.save(product);
@@ -57,6 +62,14 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDTO> findAllDTO() {
         List<Product> allprod = productRepository.findAll();
         return productMapper.toDTO(allprod);
+    }
+
+    @Override
+    public ResponseEntity<?> allProductsByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Product> productsByCompany = productRepository.findAllByCompany(company);
+
+        return new ResponseEntity<>(productMapper.toDTO(productsByCompany), HttpStatus.OK);
     }
 
     @Override

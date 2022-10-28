@@ -46,10 +46,6 @@ public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
                     return new User(company.getUser(), company.getPassword(),
                             AuthorityUtils.createAuthorityList("ADMIN","TECHNICIAN","COMPANY"));
                 }
-//                else{
-//                    return new User(company.getUser(), staff.getPassword(),
-//                            AuthorityUtils.createAuthorityList("CLIENT"));
-//                }
             }
             if(staff != null){
                 if (staff.getEmail().contains("@tt.com") && staff.getUserType() == UserType.TECHNICIAN){

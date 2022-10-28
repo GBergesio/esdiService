@@ -13,6 +13,7 @@ import esdi.Services.services.devices.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +61,13 @@ public class DeviceImpl implements DeviceService {
     @Override
     public ResponseEntity<?> allDevices() {
         return new ResponseEntity<>(findAllDTO(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> allDevicesByClient(Authentication authentication) {
+        Client client = clientRepository.findByUser(authentication.getName());
+        List<Device> devicesByClient = deviceRepository.findAllByClient(client);
+        return new ResponseEntity<>(deviceMapper.toDTO(devicesByClient), HttpStatus.OK);
     }
 
     @Override

@@ -3,6 +3,7 @@ package esdi.Services.models.devices;
 import esdi.Services.models.Order;
 import esdi.Services.models.products.Brand;
 import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Company;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,10 @@ public class Device {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private DeviceModel model;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 
     public Device(String serial, String description, DeviceCategory category, Brand brand, DeviceModel model) {
         this.serial = serial;

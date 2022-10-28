@@ -5,6 +5,7 @@ import esdi.Services.services.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,6 +28,11 @@ public class ServiceController {
     @PostMapping()
     ResponseEntity<?> newService(@RequestBody ServiceDTORequest serviceDTORequest){
         return serviceService.createService(serviceDTORequest);
+    }
+
+    @GetMapping("/current/servicesByCompany")
+    ResponseEntity<?> getServicesByCompany(Authentication authentication) {
+        return serviceService.allServicesByCompany(authentication);
     }
 
 }

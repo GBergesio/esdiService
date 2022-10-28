@@ -1,4 +1,5 @@
 package esdi.Services.models.products;
+import esdi.Services.models.users.Company;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -16,6 +17,10 @@ public class Iva {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
     private double iva;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 
     public Iva(double iva) {
         this.iva = iva;

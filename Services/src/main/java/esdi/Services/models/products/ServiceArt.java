@@ -1,4 +1,5 @@
 package esdi.Services.models.products;
+import esdi.Services.models.users.Company;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,10 @@ public class ServiceArt {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Iva iva;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 
     public ServiceArt(String description, double costPrice, double salePrice, double utility, Category category, Iva iva) {
         this.description = description;

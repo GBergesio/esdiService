@@ -4,6 +4,7 @@ import esdi.Services.dtos.budget.BudgetDTO;
 import esdi.Services.dtos.budget.BudgetRequest;
 import esdi.Services.models.budgets.Budget;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public interface BudgetService {
             ResponseEntity<?> findById(Long id);
 
             ResponseEntity<?> createBudget(BudgetRequest request, Long idClient, Long idOrder);
+            ResponseEntity<?> allBudgetsByCompany(Authentication authentication);
 
             ResponseEntity<?> updateBudget(Long id);
 

@@ -7,6 +7,7 @@ import esdi.Services.services.devices.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,21 @@ public class OrderController {
     @GetMapping("/id/{id}")
     ResponseEntity<?> getDeviceById(@PathVariable Long id){
         return orderService.findById(id);
+    }
+
+    @GetMapping("/current/ordersByClient")
+    ResponseEntity<?> getOrdersByClient(Authentication authentication) {
+        return orderService.allOrdersByClient(authentication);
+    }
+
+    @GetMapping("/current/ordersByCompany")
+    ResponseEntity<?> getOrdersByCompany(Authentication authentication) {
+        return orderService.allOrdersByCompany(authentication);
+    }
+
+    @GetMapping("/current/ordersForStaff")
+    ResponseEntity<?> getOrdersByCompanyForStaff(Authentication authentication) {
+        return orderService.allOrdersByCompanyForStaff(authentication);
     }
 
     @GetMapping("/orderNumber/{orderNumber}")

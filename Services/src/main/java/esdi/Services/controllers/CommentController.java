@@ -5,6 +5,7 @@ import esdi.Services.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -24,6 +25,16 @@ public class CommentController {
     @GetMapping()
     ResponseEntity<?> getAllActiveComments(){
         return new ResponseEntity<>(commentService.getAllActiveComments(), HttpStatus.OK);
+    }
+
+    @GetMapping("/current/allComments")
+    ResponseEntity<?> getAllCommentsByCompany(Authentication authentication) {
+        return commentService.allCommentsByCompany(authentication);
+    }
+
+    @GetMapping("/current/allActiveComments")
+    ResponseEntity<?> getAllActiveCommentsByCompany(Authentication authentication) {
+        return commentService.allActiveCommentsByCompany(authentication);
     }
 
     @Transactional

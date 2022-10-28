@@ -34,9 +34,9 @@ public class StaffController {
         return staffService.getStaffByUser(user);
     }
 
-    @GetMapping("/current/staffs")
+    @GetMapping("/current/staffByCompany")
     ResponseEntity<?> getStaffByCurrentCompany(Authentication authentication) {
-        return staffService.getAllStaffsAuth(authentication);
+        return staffService.getAllStaffsByCompany(authentication);
     }
 
     @PostMapping()
