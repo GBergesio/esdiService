@@ -17,16 +17,17 @@ public interface ProductService {
 
     List<ProductDTO> findAllDTO();
 
-    ResponseEntity<?> allProductsByCompany(Authentication authentication);
-
     ResponseEntity<?> findPN(String productNumber);
-
-    ResponseEntity<?> createProduct(ProductRequest productRequest);
 
     ProductDTO saveProductDTO(Product product);
 
     ResponseEntity<?> findById(Long id);
 
-    ResponseEntity<?> updateProduct(Long id, ProductRequest productRequest);
+    ResponseEntity<?> updateProductByCompany(Authentication authentication,Long id, ProductRequest productRequest);
+    ResponseEntity<?> allProductsByCompany(Authentication authentication);
+
+    ResponseEntity<?> createProductByCompany(Authentication authentication, ProductRequest productRequest);
+
+    ResponseEntity<?> deleteProductByCompany(Authentication authentication,Long id);
 
 }

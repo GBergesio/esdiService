@@ -12,4 +12,8 @@ public class DolarDTO {
     private double price;
 
     private LocalDateTime date;
+
+    private String description;
+
+    private String companyName;
 }

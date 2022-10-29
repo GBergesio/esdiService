@@ -8,8 +8,10 @@ import esdi.Services.models.devices.DeviceCategory;
 import esdi.Services.models.devices.DeviceModel;
 import esdi.Services.models.products.Brand;
 import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Company;
 import esdi.Services.repositories.*;
 import esdi.Services.services.devices.DeviceService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,9 @@ public class DeviceImpl implements DeviceService {
     OrderRepository orderRepository;
 
     @Autowired
+    CompanyRepository companyRepository;
+
+    @Autowired
     DeviceMapper deviceMapper;
 
     @Override
@@ -67,7 +72,18 @@ public class DeviceImpl implements DeviceService {
     public ResponseEntity<?> allDevicesByClient(Authentication authentication) {
         Client client = clientRepository.findByUser(authentication.getName());
         List<Device> devicesByClient = deviceRepository.findAllByClient(client);
-        return new ResponseEntity<>(deviceMapper.toDTO(devicesByClient), HttpStatus.OK);
+        List<Device> devicesAvailables = devicesByClient.stream().filter(device -> device.getDeleted().equals(false)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(deviceMapper.toDTO(devicesAvailables), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> allDevicesByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Device> devicesByCompany = deviceRepository.findAllByCompany(company);
+        List<Device> devicesAvailables = devicesByCompany.stream().filter(device -> device.getDeleted().equals(false)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(deviceMapper.toDTO(devicesAvailables), HttpStatus.OK);
     }
 
     @Override
@@ -83,108 +99,35 @@ public class DeviceImpl implements DeviceService {
         return new ResponseEntity<>(deviceMapper.toDTO(deviceRepository.findById(id).orElse(null)), HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<?> findByCategory(Long idCategory) {
-
-        if(idCategory.equals(null) || idCategory == null){
-            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
-        }
-
-        DeviceCategory deviceCategory = deviceCategoryRepository.findById(idCategory).orElse(null);
-
-        if (deviceCategory == null){
-            return new ResponseEntity<>("No existe la categoria seleccionada",HttpStatus.BAD_REQUEST);
-        }
-
-        List<Device> devices = deviceRepository.findAllByCategory(deviceCategory);
-
-        if (devices.size() == 0){
-            return new ResponseEntity<>("No se encontraron dispositivos con la categoria seleccionada",HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(deviceMapper.toDTO(devices), HttpStatus.OK);
-    }
 
     @Override
-    public ResponseEntity<?> findByModel(Long idModel) {
-
-        if(idModel == null){
-            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
-        }
-
-        DeviceModel deviceModel = deviceModelRepository.findById(idModel).orElse(null);
-
-        if (deviceModel == null){
-            return new ResponseEntity<>("No existe el modelo ingresado",HttpStatus.BAD_REQUEST);
-        }
-
-        List<Device> devices = deviceRepository.findAllByModel(deviceModel);
-
-        if (devices.size() == 0){
-            return new ResponseEntity<>("No se encontraron dispositivos con el modelo seleccionado",HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(deviceMapper.toDTO(devices), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<?> findBySerial(String serial) {
-
-        if(serial == null){
-            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
-        }
-
-        List<Device> devices = deviceRepository.findAllBySerial(serial);
-
-        if (devices.size() == 0){
-            return new ResponseEntity<>("No se encontraron dispositivos con el Serial ingresado",HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(deviceMapper.toDTO(devices), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<?> findByClient(Long idClient) {
-
-        if(idClient == null){
-            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
-        }
-
-        Client client = clientRepository.findById(idClient).orElse(null);
-
-        if (client == null){
-            return new ResponseEntity<>("No existe el cliente",HttpStatus.BAD_REQUEST);
-        }
-
-        List<Device> devices = deviceRepository.findAllByClient(client);
-
-        if (devices.size() == 0){
-            return new ResponseEntity<>("No se encontraron dispositivos para el cliente seleccionado",HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(deviceMapper.toDTO(devices), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<?> createDevice(DeviceRequest deviceRequest) {
-
+    public ResponseEntity<?> createDevice(DeviceRequest deviceRequest, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
         DeviceModel deviceModel = deviceModelRepository.findById(deviceRequest.getModelId()).orElse(null);
         DeviceCategory deviceCategory = deviceCategoryRepository.findById(deviceRequest.getCategoryId()).orElse(null);
         Brand brand = brandRepository.findById(deviceRequest.getBrandId()).orElse(null);
         Client client = clientRepository.findById(deviceRequest.getClientId()).orElse(null);
+        List<DeviceModel> deviceModels = deviceModelRepository.findAllByCompany(company);
+        List<DeviceCategory> deviceCategories = deviceCategoryRepository.findAllByCompany(company);
+        List<Brand> brands = brandRepository.findAllByCompany(company);
+        List<Client> clients = clientRepository.findAllByCompany(company);
 
+        if (clients.indexOf(client) == -1){
+            return new ResponseEntity<>("No se encontró cliente con el id seleccionado", HttpStatus.BAD_REQUEST);
+        }
+        if (deviceModels.indexOf(deviceModel) == -1){
+            return new ResponseEntity<>("No se encontró modelo con el id seleccionado", HttpStatus.BAD_REQUEST);
+        }
+        if (deviceCategories.indexOf(deviceCategory) == -1){
+            return new ResponseEntity<>("No se encontró categoria del dispositivo con el id seleccionado", HttpStatus.BAD_REQUEST);
+        }
+        if (brands.indexOf(brand) == -1){
+            return new ResponseEntity<>("No se encontró marca con el id seleccionado", HttpStatus.BAD_REQUEST);
+        }
         if (deviceRequest.getDescription() == null || deviceRequest.getDescription().isEmpty() || deviceRequest.getDescription().isBlank())
             return new ResponseEntity<>("Descripción requerida", HttpStatus.BAD_REQUEST);
         if (deviceRequest.getSerial() == null || deviceRequest.getSerial().isEmpty() || deviceRequest.getSerial().isBlank())
             return new ResponseEntity<>(HttpStatus.OK);
-        if(brand == null)
-            return new ResponseEntity<>("Marca no encontrada",HttpStatus.BAD_REQUEST);
-        if(deviceModel == null)
-            return new ResponseEntity<>("Modelo no encontrado",HttpStatus.BAD_REQUEST);
-        if(deviceCategory == null)
-            return new ResponseEntity<>("Categoria no encontrada",HttpStatus.BAD_REQUEST);
-        if(client == null)
-            return new ResponseEntity<>("Cliente no encontrado",HttpStatus.BAD_REQUEST);
 
         Device newDevice = new Device();
         newDevice.setClient(client);
@@ -193,48 +136,156 @@ public class DeviceImpl implements DeviceService {
         newDevice.setModel(deviceModel);
         newDevice.setSerial(deviceRequest.getSerial());
         newDevice.setDescription(deviceRequest.getDescription());
+        newDevice.setCompany(company);
+        newDevice.setDeleted(false);
         deviceRepository.save(newDevice);
 
         return new ResponseEntity<>(deviceMapper.toDTO(newDevice), HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<?> updateDevice(Long id, DeviceRequest deviceRequest) {
+    public ResponseEntity<?> updateDevice(Long id, DeviceRequest deviceRequest, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
         Device deviceDB = deviceRepository.findById(id).orElse(null);
         DeviceModel deviceModel = deviceModelRepository.findById(deviceRequest.getModelId()).orElse(null);
         DeviceCategory deviceCategory = deviceCategoryRepository.findById(deviceRequest.getCategoryId()).orElse(null);
         Brand brand = brandRepository.findById(deviceRequest.getBrandId()).orElse(null);
         Client client = clientRepository.findById(deviceRequest.getClientId()).orElse(null);
+        List<Device> devices = deviceRepository.findAllByCompany(company);
+        List<DeviceModel> deviceModels = deviceModelRepository.findAllByCompany(company);
+        List<DeviceCategory> deviceCategories = deviceCategoryRepository.findAllByCompany(company);
+        List<Brand> brands = brandRepository.findAllByCompany(company);
+        List<Client> clients = clientRepository.findAllByCompany(company);
 
-        if(deviceDB == null)
-            return new ResponseEntity<>("Dispositivo no encontrado",HttpStatus.BAD_REQUEST);
-        if (deviceDB != null){
-            deviceDB.setClient(client);
-            deviceDB.setCategory(deviceCategory);
-            deviceDB.setBrand(brand);
-            deviceDB.setModel(deviceModel);
-            deviceDB.setSerial(deviceRequest.getSerial());
-            deviceDB.setDescription(deviceRequest.getDescription());
-            deviceRepository.save(deviceDB);
+        if (devices.indexOf(deviceDB) == -1){
+            return new ResponseEntity<>("No se encontró coincidencia con el id seleccionado", HttpStatus.BAD_REQUEST);
         }
+        if (clients.indexOf(client) == -1){
+            return new ResponseEntity<>("No se encontró cliente con el id seleccionado", HttpStatus.BAD_REQUEST);
+        }
+        if (deviceModels.indexOf(deviceModel) == -1){
+            return new ResponseEntity<>("No se encontró modelo con el id seleccionado", HttpStatus.BAD_REQUEST);
+        }
+        if (deviceCategories.indexOf(deviceCategory) == -1){
+            return new ResponseEntity<>("No se encontró categoria del dispositivo con el id seleccionado", HttpStatus.BAD_REQUEST);
+        }
+        if (brands.indexOf(brand) == -1){
+            return new ResponseEntity<>("No se encontró marca con el id seleccionado", HttpStatus.BAD_REQUEST);
+        }
+        if (deviceRequest.getDescription() == null || deviceRequest.getDescription().isEmpty() || deviceRequest.getDescription().isBlank())
+            return new ResponseEntity<>("Descripción requerida", HttpStatus.BAD_REQUEST);
+
+        deviceDB.setClient(client);
+        deviceDB.setCategory(deviceCategory);
+        deviceDB.setBrand(brand);
+        deviceDB.setModel(deviceModel);
+        deviceDB.setSerial(deviceRequest.getSerial());
+        deviceDB.setDescription(deviceRequest.getDescription());
+        deviceRepository.save(deviceDB);
+
         return new ResponseEntity<>(deviceMapper.toDTO(deviceDB), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> deleteDevice(Long id) {
-
+    public ResponseEntity<?> deleteDevice(Long id, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
         Device deviceDB = deviceRepository.findById(id).orElse(null);
+        List<Device> devices = deviceRepository.findAllByCompany(company);
 
-        if(deviceDB == null)
-            return new ResponseEntity<>("Dispositivo no encontrado",HttpStatus.BAD_REQUEST);
-
+        if (devices.indexOf(deviceDB) == -1){
+            return new ResponseEntity<>("No se encontró coincidencia con el id seleccionado", HttpStatus.BAD_REQUEST);
+        }
+        // ver quizas de mejorar esto ↓
         List<Order> orders = orderRepository.findAllByDevice(deviceDB);
-
         if(orders.size() > 0)
             return new ResponseEntity<>("Dispositivo asociado a una orden",HttpStatus.BAD_REQUEST);
 
-        deviceRepository.delete(deviceDB);
+        deviceDB.setDeleted(true);
         return new ResponseEntity<>("Dispositivo eliminado exitosamente",HttpStatus.OK);
     }
 
 }
+
+
+//    Hacer para proxima version ↓ estan andando, pero hay que implementar el auth
+//    @Override
+//    public ResponseEntity<?> findByCategory(Long idCategory) {
+//
+//        if(idCategory.equals(null) || idCategory == null){
+//            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        DeviceCategory deviceCategory = deviceCategoryRepository.findById(idCategory).orElse(null);
+//
+//        if (deviceCategory == null){
+//            return new ResponseEntity<>("No existe la categoria seleccionada",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        List<Device> devices = deviceRepository.findAllByCategory(deviceCategory);
+//
+//        if (devices.size() == 0){
+//            return new ResponseEntity<>("No se encontraron dispositivos con la categoria seleccionada",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        return new ResponseEntity<>(deviceMapper.toDTO(devices), HttpStatus.OK);
+//    }
+//
+//    @Override
+//    public ResponseEntity<?> findByModel(Long idModel) {
+//
+//        if(idModel == null){
+//            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        DeviceModel deviceModel = deviceModelRepository.findById(idModel).orElse(null);
+//
+//        if (deviceModel == null){
+//            return new ResponseEntity<>("No existe el modelo ingresado",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        List<Device> devices = deviceRepository.findAllByModel(deviceModel);
+//
+//        if (devices.size() == 0){
+//            return new ResponseEntity<>("No se encontraron dispositivos con el modelo seleccionado",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        return new ResponseEntity<>(deviceMapper.toDTO(devices), HttpStatus.OK);
+//    }
+//
+//    @Override
+//    public ResponseEntity<?> findBySerial(String serial) {
+//
+//        if(serial == null){
+//            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        List<Device> devices = deviceRepository.findAllBySerial(serial);
+//
+//        if (devices.size() == 0){
+//            return new ResponseEntity<>("No se encontraron dispositivos con el Serial ingresado",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        return new ResponseEntity<>(deviceMapper.toDTO(devices), HttpStatus.OK);
+//    }
+//
+//    @Override
+//    public ResponseEntity<?> findByClient(Long idClient) {
+//
+//        if(idClient == null){
+//            return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        Client client = clientRepository.findById(idClient).orElse(null);
+//
+//        if (client == null){
+//            return new ResponseEntity<>("No existe el cliente",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        List<Device> devices = deviceRepository.findAllByClient(client);
+//
+//        if (devices.size() == 0){
+//            return new ResponseEntity<>("No se encontraron dispositivos para el cliente seleccionado",HttpStatus.BAD_REQUEST);
+//        }
+//
+//        return new ResponseEntity<>(deviceMapper.toDTO(devices), HttpStatus.OK);
+//    }

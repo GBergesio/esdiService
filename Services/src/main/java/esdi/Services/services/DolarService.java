@@ -9,5 +9,9 @@ public interface DolarService {
 
         Dolar saveDolar(Dolar dolar);
 
-        ResponseEntity<?> dolarByCompany(Authentication authentication);
+        ResponseEntity<?> allDollars();
+
+        ResponseEntity<?> dollarByCompany(Authentication authentication);
+
+        ResponseEntity<?> newDollarByCompany(Authentication authentication, DolarDTO dolarDTO);
 }

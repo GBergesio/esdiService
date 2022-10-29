@@ -37,11 +37,14 @@ public class Product {
 
     private Double dolar;
 
+    private Boolean deleted;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Iva iva;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id")
@@ -50,7 +53,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     private Brand brand;
 
-    public Product(String productNumber, String description, Brand brand, Category category,Currency currency, Double dolar,Iva iva,double costPrice,double utility,double salePrice){
+    public Product(String productNumber, String description, Brand brand, Category category,Currency currency, Double dolar,Iva iva,double costPrice,double utility,double salePrice, Boolean deleted){
         this.productNumber = productNumber;
         this.description = description;
         this.costPrice = costPrice;
@@ -61,6 +64,7 @@ public class Product {
         this.category = category;
         this.dolar = dolar;
         this.brand = brand;
+        this.deleted = deleted;
     }
 
 

@@ -1,7 +1,5 @@
 package esdi.Services.dtos.request;
 
-import esdi.Services.dtos.CategoryDTO;
-import esdi.Services.dtos.IvaDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,9 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class ServiceDTORequest {
-
-    private long id;
+public class ServiceArtRequest {
 
     private String description;
 
@@ -24,7 +20,5 @@ public class ServiceDTORequest {
     private Long ivaId;
 
     private Long categoryId;
-
-
 
 }

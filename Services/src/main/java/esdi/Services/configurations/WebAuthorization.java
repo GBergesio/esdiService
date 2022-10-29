@@ -23,9 +23,13 @@ public class WebAuthorization extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 .antMatchers(HttpMethod.GET, "/orders/current/ordersByClient", "/devices/current/devicesByClient").hasAnyAuthority("CLIENT")
-                .antMatchers(HttpMethod.GET, "/products/current/**", "/categories/current/**", "/dolar/current/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
+                .antMatchers(HttpMethod.GET, "/products/current/**", "/services/current/**", "/categories/current/**", "/dolar/current/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
                 .antMatchers(HttpMethod.GET, "/orders/current/**","/staff/current/**","/budgets/current/**","/devices/current/**","/comments/current/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
-                .antMatchers("/admin/**","/rest/**","/h2-console/**", "/companies/**", "/orders/**").hasAuthority("SUPERADMIN")
+                .antMatchers(HttpMethod.POST,"/staff/current/**", "/services/current/**","/devices/current/**").hasAnyAuthority("ADMIN", "COMPANY")
+                .antMatchers(HttpMethod.DELETE,"/services/current/**").hasAnyAuthority("ADMIN", "COMPANY")
+                .antMatchers(HttpMethod.PATCH,"/staff/current/**","/services/current/**","/products/current/**", "/orders/current/**").hasAnyAuthority("ADMIN", "COMPANY")
+
+                .antMatchers("/admin/**","/rest/**","/h2-console/**", "/companies/**", "/orders/**","/staff/**","/services/**","/SAC/**").hasAuthority("SUPERADMIN")
 //                .antMatchers(HttpMethod.GET, "/company/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
 //                .antMatchers("/web/index.html","/web/login.html","/web/data/index.js","/web/data/login.js").permitAll()
 //

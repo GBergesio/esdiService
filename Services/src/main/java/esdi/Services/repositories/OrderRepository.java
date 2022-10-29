@@ -13,11 +13,9 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order,Long> {
 
     public Order findByOrderNumber(int orderNumber);
-
     public List<Order> findAllByDevice(Device device);
-
     public List<Order> findAllByClient(Client client);
     public List<Order> findAllByCompany(Company company);
-
+    public Order findByCompany(Company company);
 }
 

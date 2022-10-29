@@ -16,40 +16,24 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @Autowired
-    ProductRepository productRepository;
-
-    @Autowired
-    ProductMapper productMapper;
-
-    @GetMapping()
-    ResponseEntity<?> getAllOrders(){
-        return new ResponseEntity<>(productService.findAllDTO(), HttpStatus.OK);
-    }
-
-    @GetMapping("/pn/{productNumber}")
-    ResponseEntity<?> getProductBy(@PathVariable String productNumber){
-        return productService.findPN(productNumber);
-    }
-
-    @GetMapping("/id/{id}")
-    ResponseEntity<?> getProductByID(@PathVariable Long id){
-        return productService.findById(id);
-    }
-
-    @GetMapping("/current/productsByCompany")
+    @GetMapping("/current")
     ResponseEntity<?> getCategoriesByCompany(Authentication authentication) {
         return productService.allProductsByCompany(authentication);
     }
 
-    @PostMapping()
-    ResponseEntity<?> newProduct(@RequestBody ProductRequest productRequest){
-        return productService.createProduct(productRequest);
+    @PostMapping("/current")
+    ResponseEntity<?> newProduct(@RequestBody ProductRequest productRequest, Authentication authentication){
+        return productService.createProductByCompany(authentication, productRequest);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
-        return productService.updateProduct(id, productRequest);
+    @PatchMapping("/current/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest, Authentication authentication) {
+        return productService.updateProductByCompany(authentication, id, productRequest);
+    }
+
+    @DeleteMapping("/current/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id, Authentication authentication) {
+        return productService.deleteProductByCompany(authentication, id);
     }
 
 }

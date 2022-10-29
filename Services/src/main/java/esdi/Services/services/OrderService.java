@@ -16,19 +16,20 @@ public interface OrderService {
     List<OrderDTO>getAllOrders();
     Order getOrderId(Long id);
     Order getOrderByNumber(int orderNumber);
-    void updateTechnician(Order order, Staff technician);
     ResponseEntity<?> allOrders();
     ResponseEntity<?> allOrdersByClient(Authentication authentication);
     ResponseEntity<?> allOrdersByCompany(Authentication authentication);
-
+    ResponseEntity<?> updateTechnician(Order order, Staff technician,Authentication authentication);
     ResponseEntity<?> allOrdersByCompanyForStaff(Authentication authentication);
     ResponseEntity<?> findById(Long id);
+    ResponseEntity<?> findByIdAuth(Long id, Authentication authentication);
     ResponseEntity<?> findByNumber(int orderNumber);
     ResponseEntity<?> createOrder(OrderRequest orderRequest, String dni, Long device);
     ResponseEntity<?> updateOrder(Long idOrder,Long idDevice, Long idTechnician, OrderRequest orderRequest);
-    ResponseEntity<?> releaseOrder(Long idOrder);
-    ResponseEntity<?> switchPriority(Long idOrder);
-    ResponseEntity<?> orderFinished(Long idOrder);
-    ResponseEntity<?> deleteOrder(Long id);
+    ResponseEntity<?> releaseOrder(Authentication authentication, Long id);
+    ResponseEntity<?> switchPriority(Authentication authentication, Long idOrder);
+    ResponseEntity<?> orderFinished(Authentication authentication, Long idOrder);
+    ResponseEntity<?> orderStaff(Authentication authentication, Long id, Long idStaff);
+    ResponseEntity<?> deleteOrder(Authentication authentication, Long id);
 
 }

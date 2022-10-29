@@ -20,4 +20,5 @@ public class ProductDTO {
     private CategoryDTO category;
     private Double dolar;
     private BrandDTO brand;
+    private Boolean deleted;
 }

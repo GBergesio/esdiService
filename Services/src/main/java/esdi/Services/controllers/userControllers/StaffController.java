@@ -14,44 +14,20 @@ public class StaffController {
     @Autowired
     StaffService staffService;
 
-    @GetMapping()
-    public ResponseEntity<?> getAllStaffs() {
-        return staffService.getAllStaffs();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getStaffById(@PathVariable Long id) {
-        return staffService.getStaffById(id);
-    }
-
-    @GetMapping("/dni/{dni}")
-    public ResponseEntity<?> getStaffByDni(@PathVariable String dni) {
-        return staffService.getStaffByDni(dni);
-    }
-
-    @GetMapping("/user/{user}")
-    public ResponseEntity<?> getStaffByUser(@PathVariable String user) {
-        return staffService.getStaffByUser(user);
-    }
-
     @GetMapping("/current/staffByCompany")
     ResponseEntity<?> getStaffByCurrentCompany(Authentication authentication) {
         return staffService.getAllStaffsByCompany(authentication);
     }
 
-    @PostMapping()
-    public ResponseEntity<?> createStaff(@RequestBody StaffRequest staffRequest) {
-        return staffService.createStaff(staffRequest);
+    @PostMapping("/current/create")
+    public ResponseEntity<?> createStaffByCurrentCompany(Authentication authentication, @RequestBody StaffRequest staffRequest) {
+        return staffService.createStaffByCompany(authentication, staffRequest);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> updateStaff(@PathVariable Long id, @RequestBody StaffRequest staffRequest) {
-        return staffService.updateStaff(id, staffRequest);
+    @PatchMapping("/current/update/{id}")
+    public ResponseEntity<?> updateStaffByCurrentCompany(Authentication authentication,@PathVariable Long id, @RequestBody StaffRequest staffRequest) {
+        return staffService.updateStaffByCompany(authentication, id, staffRequest);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteStaff(@PathVariable Long id) {
-        return staffService.deleteStaff(id);
-    }
 
 }

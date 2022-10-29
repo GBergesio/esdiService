@@ -21,6 +21,10 @@ public class Dolar{
 
     private LocalDateTime date;
 
+    private String description;
+
+    private String companyName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id")
     private Company company;

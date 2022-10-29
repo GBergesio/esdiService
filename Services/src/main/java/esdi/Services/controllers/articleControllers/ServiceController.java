@@ -1,9 +1,8 @@
 package esdi.Services.controllers.articleControllers;
 
-import esdi.Services.dtos.request.ServiceDTORequest;
+import esdi.Services.dtos.request.ServiceArtRequest;
 import esdi.Services.services.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -15,24 +14,25 @@ public class ServiceController {
     @Autowired
     ServiceService serviceService;
 
-    @GetMapping()
-    ResponseEntity<?> getAllOrders(){
-        return new ResponseEntity<>(serviceService.findAllDTO(), HttpStatus.OK);
+    @PostMapping("/current")
+    ResponseEntity<?> newService(Authentication authentication, @RequestBody ServiceArtRequest serviceArtRequest){
+        return serviceService.createServiceByCompany(authentication, serviceArtRequest);
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<?> getProductBy(@PathVariable Long id){
-        return serviceService.findById(id);
-    }
-
-    @PostMapping()
-    ResponseEntity<?> newService(@RequestBody ServiceDTORequest serviceDTORequest){
-        return serviceService.createService(serviceDTORequest);
-    }
-
-    @GetMapping("/current/servicesByCompany")
-    ResponseEntity<?> getServicesByCompany(Authentication authentication) {
+    @GetMapping("/current")
+    ResponseEntity<?> servicesByCompany(Authentication authentication) {
         return serviceService.allServicesByCompany(authentication);
     }
 
+    @DeleteMapping("/current/{id}")
+    ResponseEntity<?> deleteServiceByCompany(@PathVariable Long id, Authentication authentication) {
+        return serviceService.deleteServiceByCompany(authentication, id );
+    }
+
+    @PatchMapping("/current/{id}")
+    public ResponseEntity<?> updateService(@PathVariable Long id, @RequestBody ServiceArtRequest serviceArtRequest, Authentication authentication) {
+        return serviceService.updateServiceByCompany(authentication, id, serviceArtRequest);
+    }
+
 }
+

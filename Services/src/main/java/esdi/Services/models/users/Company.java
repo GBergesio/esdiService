@@ -1,5 +1,6 @@
 package esdi.Services.models.users;
 
+import esdi.Services.enums.CompanyPlan;
 import esdi.Services.enums.UserType;
 import esdi.Services.models.Comment;
 import esdi.Services.models.Currency;
@@ -40,6 +41,7 @@ public class Company {
     private String user;
     private String password;
     private UserType userType;
+    private CompanyPlan plan;
     private boolean active;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)

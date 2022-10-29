@@ -18,75 +18,48 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @Autowired
-    DeviceService deviceService;
-
-    @Autowired
-    ClientService clientService;
-
-    @GetMapping()
-    ResponseEntity<?> getAllOrders(){
-        return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
-        }
-
-    @GetMapping("/id/{id}")
-    ResponseEntity<?> getDeviceById(@PathVariable Long id){
-        return orderService.findById(id);
-    }
-
-    @GetMapping("/current/ordersByClient")
+    @GetMapping("/current/forClient")
     ResponseEntity<?> getOrdersByClient(Authentication authentication) {
         return orderService.allOrdersByClient(authentication);
     }
 
-    @GetMapping("/current/ordersByCompany")
+    @GetMapping("/current")
     ResponseEntity<?> getOrdersByCompany(Authentication authentication) {
         return orderService.allOrdersByCompany(authentication);
     }
 
-    @GetMapping("/current/ordersForStaff")
+    @GetMapping("/current/forStaff")
     ResponseEntity<?> getOrdersByCompanyForStaff(Authentication authentication) {
         return orderService.allOrdersByCompanyForStaff(authentication);
     }
 
-    @GetMapping("/orderNumber/{orderNumber}")
-    ResponseEntity<?> getDeviceById(@PathVariable int orderNumber){
-        return orderService.findByNumber(orderNumber);
+    @Transactional
+    @PatchMapping("/current/release")
+    ResponseEntity<?> releaseOrder(Authentication authentication, Long idOrder){
+        return orderService.releaseOrder(authentication ,idOrder);
     }
 
     @Transactional
-    @PostMapping()
-    ResponseEntity<?> newOrder(@RequestBody OrderRequest orderRequest, @RequestParam String dni, @RequestParam Long idDevice){
-        return orderService.createOrder(orderRequest, dni, idDevice);
+    @PatchMapping("/current/switchPriority")
+    ResponseEntity<?> switchPriority(Authentication authentication, Long idOrder){
+        return orderService.switchPriority(authentication, idOrder);
     }
 
     @Transactional
-    @PatchMapping("/modify")
-    ResponseEntity<?> updateOrder(Long idOrder,Long idDevice, Long idTechnician, OrderRequest orderRequest){
-        return orderService.updateOrder(idOrder,idDevice, idTechnician, orderRequest);
+    @PatchMapping("/current/finished")
+    ResponseEntity<?> orderFinished(Authentication authentication, Long idOrder){
+        return orderService.orderFinished(authentication, idOrder);
     }
 
     @Transactional
-    @PatchMapping("/release")
-    ResponseEntity<?> releaseOrder(Long idOrder){
-        return orderService.releaseOrder(idOrder);
+    @PatchMapping("/current/orderStaff")
+    ResponseEntity<?> orderFinished(Authentication authentication, Long id, Long idStaff){
+        return orderService.orderStaff(authentication, id, idStaff);
     }
 
-    @Transactional
-    @PatchMapping("/switchPriority")
-    ResponseEntity<?> switchPriority(Long idOrder){
-        return orderService.switchPriority(idOrder);
-    }
-
-    @Transactional
-    @PatchMapping("/orderFinished")
-    ResponseEntity<?> orderFinished(Long idOrder){
-        return orderService.orderFinished(idOrder);
-    }
-
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteOrder(@PathVariable Long id) {
-        return orderService.deleteOrder(id);
+    @DeleteMapping("/current/{id}")
+    ResponseEntity<?> deleteOrder(@PathVariable Long id, Authentication authentication) {
+        return orderService.deleteOrder(authentication ,id);
     }
 
 }

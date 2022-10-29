@@ -6,9 +6,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class ServiceDTO {
+public class ServiceArtDTO {
 
-    private long id;
+    private Long id;
 
     private String description;
 
@@ -19,7 +19,7 @@ public class ServiceDTO {
     private double utility;
 
     private IvaDTO iva;
-
     private CategoryDTO category;
+    private Boolean deleted;
 
 }

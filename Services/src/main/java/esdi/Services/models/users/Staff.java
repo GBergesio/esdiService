@@ -28,7 +28,7 @@ public class Staff {
     private String user;
     private String password;
     private UserType userType;
-    private boolean deleted;
+    private Boolean deleted;
 
     @OneToMany(mappedBy = "staff", fetch = FetchType.EAGER)
     private Set<Order> orders = new HashSet<>();
@@ -39,7 +39,7 @@ public class Staff {
 
     public Staff(){}
 
-    public Staff(String dni, String firstName, String lastName, String email, String user, String password, UserType userType) {
+    public Staff(String dni, String firstName, String lastName, String email, String user, String password, UserType userType, Boolean deleted) {
         this.dni = dni;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -3,10 +3,12 @@ package esdi.Services.services.implement;
 import esdi.Services.dtos.OrderDTO;
 import esdi.Services.dtos.request.OrderRequest;
 import esdi.Services.enums.Priority;
+import esdi.Services.enums.StatusBudget;
 import esdi.Services.mappers.CompanyMapper;
 import esdi.Services.mappers.OrderMapper;
 import esdi.Services.models.Comment;
 import esdi.Services.models.Order;
+import esdi.Services.models.budgets.Budget;
 import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Company;
@@ -88,9 +90,12 @@ public class OrderServiceImpl implements OrderService {
         Company company = companyRepository.findByUser(authentication.getName());
         List<Order> ordersByCompany = orderRepository.findAllByCompany(company);
 
-        System.out.println(company);
-
         return new ResponseEntity<>(orderMapper.toDTO(ordersByCompany), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> updateTechnician(Order order, Staff technician, Authentication authentication) {
+        return null;
     }
 
     @Override
@@ -114,6 +119,11 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return new ResponseEntity<>(orderMapper.toDTO(orderRepository.findById(id).orElse(null)), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> findByIdAuth(Long id, Authentication authentication) {
+        return null;
     }
 
     @Override
@@ -180,8 +190,6 @@ public class OrderServiceImpl implements OrderService {
         newOrder.setOrderDetails(orderRequest.getOrderDetails());
         newOrder.setStaff(null);
         newOrder.setPasswordDevice(orderRequest.getPasswordDevice());
-
-
         client.addOrder(newOrder);
         newOrder.setDevice(device);
 
@@ -223,11 +231,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> releaseOrder(Long idOrder) {
+    public ResponseEntity<?> releaseOrder(Authentication authentication, Long idOrder) {
+        Company company = companyRepository.findByUser(authentication.getName());
         Order order = orderRepository.findById(idOrder).orElse(null);
-        if(order == null)
-            return new ResponseEntity<>("Orden no encontrada | Ingrese numero de orden",HttpStatus.BAD_REQUEST);
-        if(order != null){
+        List<Order> orderList = orderRepository.findAllByCompany(company);
+
+        if (orderList.indexOf(order) == -1)
+            return new ResponseEntity<>("No se encuentra Orden", HttpStatus.BAD_REQUEST);
+        else{
             order.setStaff(null);
             orderRepository.save(order);
         }
@@ -235,13 +246,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> switchPriority(Long idOrder) {
-        Order order = orderRepository.findById(idOrder).orElse(null);
-        Priority priority = order.getPriority();
+    public ResponseEntity<?> switchPriority(Authentication authentication, Long id) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        Order order = orderRepository.findById(id).orElse(null);
+        List<Order> orderList = orderRepository.findAllByCompany(company);
 
-        if(order == null)
+        if (orderList.indexOf(order) == -1){
             return new ResponseEntity<>("Orden no encontrada | Ingrese numero de orden",HttpStatus.BAD_REQUEST);
-        if(order != null){
+        }
+        if (orderList.indexOf(order) != -1){
+            Priority priority = order.getPriority();
             switch (priority){
                 case NORMAL:
                     order.setPriority(Priority.MEDIUM);
@@ -258,24 +272,32 @@ public class OrderServiceImpl implements OrderService {
             }
             orderRepository.save(order);
         }
+
         return new ResponseEntity<>(orderMapper.toDTO(order), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> orderFinished(Long idOrder) {
+    public ResponseEntity<?> orderFinished(Authentication authentication, Long idOrder) {
         Order order = orderRepository.findById(idOrder).orElse(null);
-        if(order == null)
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Order> orderList = orderRepository.findAllByCompany(company);
+
+        if (orderList.indexOf(order) == -1){
             return new ResponseEntity<>("Orden no encontrada | Ingrese numero de orden",HttpStatus.BAD_REQUEST);
-        if(order != null){
+        }
+        if (orderList.indexOf(order) != -1){
             if (order.getStaff() == null){
                 return new ResponseEntity<>("Orden sin técnico asignado, por favor asigne uno para poder cambiar el estado de la orden.",HttpStatus.BAD_REQUEST);
             }
-//            if (order...presupuesto){
-//                return new ResponseEntity<>("Orden sin presupuesto, por favor cree uno para poder cambiar el estado de la orden.",HttpStatus.BAD_REQUEST);
-//            }
-//            if (order...presupaprobado ){
-//                return new ResponseEntity<>("Orden sin presupuesto aprobado, apruebe el presupuesto para poder cambiar el estado de la orden..",HttpStatus.BAD_REQUEST);
-//            }
+            Budget orderBudget = order.getBudget();
+
+            if(orderBudget == null){
+                return new ResponseEntity<>("Orden sin presupuesto, por favor cree un presupuesto para cambiar el estado de la orden.",HttpStatus.BAD_REQUEST);
+            }
+
+            if(orderBudget.getStatusBudget().equals(StatusBudget.ON_HOLD)){
+                return new ResponseEntity<>("Orden con presupuesto sin confirmar, por favor confirme el presupuesto para cambiar el estado de la orden.",HttpStatus.BAD_REQUEST);
+            }
         }
         order.setOutDate(LocalDateTime.now());
 
@@ -283,8 +305,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> deleteOrder(Long id) {
+    public ResponseEntity<?> orderStaff(Authentication authentication, Long id,Long idStaff) {
+        Order order = orderRepository.findById(id).orElse(null);
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Order> orderList = orderRepository.findAllByCompany(company);
+        List<Staff> staffList = staffRepository.findAllByCompany(company);
 
+        if (orderList.indexOf(order) == -1){
+            return new ResponseEntity<>("Orden no encontrada | Ingrese numero de orden",HttpStatus.BAD_REQUEST);
+        }
+        if (orderList.indexOf(order) != -1){
+            Staff staff = staffRepository.findById(idStaff).orElse(null);
+            if(staffList.indexOf(staff) == -1){
+                return new ResponseEntity<>("Staff no encontrado",HttpStatus.BAD_REQUEST);
+            }
+            if (staffList.indexOf(order) != -1){
+                order.setStaff(staff);
+            }
+        orderRepository.save(order);
+        }
+
+        return new ResponseEntity<>(orderMapper.toDTO(order), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteOrder(Authentication authentication, Long id) {
+        Company company = companyRepository.findByUser(authentication.getName());
         Order orderDB = orderRepository.findById(id).orElse(null);
 
         if(orderDB == null)
@@ -305,12 +351,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.delete(orderDB);
         return new ResponseEntity<>("Orden eliminada exitosamente",HttpStatus.OK);
-    }
-
-
-    @Override
-    public void updateTechnician(Order order, Staff technician) {
-        order.setStaff(technician);
     }
 
 }

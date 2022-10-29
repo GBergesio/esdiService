@@ -20,6 +20,7 @@ public class DeviceDTO {
     private DeviceModelDTO model;
     private String description;
     private String serial;
+    private Boolean deleted;
     private ClientDTO client;
 
 }

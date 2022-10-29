@@ -19,5 +19,6 @@ public class StaffDTO {
     private String user;
     private String password;
     private UserType userType;
+    private Boolean deleted;
 
 }

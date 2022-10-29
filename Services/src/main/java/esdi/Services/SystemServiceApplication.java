@@ -57,6 +57,7 @@ public class SystemServiceApplication {
             ampersand.setUser("ampersandAdmin");
             ampersand.setPassword(passwordEncoder.encode("123"));
             ampersand.setUserType(UserType.SUPERADMIN);
+            ampersand.setPlan(CompanyPlan.THREE);
             companyRepository.save(ampersand);
 
             Company esdi = new Company();
@@ -67,6 +68,7 @@ public class SystemServiceApplication {
             esdi.setUser("C-electro001");
             esdi.setPassword(passwordEncoder.encode("123"));
             esdi.setUserType(UserType.COMPANY);
+            esdi.setPlan(CompanyPlan.TWO);
             companyRepository.save(esdi);
 
             Company tallerChapa = new Company();
@@ -77,17 +79,18 @@ public class SystemServiceApplication {
             tallerChapa.setUser("C-taller001");
             tallerChapa.setPassword(passwordEncoder.encode("123"));
             tallerChapa.setUserType(UserType.COMPANY);
+            tallerChapa.setPlan(CompanyPlan.ONE);
             companyRepository.save(tallerChapa);
 
-            Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", passwordEncoder.encode("123"), UserType.ADMIN);
+            Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", passwordEncoder.encode("123"), UserType.ADMIN,false);
             admin.setCompany(esdi);
             staffRepository.save(admin);
 
-            Staff technician = new Staff("55", "Tecnico", "Bergesio", "bergesiog1@tt.com", "electro002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN);
+            Staff technician = new Staff("55", "Tecnico", "Bergesio", "bergesiog1@tt.com", "electro002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN,false);
             technician.setCompany(esdi);
             staffRepository.save(technician);
 
-            Staff tecnicoAuto = new Staff("5335", "Tecnico", "Autos", "bergesiog1@tt.com", "tecniAuto002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN);
+            Staff tecnicoAuto = new Staff("5335", "Tecnico", "Autos", "bergesiog1@tt.com", "tecniAuto002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN,false);
             tecnicoAuto.setCompany(tallerChapa);
             staffRepository.save(tecnicoAuto);
 
@@ -124,34 +127,56 @@ public class SystemServiceApplication {
             brand1.setCompany(esdi);
             brandRepository.save(brand1);
 
+            Brand brand2 = new Brand("Intel");
+            brand2.setCompany(esdi);
+            brandRepository.save(brand2);
+
+            Brand brand3 = new Brand("Peugeot");
+            brand3.setCompany(tallerChapa);
+            brandRepository.save(brand3);
+
             // DEVICES //
 
             //DEVICES MODELS//
 
             DeviceModel deviceModel1 = new DeviceModel();
             deviceModel1.setModel("X541HJ");
+            deviceModel1.setCompany(esdi);
 
             DeviceModel deviceModel2 = new DeviceModel();
             deviceModel2.setModel("TUF GAMING 22X");
+            deviceModel2.setCompany(esdi);
 
             DeviceModel deviceModel3 = new DeviceModel();
             deviceModel3.setModel("dy2061la");
+            deviceModel3.setCompany(esdi);
+
+            DeviceModel deviceModel4 = new DeviceModel();
+            deviceModel4.setModel("Corolla 2.0");
+            deviceModel4.setCompany(tallerChapa);
 
             deviceModelRepository.save(deviceModel1);
             deviceModelRepository.save(deviceModel2);
             deviceModelRepository.save(deviceModel3);
-
+            deviceModelRepository.save(deviceModel4);
             //DEVICES CATEGORIES//
 
             DeviceCategory deviceCategory1 = new DeviceCategory("PC de escritorio");
+            deviceCategory1.setCompany(esdi);
             DeviceCategory deviceCategory2 = new DeviceCategory("Notebook");
+            deviceCategory2.setCompany(esdi);
             DeviceCategory deviceCategory3 = new DeviceCategory("Netbook");
+            deviceCategory3.setCompany(esdi);
             DeviceCategory deviceCategory4 = new DeviceCategory("Impresora multifuncion");
+            deviceCategory3.setCompany(esdi);
+            DeviceCategory deviceCategory5 = new DeviceCategory("Sedan 5 puertas");
+            deviceCategory5.setCompany(tallerChapa);
 
             deviceCategoryRepository.save(deviceCategory1);
             deviceCategoryRepository.save(deviceCategory2);
             deviceCategoryRepository.save(deviceCategory3);
             deviceCategoryRepository.save(deviceCategory4);
+            deviceCategoryRepository.save(deviceCategory5);
 
             //DEVICES//
             Device device1 = new Device();
@@ -162,6 +187,7 @@ public class SystemServiceApplication {
             device1.setClient(client);
             device1.setSerial("123124DGASDGA");
             device1.setCompany(esdi);
+            device1.setDeleted(false);
             deviceRepository.save(device1);
 
             Device device2 = new Device();
@@ -172,6 +198,7 @@ public class SystemServiceApplication {
             device2.setClient(client2);
             device2.setSerial("blablalba");
             device2.setCompany(esdi);
+            device2.setDeleted(false);
 
             deviceRepository.save(device2);
 
@@ -183,14 +210,16 @@ public class SystemServiceApplication {
             device3.setClient(client);
             device3.setSerial("jujuju");
             device3.setCompany(esdi);
+            device3.setDeleted(false);
 
             deviceRepository.save(device3);
 
             Device device4 = new Device();
             device4.setDescription("Peugeot 206");
             device4.setClient(client3);
-            device4.setSerial("jujuju");
+            device4.setSerial("CDA405");
             device4.setCompany(tallerChapa);
+            device4.setDeleted(false);
 
             deviceRepository.save(device4);
 
@@ -239,7 +268,7 @@ public class SystemServiceApplication {
             order3.setOrderDetails("Chocado,");
             order3.setClient(client3);
             order3.setCompany(tallerChapa);
-            order3.setStaff(null);
+            order3.setStaff(tecnicoAuto);
             order3.setDevice(device4);
             orderRepository.save(order3);
 
@@ -307,10 +336,13 @@ public class SystemServiceApplication {
 
             // DOLAR //
 
-            Dolar dolar1 = new Dolar(145,LocalDateTime.now());
+            Dolar dolar1 = new Dolar(160,LocalDateTime.now());
             dolar1.setCompany(esdi);
             dolarRepository.save(dolar1);
 
+            Dolar dolar2 = new Dolar(155,LocalDateTime.now());
+            dolar2.setCompany(tallerChapa);
+            dolarRepository.save(dolar2);
 
             // PRODUCTO ARTICULO //
 
@@ -326,6 +358,7 @@ public class SystemServiceApplication {
             product1.setDolar(dolar1.getPrice());
             product1.setBrand(brand1);
             product1.setCompany(esdi);
+            product1.setDeleted(false);
 
             productRepository.save(product1);
 
@@ -341,9 +374,9 @@ public class SystemServiceApplication {
             product2.setDolar(dolar1.getPrice());
             product2.setBrand(brand1);
             product2.setCompany(esdi);
+            product2.setDeleted(false);
 
             productRepository.save(product2);
-
 
             // SERVICE ARTICULO //
 
@@ -355,6 +388,7 @@ public class SystemServiceApplication {
             service1.setSalePrice(5400);
             service1.setIva(iva21);
             service1.setCompany(esdi);
+            service1.setDeleted(false);
 
             serviceRepository.save(service1);
 
@@ -378,6 +412,16 @@ public class SystemServiceApplication {
             budget2.setOrder(order2);
             budget2.setCompany(esdi);
             budgetRepository.save(budget2);
+
+            Budget budget3 = new Budget();
+            budget3.setBudgetNumber(122224);
+            budget3.setOrderNumber(order3.getOrderNumber());
+            budget3.setClient(order3.getClient().getFirstName() + " " + order3.getClient().getLastName());
+            budget3.setStatusBudget(StatusBudget.APPROVED);
+            budget3.setTotal(1222);
+            budget3.setOrder(order3);
+            budget3.setCompany(tallerChapa);
+            budgetRepository.save(budget3);
 
             // OPTION BUDGETS //
             OptionBudget optionBudget1 = new OptionBudget();

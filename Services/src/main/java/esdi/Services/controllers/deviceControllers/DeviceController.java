@@ -13,46 +13,44 @@ public class DeviceController {
     @Autowired
     DeviceService deviceService;
 
-    @GetMapping()
-    ResponseEntity<?> getAllDevices(){
-        return deviceService.allDevices();
-    }
-
-    @GetMapping("/{id}")
-    ResponseEntity<?> getDeviceById(@PathVariable Long id){
-        return deviceService.findById(id);
-    }
-
-    @GetMapping("/client/{client}")
-    ResponseEntity<?> getDevicesByClient(@PathVariable Long client) {return deviceService.findByClient(client);}
-
-    @GetMapping("/category/{idCategory}")
-    ResponseEntity<?> getDevicesByCategory(@PathVariable Long idCategory) {return deviceService.findByCategory(idCategory);}
-
-    @GetMapping("/model/{idModel}")
-    ResponseEntity<?> getDevicesByModel(@PathVariable Long idModel) {return deviceService.findByModel(idModel);}
-
-    @GetMapping("/serial/{serial}")
-    ResponseEntity<?> getDevicesByModel(@PathVariable String serial) {return deviceService.findBySerial(serial);}
-
-    @GetMapping("/current/devicesByClient")
+    @GetMapping("/current/client")
     ResponseEntity<?> getDevicesByClient(Authentication authentication) {
         return deviceService.allDevicesByClient(authentication);
     }
 
-    @PostMapping()
-    ResponseEntity<?> newDevice(@RequestBody DeviceRequest deviceRequest) {
-        return deviceService.createDevice(deviceRequest);
+    @GetMapping("/current")
+    ResponseEntity<?> getDevicesByCompany(Authentication authentication) {
+        return deviceService.allDevicesByCompany(authentication);
     }
 
-    @PatchMapping("/id/{id}")
-    ResponseEntity<?> updateDevice(@PathVariable Long id, @RequestBody DeviceRequest deviceRequest) {
-        return deviceService.updateDevice(id, deviceRequest);
+    @PostMapping("/current")
+    ResponseEntity<?> createDevice(@RequestBody DeviceRequest deviceRequest, Authentication authentication) {
+        return deviceService.createDevice(deviceRequest, authentication);
     }
 
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<?> deleteDevice(@PathVariable Long id) {
-        return deviceService.deleteDevice(id);
+    @PatchMapping("/current/id/{id}")
+    ResponseEntity<?> updateDevice(@PathVariable Long id, @RequestBody DeviceRequest deviceRequest, Authentication authentication) {
+        return deviceService.updateDevice(id, deviceRequest, authentication);
     }
+
+    @DeleteMapping("current/id/{id}")
+    public ResponseEntity<?> deleteDevice(@PathVariable Long id, Authentication authentication) {
+        return deviceService.deleteDevice(id, authentication);
+    }
+
+//    Hacer para proxima version ↓
+//    @GetMapping("/client/{client}")
+//    ResponseEntity<?> getDevicesByClient(@PathVariable Long client) {return deviceService.findByClient(client);}
+//
+//    @GetMapping("/category/{idCategory}")
+//    ResponseEntity<?> getDevicesByCategory(@PathVariable Long idCategory) {return deviceService.findByCategory(idCategory);}
+//
+//    @GetMapping("/model/{idModel}")
+//    ResponseEntity<?> getDevicesByModel(@PathVariable Long idModel) {return deviceService.findByModel(idModel);}
+//
+//    @GetMapping("/serial/{serial}")
+//    ResponseEntity<?> getDevicesByModel(@PathVariable String serial) {return deviceService.findBySerial(serial);}
+
+
 
 }

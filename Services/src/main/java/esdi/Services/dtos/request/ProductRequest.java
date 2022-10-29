@@ -25,8 +25,6 @@ public class ProductRequest {
 
     private Long categoryId;
 
-    private Long dolarId;
-
     private Long brandId;
 
 }

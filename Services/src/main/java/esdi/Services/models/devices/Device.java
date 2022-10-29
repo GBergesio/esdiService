@@ -26,6 +26,8 @@ public class Device {
     private String serial;
     private String description;
 
+    private Boolean deleted;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="client_id")
     private Client client;
@@ -47,12 +49,13 @@ public class Device {
     @JoinColumn(name="company_id")
     private Company company;
 
-    public Device(String serial, String description, DeviceCategory category, Brand brand, DeviceModel model) {
+    public Device(String serial, String description, DeviceCategory category, Brand brand, DeviceModel model, Boolean deleted) {
         this.serial = serial;
         this.description = description;
         this.category = category;
         this.brand = brand;
         this.model = model;
+        this.deleted = deleted;
     }
 
 

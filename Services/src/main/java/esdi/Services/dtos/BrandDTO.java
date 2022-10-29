@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class BrandDTO {
-
+    private Long id;
     private String nameBrand;
 }

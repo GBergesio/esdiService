@@ -16,16 +16,23 @@ public interface DeviceService {
         DeviceDTO getDeviceDTO(Device device);
         List<DeviceDTO> findAllDTO();
         ResponseEntity<?> allDevices();
-        ResponseEntity<?> allDevicesByClient(Authentication authentication);
+
         ResponseEntity<?> findById(Long id);
-        ResponseEntity<?> findByCategory(Long category);
-        ResponseEntity<?> findByModel(Long idModel);
-        ResponseEntity<?> findBySerial(String serial);
-        ResponseEntity<?> findByClient(Long idClient);
-        ResponseEntity<?> createDevice(DeviceRequest deviceRequest);
 
-        ResponseEntity<?> updateDevice(Long id, DeviceRequest deviceRequest);
+        //    Hacer para proxima version ↓
+//        ResponseEntity<?> findByCategory(Long category);
+//        ResponseEntity<?> findByModel(Long idModel);
+//        ResponseEntity<?> findBySerial(String serial);
+//        ResponseEntity<?> findByClient(Long idClient);
 
-        ResponseEntity<?> deleteDevice(Long id);
+
+
+        ResponseEntity<?> allDevicesByClient(Authentication authentication);
+        ResponseEntity<?> allDevicesByCompany(Authentication authentication);
+        ResponseEntity<?> createDevice(DeviceRequest deviceRequest, Authentication authentication);
+
+        ResponseEntity<?> updateDevice(Long id, DeviceRequest deviceRequest, Authentication authentication);
+
+        ResponseEntity<?> deleteDevice(Long id, Authentication authentication);
 
 }
