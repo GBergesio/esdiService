@@ -4,6 +4,8 @@ import esdi.Services.dtos.request.OrderRequest;
 import esdi.Services.dtos.request.ServiceArtRequest;
 import esdi.Services.dtos.request.StaffRequest;
 import esdi.Services.services.*;
+import esdi.Services.services.devices.DeviceCategoryService;
+import esdi.Services.services.devices.DeviceModelService;
 import esdi.Services.services.devices.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,12 @@ public class SuperAdminController {
 
     @Autowired
     DeviceService deviceService;
+
+    @Autowired
+    DeviceCategoryService deviceCategoryService;
+
+    @Autowired
+    DeviceModelService deviceModelService;
 
     @GetMapping("/orders")
     ResponseEntity<?> getAllOrders(){
@@ -143,5 +151,27 @@ public class SuperAdminController {
     ResponseEntity<?> getDeviceById(@PathVariable Long id){
         return deviceService.findById(id);
     }
+
+    @GetMapping("/deviceCategories")
+    ResponseEntity<?> getAllDeviceCategories(){
+        return deviceCategoryService.allDeviceCategory();
+    }
+
+    @GetMapping("/deviceCategories/{id}")
+    ResponseEntity<?> getCategoryById(@PathVariable Long id){
+        return deviceCategoryService.findById(id);
+    }
+
+    @GetMapping("/deviceModel")
+    ResponseEntity<?> getAllDeviceModels(){
+        return deviceModelService.allDeviceModel();
+    }
+
+    @GetMapping("/deviceModel/{id}")
+    ResponseEntity<?> getDeviceModelById(@PathVariable Long id){
+        return deviceModelService.findById(id);
+    }
+
+
 
 }

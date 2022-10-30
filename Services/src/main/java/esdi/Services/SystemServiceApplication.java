@@ -142,18 +142,22 @@ public class SystemServiceApplication {
             DeviceModel deviceModel1 = new DeviceModel();
             deviceModel1.setModel("X541HJ");
             deviceModel1.setCompany(esdi);
+            deviceModel1.setDeleted(false);
 
             DeviceModel deviceModel2 = new DeviceModel();
             deviceModel2.setModel("TUF GAMING 22X");
             deviceModel2.setCompany(esdi);
+            deviceModel2.setDeleted(false);
 
             DeviceModel deviceModel3 = new DeviceModel();
             deviceModel3.setModel("dy2061la");
             deviceModel3.setCompany(esdi);
+            deviceModel3.setDeleted(true);
 
             DeviceModel deviceModel4 = new DeviceModel();
             deviceModel4.setModel("Corolla 2.0");
             deviceModel4.setCompany(tallerChapa);
+            deviceModel4.setDeleted(false);
 
             deviceModelRepository.save(deviceModel1);
             deviceModelRepository.save(deviceModel2);
@@ -163,14 +167,19 @@ public class SystemServiceApplication {
 
             DeviceCategory deviceCategory1 = new DeviceCategory("PC de escritorio");
             deviceCategory1.setCompany(esdi);
+            deviceCategory1.setDeleted(false);
             DeviceCategory deviceCategory2 = new DeviceCategory("Notebook");
             deviceCategory2.setCompany(esdi);
+            deviceCategory2.setDeleted(false);
             DeviceCategory deviceCategory3 = new DeviceCategory("Netbook");
             deviceCategory3.setCompany(esdi);
+            deviceCategory3.setDeleted(true);
             DeviceCategory deviceCategory4 = new DeviceCategory("Impresora multifuncion");
-            deviceCategory3.setCompany(esdi);
+            deviceCategory4.setCompany(esdi);
+            deviceCategory4.setDeleted(false);
             DeviceCategory deviceCategory5 = new DeviceCategory("Sedan 5 puertas");
             deviceCategory5.setCompany(tallerChapa);
+            deviceCategory5.setDeleted(false);
 
             deviceCategoryRepository.save(deviceCategory1);
             deviceCategoryRepository.save(deviceCategory2);

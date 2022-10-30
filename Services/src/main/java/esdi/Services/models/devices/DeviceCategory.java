@@ -22,6 +22,8 @@ public class DeviceCategory {
     private long id;
     private String nameCategory;
 
+    private Boolean deleted;
+
     public DeviceCategory(String nameCategory) {
         this.nameCategory = nameCategory;
     }

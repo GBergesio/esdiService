@@ -3,13 +3,17 @@ package esdi.Services.services.devices;
 import esdi.Services.dtos.devices.DeviceModelDTO;
 import esdi.Services.mappers.DeviceModelMapper;
 import esdi.Services.models.devices.Device;
+import esdi.Services.models.devices.DeviceCategory;
 import esdi.Services.models.devices.DeviceModel;
+import esdi.Services.models.users.Company;
+import esdi.Services.repositories.CompanyRepository;
 import esdi.Services.repositories.DeviceModelRepository;
 import esdi.Services.repositories.DeviceRepository;
 import esdi.Services.services.devices.DeviceModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,6 +30,8 @@ public class DeviceModelImpl implements DeviceModelService {
 
     @Autowired
     DeviceModelMapper deviceModelMapper;
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Override
     public DeviceModel saveDeviceModel(DeviceModel deviceModel) {
@@ -48,6 +54,15 @@ public class DeviceModelImpl implements DeviceModelService {
     }
 
     @Override
+    public ResponseEntity<?> allDeviceModelByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<DeviceModel> models = deviceModelRepository.findAllByCompany(company);
+        List<DeviceModel> modelsAvailables = models.stream().filter(m -> m.getDeleted().equals(false)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(deviceModelMapper.toDTO(modelsAvailables), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<?> findById(Long id) {
         if (id.equals(null) || id == null){
             return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
@@ -61,16 +76,19 @@ public class DeviceModelImpl implements DeviceModelService {
     }
 
     @Override
-    public ResponseEntity<?> createDeviceModel(DeviceModelDTO deviceModelDTO) {
-
+    public ResponseEntity<?> createDeviceModel(DeviceModelDTO deviceModelDTO, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
         try{
             if (deviceModelDTO.getModel().equals(null) || deviceModelDTO.getModel().isEmpty() || deviceModelDTO.getModel().isBlank())
                 return new ResponseEntity<>("Ingrese un nombre para el modelo",HttpStatus.BAD_REQUEST);
 
         DeviceModel deviceModel = new DeviceModel();
         deviceModel.setModel(deviceModelDTO.getModel());
+        deviceModel.setDeleted(false);
+        deviceModel.setCompany(company);
+        deviceModelRepository.save(deviceModel);
 
-        return new ResponseEntity<>(this.saveDeviceModel(deviceModel),HttpStatus.CREATED);
+        return new ResponseEntity<>("Modelo creado correctamente",HttpStatus.CREATED);
 
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
@@ -78,39 +96,42 @@ public class DeviceModelImpl implements DeviceModelService {
     }
 
     @Override
-    public ResponseEntity<?> renameDeviceModel(Long id, String name) {
-        if (name.isEmpty() || name.isBlank() || name.equals(null))
-            return new ResponseEntity<>("Ingrese un nombre valido",HttpStatus.BAD_REQUEST);
-
-        if (deviceModelRepository.findByModel(name) != null)
-            return new ResponseEntity<>("Nombre de categoria en uso",HttpStatus.BAD_REQUEST);
-
+    public ResponseEntity<?> renameDeviceModel(Long id, String name, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<DeviceModel> allDevices = deviceModelRepository.findAllByCompany(company);
+        DeviceModel nameDevice = deviceModelRepository.findByModel(name);
         DeviceModel deviceModel = deviceModelRepository.findById(id).orElse(null);
 
-        if (deviceModel == null)
-            return new ResponseEntity<>("Categoria no encontrada",HttpStatus.BAD_REQUEST);
+        if(allDevices.indexOf(deviceModel) == -1){
+            return new ResponseEntity<>("No existe el modelo",HttpStatus.BAD_REQUEST);
+        }
 
-        if (deviceModel.getModel().equals(name))
-            return new ResponseEntity<>("Asignar un nombre distinto",HttpStatus.BAD_REQUEST);
+        if (name.isEmpty() || name.isBlank() || name.equals(null)){
+            return new ResponseEntity<>("Ingrese un nombre valido",HttpStatus.BAD_REQUEST);
+        }
+
+        if(allDevices.contains(nameDevice)){
+            return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
+        }
 
         deviceModel.setModel(name);
+        deviceModelRepository.save(deviceModel);
 
-        return new ResponseEntity<>(this.saveDeviceModel(deviceModel),HttpStatus.OK);
+        return new ResponseEntity<>("Modelo renombrado correctamente",HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> deleteDeviceModel(Long id) {
+    public ResponseEntity<?> deleteDeviceModel(Long id, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
         DeviceModel deviceModel = deviceModelRepository.findById(id).orElse(null);
-        List<Device> allDevices = deviceRepository.findAll().stream().filter(device -> device.getCategory().getId() == id).collect(Collectors.toList());
+        List<DeviceModel> allDevices = deviceModelRepository.findAllByCompany(company);
 
-        if(deviceModel == null)
+        if(allDevices.indexOf(deviceModel) == -1){
             return new ResponseEntity<>("No existe el modelo",HttpStatus.BAD_REQUEST);
+        }
 
-        if(allDevices.size() >= 1)
-            return new ResponseEntity<>("Modelo asociado a un dispositivo",HttpStatus.BAD_REQUEST);
-
-
-        deviceModelRepository.delete(deviceModel);
+        deviceModel.setDeleted(true);
+        deviceModelRepository.save(deviceModel);
         return new ResponseEntity<>("Eliminado exitosamente",HttpStatus.OK);
     }
 

@@ -18,6 +18,7 @@ public class DeviceModel {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
     private String model;
+    private Boolean deleted;
 
     public DeviceModel(String model) {
         this.model = model;

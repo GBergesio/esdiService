@@ -120,7 +120,7 @@ public class  ServiceServiceImpl implements ServiceService {
     @Override
     public ResponseEntity<?> createServiceByCompany(Authentication authentication, ServiceArtRequest serviceArtRequest) {
         Company company = companyRepository.findByUser(authentication.getName());
-        //Genera recursividad la categoria, esta identico que producto pero en este genera recursividad.
+
         try {
             Iva iva = ivaRepository.findById(serviceArtRequest.getIvaId()).orElse(null);
             Category category = categoryRepository.findById(serviceArtRequest.getCategoryId()).orElse(null);
@@ -161,8 +161,9 @@ public class  ServiceServiceImpl implements ServiceService {
             service.setCategory(category);
             service.setCompany(company);
             service.setDeleted(false);
+            serviceRepository.save(service);
 
-            return new ResponseEntity<>(this.saveService(service), HttpStatus.CREATED);
+            return new ResponseEntity<>("Servicio tecnico creado correctamente", HttpStatus.CREATED);
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

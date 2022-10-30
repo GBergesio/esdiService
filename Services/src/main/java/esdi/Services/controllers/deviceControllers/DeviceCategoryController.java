@@ -4,6 +4,7 @@ import esdi.Services.dtos.devices.DeviceCategoryDTO;
 import esdi.Services.services.devices.DeviceCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,29 +14,27 @@ public class DeviceCategoryController {
     @Autowired
     DeviceCategoryService deviceCategoryService;
 
-    @GetMapping()
-    ResponseEntity<?> getAllCategories(){
-        return deviceCategoryService.allDeviceCategory();
+    @GetMapping("/current")
+    ResponseEntity<?> getAllCategories(Authentication authentication){
+        return deviceCategoryService.allDeviceCategoryByCompany(authentication);
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<?> getCategoryById(@PathVariable Long id){
-        return deviceCategoryService.findById(id);
+    @PostMapping("/current")
+    ResponseEntity<?> createDeviceCategory(@RequestBody DeviceCategoryDTO deviceCategoryDTO, Authentication authentication){
+        return deviceCategoryService.createDeviceCategory(deviceCategoryDTO, authentication);
     }
 
-    @PostMapping()
-    ResponseEntity<?> createDeviceCategory(@RequestBody DeviceCategoryDTO deviceCategoryDTO){
-        return deviceCategoryService.createDeviceCategory(deviceCategoryDTO);
+    @PatchMapping("/current/{id}")
+    ResponseEntity<?> renameDeviceCategory(@PathVariable Long id, @RequestParam String name, Authentication authentication){
+        return deviceCategoryService.renameDeviceCategory(id, name, authentication);
     }
 
-    @PatchMapping("/{id}")
-    ResponseEntity<?> renameDeviceCategory(@PathVariable Long id, @RequestParam String name){
-        return deviceCategoryService.renameDeviceCategory(id, name);
+    @DeleteMapping("current/{id}")
+    ResponseEntity<?> deleteDeviceCategory(@PathVariable Long id, Authentication authentication){
+        return deviceCategoryService.deleteDeviceCategory(id, authentication);
     }
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteDeviceCategory(@PathVariable Long id){
-        return deviceCategoryService.deleteDeviceCategory(id);
-    }
+
+
 
 }

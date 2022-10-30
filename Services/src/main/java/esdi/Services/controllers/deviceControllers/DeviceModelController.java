@@ -4,6 +4,7 @@ import esdi.Services.dtos.devices.DeviceModelDTO;
 import esdi.Services.services.devices.DeviceModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,29 +14,25 @@ public class DeviceModelController {
    @Autowired
    DeviceModelService deviceModelService;
 
-   @GetMapping()
-   ResponseEntity<?> getAllModels(){
-        return deviceModelService.allDeviceModel();
+   @GetMapping("/current")
+   ResponseEntity<?> getAllModels(Authentication authentication){
+        return deviceModelService.allDeviceModelByCompany(authentication);
     }
 
-   @GetMapping("/{id}")
-   ResponseEntity<?> getModelById(@PathVariable Long id){
-       return deviceModelService.findById(id);
+
+   @PostMapping("/current")
+   ResponseEntity<?> createDeviceModel(@RequestBody DeviceModelDTO deviceModelDTO, Authentication authentication){
+       return deviceModelService.createDeviceModel(deviceModelDTO, authentication);
    }
 
-   @PostMapping()
-   ResponseEntity<?> createDeviceModel(@RequestBody DeviceModelDTO deviceModelDTO){
-       return deviceModelService.createDeviceModel(deviceModelDTO);
-   }
-
-    @PatchMapping("/{id}")
-    ResponseEntity<?> renameDeviceModel(@PathVariable Long id, @RequestParam String name){
-        return deviceModelService.renameDeviceModel(id, name);
+    @PatchMapping("/current/{id}")
+    ResponseEntity<?> renameDeviceModel(@PathVariable Long id, @RequestParam String name, Authentication authentication){
+        return deviceModelService.renameDeviceModel(id, name, authentication);
     }
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteDeviceModel(@PathVariable Long id){
-        return deviceModelService.deleteDeviceModel(id);
+    @DeleteMapping("/current/{id}")
+    ResponseEntity<?> deleteDeviceModel(@PathVariable Long id, Authentication authentication){
+        return deviceModelService.deleteDeviceModel(id, authentication);
     }
 
 }

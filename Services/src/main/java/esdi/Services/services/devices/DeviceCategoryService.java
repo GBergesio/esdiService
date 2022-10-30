@@ -3,6 +3,7 @@ package esdi.Services.services.devices;
 import esdi.Services.dtos.devices.DeviceCategoryDTO;
 import esdi.Services.models.devices.DeviceCategory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -17,10 +18,12 @@ public interface DeviceCategoryService {
     ResponseEntity<?> allDeviceCategory();
     ResponseEntity<?> findById(Long id);
 
-    ResponseEntity<?> createDeviceCategory(DeviceCategoryDTO deviceCategoryDTO);
+    ResponseEntity<?> allDeviceCategoryByCompany(Authentication authentication);
 
-    ResponseEntity<?> renameDeviceCategory(Long id, String name);
+    ResponseEntity<?> createDeviceCategory(DeviceCategoryDTO deviceCategoryDTO, Authentication authentication);
 
-    ResponseEntity<?> deleteDeviceCategory(Long id);
+    ResponseEntity<?> renameDeviceCategory(Long id, String name, Authentication authentication);
+
+    ResponseEntity<?> deleteDeviceCategory(Long id, Authentication authentication);
 
 }
