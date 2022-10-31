@@ -5,6 +5,7 @@ import esdi.Services.mappers.DeviceModelMapper;
 import esdi.Services.models.devices.Device;
 import esdi.Services.models.devices.DeviceCategory;
 import esdi.Services.models.devices.DeviceModel;
+import esdi.Services.models.products.Product;
 import esdi.Services.models.users.Company;
 import esdi.Services.repositories.CompanyRepository;
 import esdi.Services.repositories.DeviceModelRepository;
@@ -78,9 +79,16 @@ public class DeviceModelImpl implements DeviceModelService {
     @Override
     public ResponseEntity<?> createDeviceModel(DeviceModelDTO deviceModelDTO, Authentication authentication) {
         Company company = companyRepository.findByUser(authentication.getName());
+        List<DeviceModel> allDevices = deviceModelRepository.findAllByCompany(company);
+        Boolean modelExists = allDevices.stream().anyMatch(model -> model.getModel().equals(deviceModelDTO.getModel()));
+
         try{
-            if (deviceModelDTO.getModel().equals(null) || deviceModelDTO.getModel().isEmpty() || deviceModelDTO.getModel().isBlank())
+            if (deviceModelDTO.getModel().equals(null) || deviceModelDTO.getModel().isEmpty() || deviceModelDTO.getModel().isBlank()){
                 return new ResponseEntity<>("Ingrese un nombre para el modelo",HttpStatus.BAD_REQUEST);
+            }
+            if(modelExists){
+                return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
+            }
 
         DeviceModel deviceModel = new DeviceModel();
         deviceModel.setModel(deviceModelDTO.getModel());
@@ -99,7 +107,7 @@ public class DeviceModelImpl implements DeviceModelService {
     public ResponseEntity<?> renameDeviceModel(Long id, String name, Authentication authentication) {
         Company company = companyRepository.findByUser(authentication.getName());
         List<DeviceModel> allDevices = deviceModelRepository.findAllByCompany(company);
-        DeviceModel nameDevice = deviceModelRepository.findByModel(name);
+        Boolean modelExists = allDevices.stream().anyMatch(model -> model.getModel().equals(name));
         DeviceModel deviceModel = deviceModelRepository.findById(id).orElse(null);
 
         if(allDevices.indexOf(deviceModel) == -1){
@@ -110,7 +118,7 @@ public class DeviceModelImpl implements DeviceModelService {
             return new ResponseEntity<>("Ingrese un nombre valido",HttpStatus.BAD_REQUEST);
         }
 
-        if(allDevices.contains(nameDevice)){
+        if(modelExists){
             return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
         }
 

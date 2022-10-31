@@ -125,14 +125,17 @@ public class SystemServiceApplication {
 
             Brand brand1 = new Brand("AMD");
             brand1.setCompany(esdi);
+            brand1.setDeleted(false);
             brandRepository.save(brand1);
 
             Brand brand2 = new Brand("Intel");
             brand2.setCompany(esdi);
+            brand2.setDeleted(false);
             brandRepository.save(brand2);
 
             Brand brand3 = new Brand("Peugeot");
             brand3.setCompany(tallerChapa);
+            brand3.setDeleted(false);
             brandRepository.save(brand3);
 
             // DEVICES //
@@ -232,6 +235,15 @@ public class SystemServiceApplication {
 
             deviceRepository.save(device4);
 
+            Device device5 = new Device();
+            device5.setDescription("Fiat 500");
+            device5.setClient(client3);
+            device5.setSerial("AB SAF 21412");
+            device5.setCompany(tallerChapa);
+            device5.setDeleted(false);
+
+            deviceRepository.save(device5);
+
 
             // ORDENES DE TRABAJO //
 
@@ -281,9 +293,40 @@ public class SystemServiceApplication {
             order3.setDevice(device4);
             orderRepository.save(order3);
 
+            Order order4 = new Order();
+            order4.setOrderNumber(5744);
+            order4.setStatus(Status.ON_HOLD);
+            order4.setOrderType(OrderType.NORMAL);
+            order4.setPriority(Priority.HIGH);
+            order4.setJoinDate(LocalDateTime.now());
+            order4.setOutDate(null);
+            order4.setPasswordDevice("AB 123 FC");
+            order4.setOrderDetails("cambiar filtros,");
+            order4.setClient(client4);
+            order4.setCompany(tallerChapa);
+            order4.setStaff(tecnicoAuto);
+            order4.setDevice(device5);
+            orderRepository.save(order4);
+
+            Order order5 = new Order();
+            order5.setOrderNumber(41444);
+            order5.setStatus(Status.ON_HOLD);
+            order5.setOrderType(OrderType.NORMAL);
+            order5.setPriority(Priority.HIGH);
+            order5.setJoinDate(LocalDateTime.now());
+            order5.setOutDate(null);
+            order5.setPasswordDevice("aggggg");
+            order5.setOrderDetails("pantalla rota, limpiar");
+            order5.setClient(client2);
+            order5.setDevice(device2);
+            order5.setCompany(esdi);
+            order5.setStaff(null);
+            orderRepository.save(order5);
+
             clientRepository.save(client);
             clientRepository.save(client2);
             clientRepository.save(client3);
+            clientRepository.save(client4);
 			staffRepository.save(technician);
 
             // COMMENTS //
@@ -332,15 +375,23 @@ public class SystemServiceApplication {
 
             Category category1 = new Category("Microprocesadores");
             category1.setCompany(esdi);
+            category1.setDeleted(false);
             categoryRepository.save(category1);
 
             Category category2 = new Category("Servicio tecnico PC De Escritorio");
             category2.setCompany(esdi);
+            category2.setDeleted(false);
             categoryRepository.save(category2);
 
             Category category3 = new Category("Servicio tecnico Notebooks");
             category3.setCompany(esdi);
+            category3.setDeleted(false);
             categoryRepository.save(category3);
+
+            Category category4 = new Category("Cambio de aceite motor");
+            category4.setCompany(tallerChapa);
+            category4.setDeleted(false);
+            categoryRepository.save(category4);
 
 
             // DOLAR //
@@ -406,7 +457,7 @@ public class SystemServiceApplication {
             budget1.setBudgetNumber(123);
             budget1.setOrderNumber(order1.getOrderNumber());
             budget1.setClient(order1.getClient().getFirstName() + " " + order1.getClient().getLastName());
-            budget1.setStatusBudget(StatusBudget.APPROVED);
+            budget1.setStatusBudget(StatusBudget.ON_HOLD);
             budget1.setTotal(9455);
             budget1.setOrder(order1);
             budget1.setCompany(esdi);
@@ -432,6 +483,16 @@ public class SystemServiceApplication {
             budget3.setCompany(tallerChapa);
             budgetRepository.save(budget3);
 
+            Budget budget4 = new Budget();
+            budget4.setBudgetNumber(124);
+            budget4.setOrderNumber(order5.getOrderNumber());
+            budget4.setClient(order5.getClient().getFirstName() + " " + order5.getClient().getLastName());
+            budget4.setStatusBudget(StatusBudget.ON_HOLD);
+            budget4.setTotal(1234);
+            budget4.setOrder(order5);
+            budget4.setCompany(esdi);
+            budgetRepository.save(budget4);
+
             // OPTION BUDGETS //
             OptionBudget optionBudget1 = new OptionBudget();
 
@@ -451,30 +512,32 @@ public class SystemServiceApplication {
             // OPTION COMPONTENTS //
             OptionComponent optionComponent1 = new OptionComponent();
             optionComponent1.setIdPoS(product1.getId());
+            optionComponent1.setName("KAKA");
             optionComponent1.setTotalPrice(product1.getSalePrice() * 3);
             optionComponent1.setQuantity(3);
             optionComponent1.setOptionBudget(optionBudget1);
             optionComponent1.setCompany(esdi);
             optionComponentRepository.save(optionComponent1);
-
-            OptionComponent optionComponent2 = new OptionComponent();
-            optionComponent2.setIdPoS(product2.getId());
-            optionComponent2.setTotalPrice(product2.getSalePrice() * 2);
-            optionComponent2.setQuantity(2);
-            optionComponent2.setOptionBudget(optionBudget1);
-            optionComponent2.setCompany(esdi);
-            optionComponentRepository.save(optionComponent2);
-
-            OptionComponent optionComponent3 = new OptionComponent();
-            optionComponent3.setIdPoS(product2.getId());
-            optionComponent3.setTotalPrice(product2.getSalePrice() * 2);
-            optionComponent3.setQuantity(2);
-            optionComponent3.setOptionBudget(optionBudget2);
-            optionComponent3.setCompany(esdi);
-            optionComponentRepository.save(optionComponent3);
-
-            optionBudget1.setTotal(optionComponent1.getTotalPrice() + optionComponent2.getTotalPrice());
-            optionBudgetRepository.save(optionBudget1);
+//
+//            OptionComponent optionComponent2 = new OptionComponent();
+//            optionComponent2.setIdPoS(product2.getId());
+//            optionComponent2.setName("222222");
+//            optionComponent2.setTotalPrice(product2.getSalePrice() * 2);
+//            optionComponent2.setQuantity(2);
+//            optionComponent2.setOptionBudget(optionBudget1);
+//            optionComponent2.setCompany(esdi);
+//            optionComponentRepository.save(optionComponent2);
+//
+//            OptionComponent optionComponent3 = new OptionComponent();
+//            optionComponent3.setIdPoS(product2.getId());
+//            optionComponent3.setTotalPrice(product2.getSalePrice() * 2);
+//            optionComponent3.setQuantity(2);
+//            optionComponent3.setOptionBudget(optionBudget2);
+//            optionComponent3.setCompany(esdi);
+//            optionComponentRepository.save(optionComponent3);
+//
+//            optionBudget1.setTotal(optionComponent1.getTotalPrice() + optionComponent2.getTotalPrice());
+//            optionBudgetRepository.save(optionBudget1);
 
         };
     }

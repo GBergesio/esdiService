@@ -57,14 +57,6 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public ResponseEntity<?> allBrandsByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
-        List<Brand> brandsByCompany = brandRepository.findAllByCompany(company);
-
-        return new ResponseEntity<>(brandMapper.toDTO(brandsByCompany), HttpStatus.OK);
-    }
-
-    @Override
     public ResponseEntity<?> findById(Long id) {
 
         if (id.equals(null) || id == null){
@@ -79,19 +71,34 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public ResponseEntity<?> createBrand(BrandDTO brandDTO) {
+    public ResponseEntity<?> allBrandsByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Brand> brandsByCompany = brandRepository.findAllByCompany(company);
+        List<Brand> brandsAvailable = brandsByCompany.stream().filter(brand -> brand.getDeleted().equals(false)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(brandMapper.toDTO(brandsAvailable), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> createBrand(BrandDTO brandDTO, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Brand> brands = brandRepository.findAllByCompany(company);
+        Boolean brandExists = brands.stream().anyMatch(brand -> brand.getNameBrand().equals(brandDTO.getNameBrand()));
+
         try{
-
-            if (brandDTO.getNameBrand().equals(null) || brandDTO.getNameBrand().isEmpty() || brandDTO.getNameBrand().isBlank())
+            if (brandDTO.getNameBrand().equals(null) || brandDTO.getNameBrand().isEmpty() || brandDTO.getNameBrand().isBlank()){
                 return new ResponseEntity<>("Ingrese un nombre para la categoria",HttpStatus.BAD_REQUEST);
-
-            if (brandRepository.findByNameBrand(brandDTO.getNameBrand()) != null)
-                return new ResponseEntity<>("Nombre de marca en uso",HttpStatus.BAD_REQUEST);
-
+            }
+            if(brandExists){
+                return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
+            }
             Brand brand = new Brand();
             brand.setNameBrand(brandDTO.getNameBrand());
+            brand.setDeleted(false);
+            brand.setCompany(company);
 
-            return new ResponseEntity<>(this.saveBrand(brand),HttpStatus.CREATED);
+            brandRepository.save(brand);
+            return new ResponseEntity<>("Marca creada correctamente",HttpStatus.CREATED);
 
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
@@ -99,38 +106,49 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public ResponseEntity<?> renameBrand(Long id, String name) {
+    public ResponseEntity<?> renameBrand(Long id, String name, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<Brand> brands = brandRepository.findAllByCompany(company);
+        Boolean brandExists = brands.stream().anyMatch(brand -> brand.getNameBrand().equals(name));
+
         if (name.isEmpty() || name.isBlank() || name.equals(null))
             return new ResponseEntity<>("Ingrese un nombre valido",HttpStatus.BAD_REQUEST);
 
-        if (brandRepository.findByNameBrand(name) != null)
-            return new ResponseEntity<>("Nombre de marca en uso",HttpStatus.BAD_REQUEST);
+        if(brandExists){
+            return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
+        }
 
         Brand brand  = brandRepository.findById(id).orElse(null);
 
-        if (brand == null)
+        if (brands.indexOf(brand) == -1)
             return new ResponseEntity<>("Marca no encontrada",HttpStatus.BAD_REQUEST);
 
-        if (brand.getNameBrand().equals(name))
-            return new ResponseEntity<>("Asignar un nombre distinto",HttpStatus.BAD_REQUEST);
-
         brand.setNameBrand(name);
+        brandRepository.save(brand);
 
-        return new ResponseEntity<>(this.saveBrand(brand),HttpStatus.OK);
+        return new ResponseEntity<>("Marca modificada correctamente",HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> deleteBrand(Long id) {
+    public ResponseEntity<?> deleteBrand(Long id, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
         Brand brand  = brandRepository.findById(id).orElse(null);
-        List<Product> products = productRepository.findAll().stream().filter(product -> product.getBrand().getId() == id).collect(Collectors.toList());
+        List<Brand> brands = brandRepository.findAllByCompany(company);
+        List<Product> products = productRepository.findAllByCompany(company);
+        Boolean existInProduct = products.stream().anyMatch(product -> product.getBrand().equals(brand));
 
-        if (products.size() >= 1)
-            return new ResponseEntity<>("No se puede borrar ya que la marca está asignada a un producto",HttpStatus.BAD_REQUEST);
+        if (brands.indexOf(brand) == -1)
+            return new ResponseEntity<>("Marca no encontrada",HttpStatus.BAD_REQUEST);
 
-        if (brand == null)
-            return new ResponseEntity<>("No existe marca",HttpStatus.BAD_REQUEST);
+        if (existInProduct){
+            brand.setDeleted(true);
+            brandRepository.save(brand);
+            return new ResponseEntity<>("La marca existe en algún producto. Marca desactivada correctamente",HttpStatus.OK);
+        }
 
-        brandRepository.delete(brand);
-        return new ResponseEntity<>("Eliminado exitosamente",HttpStatus.OK);
+        brand.setDeleted(true);
+        brandRepository.save(brand);
+
+        return new ResponseEntity<>("Marca eliminada exitosamente",HttpStatus.OK);
     }
 }

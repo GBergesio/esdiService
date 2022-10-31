@@ -9,4 +9,5 @@ import lombok.Setter;
 public class BrandDTO {
     private Long id;
     private String nameBrand;
+    private Boolean deleted;
 }

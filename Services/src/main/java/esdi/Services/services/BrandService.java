@@ -18,9 +18,9 @@ public interface BrandService {
         ResponseEntity<?> findById(Long id);
         ResponseEntity<?> allBrandsByCompany(Authentication authentication);
 
-        ResponseEntity<?> createBrand(BrandDTO brandDTO);
+        ResponseEntity<?> createBrand(BrandDTO brandDTO,Authentication authentication );
 
-        ResponseEntity<?> renameBrand(Long id, String name);
+        ResponseEntity<?> renameBrand(Long id, String name,Authentication authentication);
 
-        ResponseEntity<?> deleteBrand(Long id);
+        ResponseEntity<?> deleteBrand(Long id,Authentication authentication);
 }

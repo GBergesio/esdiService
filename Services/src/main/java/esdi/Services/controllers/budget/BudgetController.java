@@ -15,28 +15,25 @@ public class BudgetController {
     @Autowired
     BudgetService budgetService;
 
-    @GetMapping()
-    ResponseEntity<?> getAllBudgets(){
-        return new ResponseEntity<>(budgetService.allBudgets(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    ResponseEntity<?> getById(@PathVariable Long id){
-        return budgetService.findById(id);
-    }
-
-    @GetMapping("/current/budgetsByCompany")
+    @GetMapping("/current")
     ResponseEntity<?> getBudgetsByCompany(Authentication authentication) {
         return budgetService.allBudgetsByCompany(authentication);
     }
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteBudget(@PathVariable Long id){
-        return budgetService.deleteBudget(id);
+    @PostMapping("/current")
+    ResponseEntity<?> newBudget(@RequestBody BudgetRequest request, Long idOrder, Authentication authentication) {
+        return budgetService.createBudget(request, idOrder, authentication);
     }
 
-    @PostMapping()
-    ResponseEntity<?> newBudget(@RequestBody BudgetRequest request, Long idClient, Long idOrder) {
-        return budgetService.createBudget(request, idClient,idOrder);
+    @PatchMapping("/current/{id}")
+    ResponseEntity<?> updateBudget(@RequestBody BudgetRequest request, Long idBudget, Authentication authentication) {
+        return budgetService.updateBudget(request, idBudget, authentication);
     }
+
+    @DeleteMapping("/current/{id}")
+    ResponseEntity<?> deleteBudget(@PathVariable Long id, Authentication authentication){
+        return budgetService.deleteBudget(id, authentication);
+    }
+
+
 }

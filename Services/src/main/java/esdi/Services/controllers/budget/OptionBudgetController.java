@@ -1,9 +1,11 @@
 package esdi.Services.controllers.budget;
 
+import esdi.Services.dtos.request.OptionRequest;
 import esdi.Services.services.budget.OptionBudgetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,24 +15,34 @@ public class OptionBudgetController {
     @Autowired
     OptionBudgetService optionBudgetService;
 
-    @GetMapping()
-    ResponseEntity<?> getAllBudgets(){
-        return new ResponseEntity<>(optionBudgetService.allOptionBudgets(), HttpStatus.OK);
+    @GetMapping("/current")
+    ResponseEntity<?> getOptionsByCompany(Authentication authentication){
+        return new ResponseEntity<>(optionBudgetService.allOptionBudgetsByCompany(authentication), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<?> getById(@PathVariable Long id){
-        return optionBudgetService.findById(id);
+    @GetMapping("/current/budget/{id}")
+    ResponseEntity<?> getOptionByBudget(Authentication authentication,@PathVariable Long id){
+        return new ResponseEntity<>(optionBudgetService.optionsByBudget(authentication,id), HttpStatus.OK);
     }
 
-//    @PostMapping()
-//    ResponseEntity<?> newOption(@RequestBody OptionRequest option, Long idBudget, Long idPoS) {
-//        return optionComponentService.createOptionComponent(option, idBudget,idPoS);
-//    }
+    @PostMapping("/current")
+    ResponseEntity<?> newOption(Authentication authentication,@RequestBody OptionRequest option, Long idBudget) {
+        return optionBudgetService.createOptionBudget(authentication,option, idBudget);
+    }
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteOption(@PathVariable Long id){
-        return optionBudgetService.deleteOptionBudget(id);
+    @PatchMapping("/current/{id}")
+    ResponseEntity<?> updateOption(Authentication authentication,@RequestBody OptionRequest option, Long optionBudget) {
+        return optionBudgetService.updateOptionBudget(authentication,option, optionBudget);
+    }
+
+    @PatchMapping("/current/total/{id}")
+    ResponseEntity<?> updateTotalOption(Authentication authentication,@RequestBody OptionRequest option, Long optionBudget) {
+        return optionBudgetService.updateTotalOptionBudget(authentication,option, optionBudget);
+    }
+
+    @DeleteMapping("/current/{id}")
+    ResponseEntity<?> deleteOption(@PathVariable Long id, Authentication authentication){
+        return optionBudgetService.deleteOptionBudget(authentication, id);
     }
 
 }

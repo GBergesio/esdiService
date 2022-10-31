@@ -1,27 +1,25 @@
 package esdi.Services.services.budget;
 
 import esdi.Services.dtos.budget.OptionBudgetDTO;
+import esdi.Services.dtos.request.OptionRequest;
 import esdi.Services.models.budgets.OptionBudget;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
 public interface OptionBudgetService {
 
-    OptionBudget saveOptionBudget(OptionBudget optionBudget);
-
-    OptionBudgetDTO saveOptionBudgetDTO(OptionBudget optionBudget);
-
-    List<OptionBudgetDTO> findAllDTO();
-
     ResponseEntity<?> allOptionBudgets();
-
+    ResponseEntity<?> allOptionBudgetsByCompany(Authentication authentication);
     ResponseEntity<?> findById(Long id);
 
-    ResponseEntity<?> createOptionBudget(OptionBudgetDTO optionBudgetDTO);
+    ResponseEntity<?> optionsByBudget(Authentication authentication, Long id);
 
-    ResponseEntity<?> updateOptionBudget(Long id);
+    ResponseEntity<?> createOptionBudget(Authentication authentication, OptionRequest optionRequest, Long idBudget);
 
-    ResponseEntity<?> deleteOptionBudget(Long id);
+    ResponseEntity<?> updateOptionBudget(Authentication authentication,OptionRequest optionRequest, Long id);
+    ResponseEntity<?> updateTotalOptionBudget(Authentication authentication,OptionRequest optionRequest, Long id);
+    ResponseEntity<?> deleteOptionBudget(Authentication authentication, Long id);
 
 }

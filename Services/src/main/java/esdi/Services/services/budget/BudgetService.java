@@ -19,11 +19,11 @@ public interface BudgetService {
             ResponseEntity<?> allBudgets();
 
             ResponseEntity<?> findById(Long id);
-
-            ResponseEntity<?> createBudget(BudgetRequest request, Long idClient, Long idOrder);
             ResponseEntity<?> allBudgetsByCompany(Authentication authentication);
 
-            ResponseEntity<?> updateBudget(Long id);
+            ResponseEntity<?> createBudget(BudgetRequest request, Long idOrder, Authentication authentication);
 
-            ResponseEntity<?> deleteBudget(Long id);
+            ResponseEntity<?> updateBudget(BudgetRequest request,Long idBudget, Authentication authentication);
+
+            ResponseEntity<?> deleteBudget(Long id, Authentication authentication);
 }

@@ -11,7 +11,9 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,10 +33,10 @@ public class OptionBudget {
     private Boolean selected;
     private Boolean deleted;
 
-    @OneToMany(mappedBy = "optionBudget", fetch = FetchType.EAGER)
-    private Set<OptionComponent> optionComponents = new HashSet<>();
+    @OneToMany(mappedBy = "optionBudget", fetch = FetchType.LAZY)
+    private List<OptionComponent> optionComponents = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="budget_id")
     private Budget budget;
 

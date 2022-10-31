@@ -14,35 +14,25 @@ public class BrandController {
     @Autowired
     BrandService brandService;
 
-    @GetMapping()
-    ResponseEntity<?> getAllBrands(){
-        return new ResponseEntity<>(brandService.findAllDTO(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    ResponseEntity<?> getCategoryById(@PathVariable Long id) {
-        return brandService.findById(id);
-    }
-
-    @PostMapping()
-    ResponseEntity<?> createCategory(@RequestBody BrandDTO brandDTO) {
-        return brandService.createBrand(brandDTO);
+    @PostMapping("/current")
+    ResponseEntity<?> createBrand(@RequestBody BrandDTO brandDTO, Authentication authentication) {
+        return brandService.createBrand(brandDTO, authentication);
     }
 
 
-    @GetMapping("/current/brandsByCompany")
+    @GetMapping("/current")
     ResponseEntity<?> getBrandsByCompany(Authentication authentication) {
         return brandService.allBrandsByCompany(authentication);
     }
 
-    @PatchMapping("/{id}")
-    ResponseEntity<?> renameCategory(@PathVariable Long id, @RequestParam String name) {
-        return brandService.renameBrand(id, name);
+    @PatchMapping("/current/{id}")
+    ResponseEntity<?> renameBrand(@PathVariable Long id, @RequestParam String name, Authentication authentication) {
+        return brandService.renameBrand(id, name, authentication);
     }
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteCategory(@PathVariable Long id) {
-        return brandService.deleteBrand(id);
+    @DeleteMapping("/current/{id}")
+    ResponseEntity<?> deleteBrand(@PathVariable Long id, Authentication authentication) {
+        return brandService.deleteBrand(id,authentication);
     }
 
 }

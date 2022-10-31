@@ -84,14 +84,25 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
 
     @Override
     public ResponseEntity<?> createDeviceCategory(DeviceCategoryDTO deviceCategoryDTO, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        List<DeviceCategory> deviceCategories = deviceCategoryRepository.findAllByCompany(company);
+        Boolean modelExists = deviceCategories.stream().anyMatch(model -> model.getNameCategory().equals(deviceCategoryDTO.getNameCategory()));
+
         try{
-            if (deviceCategoryDTO.getNameCategory().equals(null) || deviceCategoryDTO.getNameCategory().isEmpty() || deviceCategoryDTO.getNameCategory().isBlank())
+            if (deviceCategoryDTO.getNameCategory().equals(null) || deviceCategoryDTO.getNameCategory().isEmpty() || deviceCategoryDTO.getNameCategory().isBlank()){
                 return new ResponseEntity<>("Ingrese un nombre para el modelo",HttpStatus.BAD_REQUEST);
+            }
+            if(modelExists){
+                return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
+            }
 
             DeviceCategory deviceCategory = new DeviceCategory();
             deviceCategory.setNameCategory(deviceCategoryDTO.getNameCategory());
+            deviceCategory.setDeleted(false);
+            deviceCategory.setCompany(company);
+            deviceCategoryRepository.save(deviceCategory);
 
-            return new ResponseEntity<>(this.saveDeviceModel(deviceCategory),HttpStatus.CREATED);
+            return new ResponseEntity<>("Categoria creada correctamente",HttpStatus.CREATED);
 
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
@@ -101,6 +112,8 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
     @Override
     public ResponseEntity<?> renameDeviceCategory(Long id, String name, Authentication authentication) {
         Company company = companyRepository.findByUser(authentication.getName());
+        List<DeviceCategory> deviceCategories = deviceCategoryRepository.findAllByCompany(company);
+        Boolean modelExists = deviceCategories.stream().anyMatch(model -> model.getNameCategory().equals(name));
 
         if (name.isEmpty() || name.isBlank() || name.equals(null))
             return new ResponseEntity<>("Ingrese un nombre valido",HttpStatus.BAD_REQUEST);
@@ -110,6 +123,10 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
 
         if(categories.indexOf(deviceCategory) == -1){
             return new ResponseEntity<>("No existe la categoria",HttpStatus.BAD_REQUEST);
+        }
+
+        if(modelExists){
+            return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
         }
 
         deviceCategory.setNameCategory(name);
@@ -132,6 +149,5 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
         deviceCategoryRepository.save(deviceCategory);
         return new ResponseEntity<>("Eliminado exitosamente",HttpStatus.OK);
     }
-
 
 }

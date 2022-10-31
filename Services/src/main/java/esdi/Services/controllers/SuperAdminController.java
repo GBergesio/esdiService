@@ -4,6 +4,9 @@ import esdi.Services.dtos.request.OrderRequest;
 import esdi.Services.dtos.request.ServiceArtRequest;
 import esdi.Services.dtos.request.StaffRequest;
 import esdi.Services.services.*;
+import esdi.Services.services.budget.BudgetService;
+import esdi.Services.services.budget.OptionBudgetService;
+import esdi.Services.services.budget.OptionComponentService;
 import esdi.Services.services.devices.DeviceCategoryService;
 import esdi.Services.services.devices.DeviceModelService;
 import esdi.Services.services.devices.DeviceService;
@@ -40,6 +43,22 @@ public class SuperAdminController {
 
     @Autowired
     DeviceModelService deviceModelService;
+
+    @Autowired
+    BrandService brandService;
+
+    @Autowired
+    CategoryService categoryService;
+
+    @Autowired
+    BudgetService budgetService;
+
+    @Autowired
+    OptionBudgetService optionBudgetService;
+
+    @Autowired
+    OptionComponentService optionComponentService;
+
 
     @GetMapping("/orders")
     ResponseEntity<?> getAllOrders(){
@@ -158,7 +177,7 @@ public class SuperAdminController {
     }
 
     @GetMapping("/deviceCategories/{id}")
-    ResponseEntity<?> getCategoryById(@PathVariable Long id){
+    ResponseEntity<?> getDeviceCategoryById(@PathVariable Long id){
         return deviceCategoryService.findById(id);
     }
 
@@ -172,6 +191,56 @@ public class SuperAdminController {
         return deviceModelService.findById(id);
     }
 
+    @GetMapping("/brands")
+    ResponseEntity<?> getAllBrands(){
+        return new ResponseEntity<>(brandService.findAllDTO(), HttpStatus.OK);
+    }
+
+    @GetMapping("/brands/{id}")
+    ResponseEntity<?> getBrandById(@PathVariable Long id) {
+        return brandService.findById(id);
+    }
+
+
+    @GetMapping("/categories")
+    ResponseEntity<?> getAllCategories() {
+        return categoryService.allCategories();
+    }
+
+    @GetMapping("/categories/{id}")
+    ResponseEntity<?> getCategoryById(@PathVariable Long id) {
+        return categoryService.findById(id);
+    }
+
+    @GetMapping("/budgets")
+    ResponseEntity<?> getAllBudgets(){
+        return new ResponseEntity<>(budgetService.allBudgets(), HttpStatus.OK);
+    }
+
+    @GetMapping("budgets/{id}")
+    ResponseEntity<?> getBudgetById(@PathVariable Long id){
+        return budgetService.findById(id);
+    }
+
+    @GetMapping("/optionBudget")
+    ResponseEntity<?> getAllOptionBudgets(){
+        return new ResponseEntity<>(optionBudgetService.allOptionBudgets(), HttpStatus.OK);
+    }
+
+    @GetMapping("/optionBudget/{id}")
+    ResponseEntity<?> getOptionBudgetById(@PathVariable Long id){
+        return optionBudgetService.findById(id);
+    }
+
+    @GetMapping("/optionComponent")
+    ResponseEntity<?> getAllOptionComponents(){
+        return new ResponseEntity<>(optionComponentService.allOptionsComponent(), HttpStatus.OK);
+    }
+
+    @GetMapping("/optionComponent/{id}")
+    ResponseEntity<?> getOptionComponentById(@PathVariable Long id){
+        return optionComponentService.findById(id);
+    }
 
 
 }

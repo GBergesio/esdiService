@@ -11,4 +11,5 @@ public class CategoryDTO {
 
     private long id;
     private String nameCategory;
+    private Boolean deleted;
 }

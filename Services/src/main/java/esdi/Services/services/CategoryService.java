@@ -16,15 +16,13 @@ public interface CategoryService {
         List<CategoryDTO> findAllDTO();
 
         ResponseEntity<?> allCategories();
+        ResponseEntity<?> findById(Long id);
 
         ResponseEntity<?> allCategoriesByCompany(Authentication authentication);
 
+        ResponseEntity<?> createCategory(CategoryDTO categoryDTO, Authentication authentication);
 
-        ResponseEntity<?> findById(Long id);
+        ResponseEntity<?> renameCategory(Long id, String name, Authentication authentication);
 
-        ResponseEntity<?> createCategory(CategoryDTO categoryDTO);
-
-        ResponseEntity<?> renameCategory(Long id, String name);
-
-        ResponseEntity<?> deleteCategory(Long id);
+        ResponseEntity<?> deleteCategory(Long id, Authentication authentication);
 }

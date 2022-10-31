@@ -18,6 +18,7 @@ public class Brand{
     private long id;
 
     private String nameBrand;
+    private Boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id")

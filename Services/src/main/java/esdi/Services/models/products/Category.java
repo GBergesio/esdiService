@@ -15,6 +15,7 @@ public class Category {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
     private String nameCategory;
+    private Boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id")

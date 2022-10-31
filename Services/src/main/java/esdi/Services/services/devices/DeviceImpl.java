@@ -119,7 +119,7 @@ public class DeviceImpl implements DeviceService {
             return new ResponseEntity<>("No se encontró modelo con el id seleccionado", HttpStatus.BAD_REQUEST);
         }
         if (deviceCategories.indexOf(deviceCategory) == -1){
-            return new ResponseEntity<>("No se encontró categoria del dispositivo con el id seleccionado", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("No se encontró categoria con el id seleccionado", HttpStatus.BAD_REQUEST);
         }
         if (brands.indexOf(brand) == -1){
             return new ResponseEntity<>("No se encontró marca con el id seleccionado", HttpStatus.BAD_REQUEST);

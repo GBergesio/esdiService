@@ -23,15 +23,35 @@ public class WebAuthorization extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 .antMatchers(HttpMethod.GET, "/orders/current/ordersByClient", "/devices/current/devicesByClient").hasAnyAuthority("CLIENT")
-//                .antMatchers(HttpMethod.GET, "/products/current/**", "/services/current/**", "/categories/current/**","/dolar/current/**","/comments/current/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
+
                 .antMatchers(HttpMethod.GET, "/orders/current/**","/staff/current/**","/budgets/current/**","/devices/current/**",
                                             "/deviceCategory/current/**","/deviceModel/current/**","/dolar/current/**","/comments/current/**",
-                                            "/products/current/**", "/services/current/**", "/categories/current/**"
+                                            "/products/current/**", "/services/current/**", "/categories/current/**", "/brands/current/**",
+                                            "/categories/current/**/","/budgets/current/**","/optionBudgets/current/**", "/optionComponent/current/**"
                 ).hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
 
-                .antMatchers(HttpMethod.POST,"/staff/current/**", "/services/current/**","/devices/current/**", "/deviceModel/current/**", "/deviceCategory/current/**").hasAnyAuthority("ADMIN", "COMPANY")
-                .antMatchers(HttpMethod.DELETE,"/services/current/**","/devices/current/**", "/deviceModel/current/**", "/deviceCategory/current/**").hasAnyAuthority("ADMIN", "COMPANY")
-                .antMatchers(HttpMethod.PATCH,"/staff/current/**","/services/current/**","/products/current/**", "/orders/current/**").hasAnyAuthority("ADMIN", "COMPANY")
+                .antMatchers(HttpMethod.POST,"/staff/current/**", "/services/current/**","/devices/current/**","/categories/current/**/", "/orders/current/",
+                                                        "/deviceModel/current/**", "/deviceCategory/current/**","/brands/current/**","/dolar/current/**","/products/current/**"
+                ).hasAnyAuthority("ADMIN", "COMPANY")
+
+                .antMatchers(HttpMethod.POST,"/budgets/current/**","/optionBudgets/current/**", "/optionComponent/current/**", "/comments/current/**"
+                ).hasAnyAuthority("ADMIN","TECHNICIAN","COMPANY")
+
+                .antMatchers(HttpMethod.PATCH,"/staff/current/**","/services/current/**","/products/current/**", "/current/brands/**",
+                                            "/categories/current/**/" , "/products/current/**", "/budgets/current/**", "/devices/current/**", "/deviceCategory/current/**",
+                                            "/deviceModel/current/**"
+                ).hasAnyAuthority("ADMIN", "COMPANY")
+
+                .antMatchers(HttpMethod.PATCH,"/budgets/current/**", "/optionBudgets/current/**","/optionComponent/current/**", "/comments/current/**", "/orders/current/**"
+                ).hasAnyAuthority("ADMIN","TECHNICIAN","COMPANY")
+
+                .antMatchers(HttpMethod.DELETE,"/services/current/**","/devices/current/**", "/categories/current/**/",
+                        "/deviceModel/current/**", "/deviceCategory/current/**", "/current/brands/**", "/products/current/**", "/orders/current/"
+                ).hasAnyAuthority("ADMIN", "COMPANY")
+
+                .antMatchers(HttpMethod.DELETE,"/budgets/current/**", "/optionBudgets/current/**", "/optionComponent/current/**", "/comments/current/**"
+                ).hasAnyAuthority("ADMIN","TECHNICIAN","COMPANY")
+
 
                 .antMatchers("/admin/**","/rest/**","/h2-console/**", "/companies/**", "/orders/**","/staff/**","/services/**","/SAC/**").hasAuthority("SUPERADMIN")
 //                .antMatchers(HttpMethod.GET, "/company/**").hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")

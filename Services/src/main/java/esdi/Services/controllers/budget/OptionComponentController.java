@@ -7,6 +7,7 @@ import esdi.Services.services.budget.OptionComponentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,24 +17,14 @@ public class OptionComponentController {
     @Autowired
     OptionComponentService optionComponentService;
 
-    @GetMapping()
-    ResponseEntity<?> getAllOptionComponents(){
-        return new ResponseEntity<>(optionComponentService.allOptionsComponent(), HttpStatus.OK);
+    @GetMapping("/current")
+    ResponseEntity<?> getOptionsByCompany(Authentication authentication){
+        return new ResponseEntity<>(optionComponentService.allOptionsComponentByCompany(authentication), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<?> getById(@PathVariable Long id){
-        return optionComponentService.findById(id);
-    }
-
-    @PostMapping()
-    ResponseEntity<?> newOption(@RequestBody OptionRequest option, Long idBudget, Long idPoS) {
-        return optionComponentService.createOptionComponent(option, idBudget,idPoS);
-    }
-
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteOption(@PathVariable Long id){
-        return optionComponentService.deleteOption(id);
+    @DeleteMapping("/current/{id}")
+    ResponseEntity<?> deleteOption(Authentication authentication, @PathVariable Long id){
+        return optionComponentService.deleteOption(authentication, id);
     }
 
 

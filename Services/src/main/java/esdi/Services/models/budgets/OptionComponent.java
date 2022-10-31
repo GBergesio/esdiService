@@ -23,9 +23,10 @@ public class OptionComponent {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
+    private long idPoS;
+    private double pricePoS;
     private double quantity;
     private double totalPrice;
-    private long idPoS;
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

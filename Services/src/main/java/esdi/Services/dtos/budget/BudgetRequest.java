@@ -14,6 +14,7 @@ public class BudgetRequest {
 
     private StatusBudget statusBudget;
     private LocalDateTime issueDate;
+    private LocalDateTime confirmationDate;
     private LocalDateTime dueDate;
 
 }
