@@ -22,11 +22,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "System service API Doc", version = "0.0", description = "System service API documentation"))
 public class SystemServiceApplication {
@@ -58,6 +54,7 @@ public class SystemServiceApplication {
             ampersand.setPassword(passwordEncoder.encode("123"));
             ampersand.setUserType(UserType.SUPERADMIN);
             ampersand.setPlan(CompanyPlan.THREE);
+            ampersand.setActive(true);
             companyRepository.save(ampersand);
 
             Company esdi = new Company();
@@ -69,6 +66,7 @@ public class SystemServiceApplication {
             esdi.setPassword(passwordEncoder.encode("123"));
             esdi.setUserType(UserType.COMPANY);
             esdi.setPlan(CompanyPlan.TWO);
+            esdi.setActive(true);
             companyRepository.save(esdi);
 
             Company tallerChapa = new Company();
@@ -80,6 +78,7 @@ public class SystemServiceApplication {
             tallerChapa.setPassword(passwordEncoder.encode("123"));
             tallerChapa.setUserType(UserType.COMPANY);
             tallerChapa.setPlan(CompanyPlan.ONE);
+            tallerChapa.setActive(true);
             companyRepository.save(tallerChapa);
 
             Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", passwordEncoder.encode("123"), UserType.ADMIN,false);

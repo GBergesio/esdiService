@@ -3,6 +3,7 @@ package esdi.Services.services.implement;
 import esdi.Services.dtos.CompanyDTO;
 import esdi.Services.dtos.budget.BudgetDTO;
 import esdi.Services.dtos.request.CompanyRequest;
+import esdi.Services.enums.UserType;
 import esdi.Services.mappers.CompanyMapper;
 import esdi.Services.models.users.Company;
 import esdi.Services.repositories.CompanyRepository;
@@ -112,6 +113,41 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public ResponseEntity<?> createCompany(CompanyRequest companyRequest) {
-        return null;
+
+        if(companyRequest.getName() == null || companyRequest.getName().equals(null) || companyRequest.getName().isBlank()){
+            return new ResponseEntity<>("Ingresar datos",HttpStatus.BAD_REQUEST);
+        }
+
+        if(companyRequest.getCuit() == null || companyRequest.getCuit().equals(null) || companyRequest.getCuit().isBlank()){
+            return new ResponseEntity<>("Ingresar datos",HttpStatus.BAD_REQUEST);
+        }
+
+        if(companyRequest.getEmail() == null || companyRequest.getEmail().equals(null) || companyRequest.getEmail().isBlank()){
+            return new ResponseEntity<>("Ingresar datos",HttpStatus.BAD_REQUEST);
+        }
+
+        if(companyRequest.getPhone() == null || companyRequest.getPhone().equals(null) || companyRequest.getPhone().isBlank()){
+            return new ResponseEntity<>("Ingresar datos",HttpStatus.BAD_REQUEST);
+        }
+
+        if(companyRequest.getSector() == null || companyRequest.getSector().equals(null) || companyRequest.getSector().isBlank()){
+            return new ResponseEntity<>("Ingresar datos",HttpStatus.BAD_REQUEST);
+        }
+
+        Company company = new Company();
+        company.setPlan(null);
+        company.setActive(false);
+        company.setUserType(UserType.COMPANY);
+        company.setUser(null);
+        company.setPassword(null);
+        company.setName(companyRequest.getName());
+        company.setCuit(companyRequest.getCuit());
+        company.setEmail(companyRequest.getEmail());
+        company.setPhone(companyRequest.getPhone());
+        company.setSector(companyRequest.getSector());
+
+        companyRepository.save(company);
+
+        return new ResponseEntity<>("Solicitud enviada correctamente",HttpStatus.CREATED);
     }
 }

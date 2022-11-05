@@ -88,14 +88,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ResponseEntity<?> createComment(CommentRequest commentRequest, Long idOrder, Long idActiveUser) {
-
+    public ResponseEntity<?> createComment(CommentRequest commentRequest, Long idOrder, Authentication authentication) {
+        Staff activeUser = staffRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByStaffs(activeUser);
         Order order = orderRepository.findById(idOrder).orElse(null);
-        // Reemplazar por usuario activo ↓
-        Staff activeUser = staffRepository.findById(idActiveUser).orElse(null);
+        List<Order> orders = orderRepository.findAllByCompany(company);
 
         if (order == null)
             return new ResponseEntity<>("Ingrese orden", HttpStatus.BAD_REQUEST);
+
+        if(!orders.contains(order))
+            return new ResponseEntity<>("Orden no encontrada", HttpStatus.BAD_REQUEST);
 
         if(order != null){
 
@@ -118,11 +121,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ResponseEntity<?> deleteComment(Long idComment) {
-
+    public ResponseEntity<?> deleteComment(Long idComment, Authentication authentication) {
+        Staff activeUser = staffRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByStaffs(activeUser);
         Comment comment = commentRepository.findById(idComment).orElse(null);
+        List<Comment> comments = commentRepository.findAllByCompany(company);
 
-        if (comment == null)
+        if (!comments.contains(comment))
             return new ResponseEntity<>("No se puede eliminar ya que no se encuentra el comentario",HttpStatus.BAD_REQUEST);
 
         comment.setDeleted(true);
@@ -133,7 +138,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ResponseEntity<?> deleteCommentAdmin(Long idComment) {
+    public ResponseEntity<?> deleteCommentCompany(Long idComment, Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
 
         Comment comment = commentRepository.findById(idComment).orElse(null);
 

@@ -19,43 +19,34 @@ public class ClientController {
     ClientService clientService;
 
     //  TODOS LOS CLIENTES
-    @GetMapping()
-    ResponseEntity<?> getAllUsers() {
-        return clientService.allClients();
-    }
-
-
-    @GetMapping("/id/{id}")
-    ResponseEntity<?> getClientById(@PathVariable Long id) {
-        return clientService.getClientById(id);
-    }
-
-    @GetMapping("/company/{id}")
-    ResponseEntity<?> getClientByCompany(@PathVariable Long id) {
-        return clientService.getClientsByCompany(id);
-    }
-
-    @GetMapping("/current/clients")
-    ResponseEntity<?> getClientsByCurrentCompany(Authentication authentication) {
+    @GetMapping("/current")
+    ResponseEntity<?> getAllClients(Authentication authentication) {
         return clientService.getAllClientsAuth(authentication);
     }
-    @GetMapping("/dni/{dni}")
-    ResponseEntity<?> getClientByDni(@PathVariable String dni) {
-        return clientService.getClientByDni(dni);
+
+    @GetMapping("/current/id/{id}")
+    ResponseEntity<?> getClientById(@PathVariable Long id, Authentication authentication) {
+        return clientService.getClientByIdCC(id,authentication);
     }
 
-    @PostMapping()
-    ResponseEntity<?> createNewClient(@RequestBody ClientRequest clientRequest) {
-        return clientService.createNewClient(clientRequest);
+    @GetMapping("/current/dni/{dni}")
+    ResponseEntity<?> getClientByDni(@PathVariable String dni, Authentication authentication) {
+        return clientService.getClientByDni(dni,authentication);
     }
 
-    @PatchMapping("/id/{id}")
-    ResponseEntity<?> updateClient(@PathVariable Long id, @RequestBody ClientRequest clientRequest) {
-        return clientService.updateClient(id, clientRequest);
+    @PostMapping("/current")
+    ResponseEntity<?> createNewClient(@RequestBody ClientRequest clientRequest, Authentication authentication) {
+        return clientService.createNewClient(clientRequest,authentication);
     }
 
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
-        return clientService.deleteClient(id);
+    @PatchMapping("/current/id/{id}")
+    ResponseEntity<?> updateClient(@PathVariable Long id, @RequestBody ClientRequest clientRequest,Authentication authentication) {
+        return clientService.updateClient(id, clientRequest, authentication);
     }
+
+    @DeleteMapping("/current/id/{id}")
+    public ResponseEntity<?> deleteClient(@PathVariable Long id, Authentication authentication) {
+        return clientService.deleteClient(id,authentication);
+    }
+
 }

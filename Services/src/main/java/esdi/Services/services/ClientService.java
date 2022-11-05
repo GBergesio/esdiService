@@ -11,16 +11,18 @@ public interface ClientService {
 
     List<ClientDTO> findAllDTO();
     ResponseEntity<?> allClients();
-    ResponseEntity<?> getAllClientsAuth(Authentication authentication);
+    ResponseEntity<?> getClientsByCompany(Long id);
     ResponseEntity<?> getClientById(Long id);
 
-    ResponseEntity<?> getClientByDni(String dni);
 
-    ResponseEntity<?> getClientsByCompany(Long id);
+    ResponseEntity<?> getAllClientsAuth(Authentication authentication);
 
-    ResponseEntity<?> createNewClient(ClientRequest clientRequest);
+    ResponseEntity<?> getClientByIdCC(Long id, Authentication authentication);
+    ResponseEntity<?> getClientByDni(String dni, Authentication authentication);
 
-    ResponseEntity<?> updateClient(Long id, ClientRequest clientRequest);
+    ResponseEntity<?> createNewClient(ClientRequest clientRequest, Authentication authentication);
 
-    ResponseEntity<?> deleteClient(Long id);
+    ResponseEntity<?> updateClient(Long id, ClientRequest clientRequest, Authentication authentication);
+
+    ResponseEntity<?> deleteClient(Long id, Authentication authentication);
 }

@@ -22,10 +22,10 @@ public interface CommentService {
 
     ResponseEntity<?> allActiveCommentsByCompany(Authentication authentication);
 
-    ResponseEntity<?> createComment(CommentRequest commentRequest, Long idOrder, Long idActiveUser);
+    ResponseEntity<?> createComment(CommentRequest commentRequest, Long idOrder, Authentication authentication);
 
-    ResponseEntity<?> deleteComment(Long idComment);
-    ResponseEntity<?> deleteCommentAdmin(Long idComment);
+    ResponseEntity<?> deleteComment(Long idComment, Authentication authentication);
+    ResponseEntity<?> deleteCommentCompany(Long idComment, Authentication authentication);
 
     ResponseEntity<?> editComment(CommentRequest commentRequest, Long idOrder);
 

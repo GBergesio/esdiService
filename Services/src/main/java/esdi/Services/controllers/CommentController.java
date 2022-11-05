@@ -38,19 +38,19 @@ public class CommentController {
     }
 
     @Transactional
-    @PostMapping()
-    ResponseEntity<?> newComment(@RequestBody CommentRequest commentRequest, @RequestParam Long idOrder, @RequestParam Long idActiveUser){
-        return commentService.createComment(commentRequest, idOrder, idActiveUser);
+    @PostMapping("/current")
+    ResponseEntity<?> newComment(@RequestBody CommentRequest commentRequest, @RequestParam Long idOrder, Authentication authentication){
+        return commentService.createComment(commentRequest, idOrder, authentication);
     }
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteComment(@PathVariable Long id) {
-        return commentService.deleteComment(id);
+    @DeleteMapping("/current/{id}")
+    ResponseEntity<?> deleteComment(@PathVariable Long id, Authentication authentication) {
+        return commentService.deleteComment(id,authentication);
     }
 
-    @DeleteMapping("/admin/{id}")
-    ResponseEntity<?> deleteCommentAdmin(@PathVariable Long id) {
-        return commentService.deleteCommentAdmin(id);
+    @DeleteMapping("/current/company/{id}")
+    ResponseEntity<?> deleteCommentCompany(@PathVariable Long id, Authentication authentication) {
+        return commentService.deleteCommentCompany(id,authentication);
     }
 
     @PatchMapping("/edit/{idComment}")

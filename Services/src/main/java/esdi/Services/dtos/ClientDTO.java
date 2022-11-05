@@ -1,10 +1,6 @@
 package esdi.Services.dtos;
 
-import esdi.Services.dtos.devices.DeviceDTO;
-import esdi.Services.models.users.Neighborhood;
 import esdi.Services.enums.UserType;
-import esdi.Services.models.users.Client;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +20,8 @@ public class ClientDTO {
     private String cellphone;
     private String email;
     private String user;
+    private String password;
     private UserType userType;
+    private String passwordOrd;
 
 }

@@ -1,4 +1,5 @@
 package esdi.Services.controllers.userControllers;
+import esdi.Services.dtos.request.CompanyRequest;
 import esdi.Services.dtos.request.StaffRequest;
 import esdi.Services.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,12 @@ public class CompanyController {
     ResponseEntity<?> getCompanyByUserName(@PathVariable String user) {
         return companyService.findByUser(user);
     }
+
+    @PostMapping("/request")
+    ResponseEntity<?> requestCompany(@RequestBody CompanyRequest companyRequest) {
+        return companyService.createCompany(companyRequest);
+    }
+
 
 //    @PostMapping("/login")
 //    public ResponseEntity<?> createStaff(@RequestParam String email, @RequestParam String password) {
