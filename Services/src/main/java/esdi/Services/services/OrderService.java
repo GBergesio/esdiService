@@ -28,6 +28,7 @@ public interface OrderService {
     ResponseEntity<?> updateOrder(Long idOrder,Long idDevice, Long idTechnician, OrderRequest orderRequest);
     ResponseEntity<?> releaseOrder(Authentication authentication, Long id);
     ResponseEntity<?> switchPriority(Authentication authentication, Long idOrder);
+    ResponseEntity<?> switchPriorityTemp(Long idOrder);
     ResponseEntity<?> orderFinished(Authentication authentication, Long idOrder);
     ResponseEntity<?> orderStaff(Authentication authentication, Long id, Long idStaff);
     ResponseEntity<?> deleteOrder(Authentication authentication, Long id);

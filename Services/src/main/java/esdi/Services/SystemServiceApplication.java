@@ -227,7 +227,10 @@ public class SystemServiceApplication {
 
             Device device4 = new Device();
             device4.setDescription("Peugeot 206");
+            device4.setBrand(brand1);
+            device4.setCategory(deviceCategory1);
             device4.setClient(client3);
+            device4.setModel(deviceModel2);
             device4.setSerial("CDA405");
             device4.setCompany(tallerChapa);
             device4.setDeleted(false);
@@ -236,7 +239,10 @@ public class SystemServiceApplication {
 
             Device device5 = new Device();
             device5.setDescription("Fiat 500");
+            device5.setBrand(brand1);
+            device5.setCategory(deviceCategory1);
             device5.setClient(client3);
+            device5.setModel(deviceModel2);
             device5.setSerial("AB SAF 21412");
             device5.setCompany(tallerChapa);
             device5.setDeleted(false);
@@ -266,7 +272,7 @@ public class SystemServiceApplication {
             order2.setOrderNumber(12999);
             order2.setStatus(Status.ON_HOLD);
             order2.setOrderType(OrderType.NORMAL);
-            order2.setPriority(Priority.HIGH);
+            order2.setPriority(Priority.NORMAL);
             order2.setJoinDate(LocalDateTime.now());
             order2.setOutDate(null);
             order2.setPasswordDevice("passwordcito");
@@ -281,7 +287,7 @@ public class SystemServiceApplication {
             order3.setOrderNumber(8888);
             order3.setStatus(Status.ON_HOLD);
             order3.setOrderType(OrderType.NORMAL);
-            order3.setPriority(Priority.HIGH);
+            order3.setPriority(Priority.EXPRESS);
             order3.setJoinDate(LocalDateTime.now());
             order3.setOutDate(null);
             order3.setPasswordDevice("");
@@ -305,6 +311,7 @@ public class SystemServiceApplication {
             order4.setCompany(tallerChapa);
             order4.setStaff(tecnicoAuto);
             order4.setDevice(device5);
+
             orderRepository.save(order4);
 
             Order order5 = new Order();
@@ -477,6 +484,7 @@ public class SystemServiceApplication {
             budget3.setOrderNumber(order3.getOrderNumber());
             budget3.setClient(order3.getClient().getFirstName() + " " + order3.getClient().getLastName());
             budget3.setStatusBudget(StatusBudget.APPROVED);
+            budget3.setConfirmationDate(LocalDateTime.now());
             budget3.setTotal(1222);
             budget3.setOrder(order3);
             budget3.setCompany(tallerChapa);
@@ -491,6 +499,16 @@ public class SystemServiceApplication {
             budget4.setOrder(order5);
             budget4.setCompany(esdi);
             budgetRepository.save(budget4);
+
+//            Budget budget5 = new Budget();
+//            budget5.setBudgetNumber(1224);
+//            budget5.setOrderNumber(order4.getOrderNumber());
+//            budget5.setClient(order4.getClient().getFirstName() + " " + order4.getClient().getLastName());
+//            budget5.setStatusBudget(StatusBudget.ON_HOLD);
+//            budget5.setTotal(1234);
+//            budget5.setOrder(order4);
+//            budget5.setCompany(esdi);
+//            budgetRepository.save(budget5);
 
             // OPTION BUDGETS //
             OptionBudget optionBudget1 = new OptionBudget();

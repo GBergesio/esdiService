@@ -64,10 +64,17 @@ public class SuperAdminController {
     ClientService clientService;
 
 
-//    @GetMapping("/orders")
-//    ResponseEntity<?> getAllOrders(){
-//        return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
-//    }
+    @GetMapping("/orders")
+    ResponseEntity<?> getAllOrders(){
+        return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
+    }
+    @Transactional
+    @CrossOrigin
+    @PatchMapping("/switchPriority/{idOrder}")
+    ResponseEntity<?> switchPriority(@PathVariable Long idOrder){
+        return orderService.switchPriorityTemp(idOrder);
+    }
+
 //
 //    @GetMapping("/orders/{id}")
 //    ResponseEntity<?> getOrderById(@PathVariable Long id){

@@ -277,6 +277,35 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public ResponseEntity<?> switchPriorityTemp(Long idOrder) {
+        Order order = orderRepository.findById(idOrder).orElse(null);
+
+        if (order == null){
+            return new ResponseEntity<>("Orden no encontrada | Ingrese numero de orden",HttpStatus.BAD_REQUEST);
+        }
+        if (order != null){
+            Priority priority = order.getPriority();
+            switch (priority){
+                case NORMAL:
+                    order.setPriority(Priority.MEDIUM);
+                    break;
+                case MEDIUM:
+                    order.setPriority(Priority.HIGH);
+                    break;
+                case HIGH:
+                    order.setPriority(Priority.EXPRESS);
+                    break;
+                case EXPRESS:
+                    order.setPriority(Priority.NORMAL);
+                    break;
+            }
+            orderRepository.save(order);
+        }
+
+        return new ResponseEntity<>(orderMapper.toDTO(order), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<?> orderFinished(Authentication authentication, Long idOrder) {
         Order order = orderRepository.findById(idOrder).orElse(null);
         Company company = companyRepository.findByUser(authentication.getName());
