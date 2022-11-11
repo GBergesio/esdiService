@@ -1,11 +1,13 @@
 package esdi.Services.controllers.userControllers;
+
 import esdi.Services.dtos.request.CompanyRequest;
-import esdi.Services.dtos.request.StaffRequest;
 import esdi.Services.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/companies")
@@ -42,6 +44,13 @@ public class CompanyController {
     @PostMapping("/request")
     ResponseEntity<?> requestCompany(@RequestBody CompanyRequest companyRequest) {
         return companyService.createCompany(companyRequest);
+    }
+
+    @Transactional
+    @CrossOrigin
+    @GetMapping("/current")
+    ResponseEntity<?> getCurrentCompany(Authentication authentication) {
+        return companyService.getCurrentCompany(authentication);
     }
 
 

@@ -12,7 +12,7 @@ public interface CompanyService {
 
     Company saveCompany(Company company);
     CompanyDTO saveCompanyDTO(Company company);
-    Company getCurrentCompany(Authentication authentication);
+    ResponseEntity<?> getCurrentCompany(Authentication authentication);
     List<CompanyDTO> findAllDTO();
     ResponseEntity<?> allCompanies();
     ResponseEntity<?> findById(Long id);

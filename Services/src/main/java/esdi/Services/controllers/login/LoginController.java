@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 @RequestMapping("/login")
 public class LoginController {
 
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @Transactional
     @PostMapping()
     ResponseEntity<?> login(@RequestParam String user, @RequestParam String password){

@@ -47,8 +47,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Company getCurrentCompany(Authentication authentication) {
-        return companyRepository.findByEmail(authentication.getName());
+    public ResponseEntity<?> getCurrentCompany(Authentication authentication) {
+        Company company = companyRepository.findByUser(authentication.getName());
+        CompanyDTO companyDTO = companyMapper.toDTO(company);
+
+        return new ResponseEntity<>(companyDTO, HttpStatus.OK);
     }
 
     @Override

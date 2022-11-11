@@ -1,13 +1,18 @@
 package esdi.Services.configurations;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +35,7 @@ public class WebAuthorization extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/orders/current/**","/staff/current/**","/budgets/current/**","/devices/current/**",
                                             "/deviceCategory/current/**","/deviceModel/current/**","/dolar/current/**","/comments/current/**",
                                             "/products/current/**", "/services/current/**", "/categories/current/**", "/brands/current/**", "/clients/current/**",
-                                            "/categories/current/**/","/budgets/current/**","/optionBudgets/current/**", "/optionComponent/current/**"
+                                            "/categories/current/**/","/budgets/current/**","/optionBudgets/current/**", "/optionComponent/current/**", "/companies/current"
                 ).hasAnyAuthority("COMPANY","ADMIN","TECHNICIAN")
 
                 .antMatchers(HttpMethod.POST,"/staff/current/**", "/services/current/**","/devices/current/**","/categories/current/**/", "/orders/current/",
@@ -131,4 +136,5 @@ public class WebAuthorization extends WebSecurityConfigurerAdapter {
 
         };
     };
+
 }
