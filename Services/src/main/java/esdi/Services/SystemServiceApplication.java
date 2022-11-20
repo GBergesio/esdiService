@@ -22,7 +22,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.MonthDay;
+
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "System service API Doc", version = "0.0", description = "System service API documentation"))
 public class SystemServiceApplication {
@@ -50,7 +54,7 @@ public class SystemServiceApplication {
             ampersand.setCuit("20393231581");
             ampersand.setSector("Software");
             ampersand.setEmail("admin@ampersand.com");
-            ampersand.setUser("ampersandAdmin");
+            ampersand.setUsername("ampersandAdmin");
             ampersand.setPassword(passwordEncoder.encode("123"));
             ampersand.setUserType(UserType.SUPERADMIN);
             ampersand.setPlan(CompanyPlan.THREE);
@@ -62,7 +66,7 @@ public class SystemServiceApplication {
             esdi.setCuit("20286986669");
             esdi.setSector("Informatica");
             esdi.setEmail("ventas@altaoferta.com");
-            esdi.setUser("C-electro001");
+            esdi.setUsername("C-electro001");
             esdi.setPassword(passwordEncoder.encode("123"));
             esdi.setUserType(UserType.COMPANY);
             esdi.setPlan(CompanyPlan.TWO);
@@ -74,18 +78,18 @@ public class SystemServiceApplication {
             tallerChapa.setCuit("2023233133");
             tallerChapa.setSector("Automoviles");
             tallerChapa.setEmail("taller@chapa.com");
-            tallerChapa.setUser("C-taller001");
+            tallerChapa.setUsername("C-taller001");
             tallerChapa.setPassword(passwordEncoder.encode("123"));
             tallerChapa.setUserType(UserType.COMPANY);
             tallerChapa.setPlan(CompanyPlan.ONE);
             tallerChapa.setActive(true);
             companyRepository.save(tallerChapa);
 
-            Staff admin = new Staff("001", "Staff", "Administrador", "bergesiog1@gmail.com", "admin1", passwordEncoder.encode("123"), UserType.ADMIN,false);
+            Staff admin = new Staff("001", "Javi", "Crespi", "crespijavier1@gmail.com", "admin1", passwordEncoder.encode("123"), UserType.ADMIN,false);
             admin.setCompany(esdi);
             staffRepository.save(admin);
 
-            Staff technician = new Staff("55", "Tecnico", "Bergesio", "bergesiog1@tt.com", "electro002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN,false);
+            Staff technician = new Staff("55", "Gonza", "Bustamante", "bsmg@tt.com", "electro002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN,false);
             technician.setCompany(esdi);
             staffRepository.save(technician);
 
@@ -270,10 +274,10 @@ public class SystemServiceApplication {
 
             Order order2 = new Order();
             order2.setOrderNumber(12999);
-            order2.setStatus(Status.ON_HOLD);
+            order2.setStatus(Status.READY_R);
             order2.setOrderType(OrderType.NORMAL);
             order2.setPriority(Priority.NORMAL);
-            order2.setJoinDate(LocalDateTime.now());
+            order2.setJoinDate(LocalDateTime.now().of(2022, 10, 24, 11, 25));
             order2.setOutDate(null);
             order2.setPasswordDevice("passwordcito");
             order2.setOrderDetails("Lenta, limpiar");
@@ -316,7 +320,7 @@ public class SystemServiceApplication {
 
             Order order5 = new Order();
             order5.setOrderNumber(41444);
-            order5.setStatus(Status.ON_HOLD);
+            order5.setStatus(Status.WITHDRAWN_WR);
             order5.setOrderType(OrderType.NORMAL);
             order5.setPriority(Priority.HIGH);
             order5.setJoinDate(LocalDateTime.now());

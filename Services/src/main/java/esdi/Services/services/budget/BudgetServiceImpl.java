@@ -69,7 +69,7 @@ public class BudgetServiceImpl implements BudgetService{
 
     @Override
     public ResponseEntity<?> allBudgetsByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Budget> budgetsByCompany = budgetRepository.findAllByCompany(company);
 
         return new ResponseEntity<>(budgetMapper.toDTO(budgetsByCompany), HttpStatus.OK);
@@ -77,7 +77,7 @@ public class BudgetServiceImpl implements BudgetService{
 
     @Override
     public ResponseEntity<?> createBudget(BudgetRequest request,Long idOrder, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Order order = orderRepository.findById(idOrder).orElse(null);
         List<Order> orders = orderRepository.findAllByCompany(company);
         boolean existBudget = budgetRepository.findAllByCompany(company).stream().anyMatch(budget -> budget.getOrder().equals(order));
@@ -118,7 +118,7 @@ public class BudgetServiceImpl implements BudgetService{
 
     @Override
     public ResponseEntity<?> updateBudget(BudgetRequest request,Long idBudget, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Budget budget = budgetRepository.findById(idBudget).orElse(null);
         List<Budget> budgets = budgetRepository.findAllByCompany(company);
 
@@ -150,7 +150,7 @@ public class BudgetServiceImpl implements BudgetService{
 
     @Override
     public ResponseEntity<?> deleteBudget(Long id, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Budget budget = budgetRepository.findById(id).orElse(null);
         List<Budget> budgets = budgetRepository.findAllByCompany(company);
         boolean optionsExists = budgets.stream().anyMatch(b -> b.getOptions().size() > 0);

@@ -75,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<?> allCategoriesByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Category> categoriesByCompany = categoryRepository.findAllByCompany(company);
         List<Category> categoriesAvailable = categoriesByCompany.stream().filter(c -> c.getDeleted().equals(false)).collect(Collectors.toList());
         return new ResponseEntity<>(categoryMapper.toDTO(categoriesAvailable), HttpStatus.OK);
@@ -83,7 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<?> createCategory(CategoryDTO categoryDTO, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Category> categories = categoryRepository.findAllByCompany(company);
         Boolean categoryExists = categories.stream().anyMatch(c -> c.getNameCategory().equals(categoryDTO.getNameCategory()));
         try{
@@ -110,7 +110,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<?> renameCategory(Long id, String name, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Category> categories = categoryRepository.findAllByCompany(company);
         Boolean categoryExists = categories.stream().anyMatch(c -> c.getNameCategory().equals(name));
 
@@ -134,7 +134,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<?> deleteCategory(Long id, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Category category = categoryRepository.findById(id).orElse(null);
         List<Category> categories = categoryRepository.findAllByCompany(company);
         List<Product> products = productRepository.findAllByCompany(company);

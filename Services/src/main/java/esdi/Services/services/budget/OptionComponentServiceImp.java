@@ -53,7 +53,7 @@ public class OptionComponentServiceImp implements OptionComponentService{
 
     @Override
     public ResponseEntity<?> allOptionsComponentByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<OptionComponent> components = optionComponentRepository.findAllByCompany(company);
 
         return new ResponseEntity<>(optionComponentMapper.toDTO(components), HttpStatus.OK);
@@ -69,7 +69,7 @@ public class OptionComponentServiceImp implements OptionComponentService{
 
     @Override
     public ResponseEntity<?> deleteOption(Authentication authentication, Long id) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         OptionComponent optionComponent = optionComponentRepository.findById(id).orElse(null);
         List<OptionComponent> components = optionComponentRepository.findAllByCompany(company);
 

@@ -87,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<?> allOrdersByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Order> ordersByCompany = orderRepository.findAllByCompany(company);
 
         return new ResponseEntity<>(orderMapper.toDTO(ordersByCompany), HttpStatus.OK);
@@ -232,7 +232,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<?> releaseOrder(Authentication authentication, Long idOrder) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Order order = orderRepository.findById(idOrder).orElse(null);
         List<Order> orderList = orderRepository.findAllByCompany(company);
 
@@ -247,7 +247,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<?> switchPriority(Authentication authentication, Long id) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Order order = orderRepository.findById(id).orElse(null);
         List<Order> orderList = orderRepository.findAllByCompany(company);
 
@@ -308,7 +308,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> orderFinished(Authentication authentication, Long idOrder) {
         Order order = orderRepository.findById(idOrder).orElse(null);
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Order> orderList = orderRepository.findAllByCompany(company);
 
         if (orderList.indexOf(order) == -1){
@@ -336,7 +336,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> orderStaff(Authentication authentication, Long id,Long idStaff) {
         Order order = orderRepository.findById(id).orElse(null);
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Order> orderList = orderRepository.findAllByCompany(company);
         List<Staff> staffList = staffRepository.findAllByCompany(company);
 
@@ -359,7 +359,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<?> deleteOrder(Authentication authentication, Long id) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Order orderDB = orderRepository.findById(id).orElse(null);
 
         if(orderDB == null)

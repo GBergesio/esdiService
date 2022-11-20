@@ -59,7 +59,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ResponseEntity<?> getAllClientsAuth(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Client> clients = clientRepository.findAllByCompany(company);
         return new ResponseEntity<>(clientMapper.toDTO(clients), HttpStatus.OK);
     }
@@ -75,7 +75,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ResponseEntity<?> getClientByIdCC(Long id, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Client client = clientRepository.findById(id).orElse(null);
         List<Client> clients = clientRepository.findAllByCompany(company);
 
@@ -87,7 +87,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ResponseEntity<?> getClientByDni(String dni, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Client client = clientRepository.findByDni(dni);
         List<Client> clients = clientRepository.findAllByCompany(company);
         if (!clients.contains(client)) {
@@ -106,7 +106,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ResponseEntity<?> createNewClient(ClientRequest clientRequest, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Client> clients = clientRepository.findAllByCompany(company);
         Boolean clientExist = clients.stream().anyMatch(client -> client.getDni().equals(clientRequest.getDni()));
 
@@ -146,7 +146,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ResponseEntity<?> updateClient(Long id, ClientRequest clientRequest, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Client> clients = clientRepository.findAllByCompany(company);
         Client client = clientRepository.findById(id).orElse(null);
 
@@ -200,7 +200,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ResponseEntity<?> deleteClient(Long id, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Client> clients = clientRepository.findAllByCompany(company);
 
         Client client = clientRepository.findById(id).orElse(null);

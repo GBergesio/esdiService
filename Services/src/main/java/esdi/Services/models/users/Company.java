@@ -38,7 +38,7 @@ public class Company {
     private String email;
     private String phone;
     private String sector;
-    private String user;
+    private String username;
     private String password;
     private UserType userType;
     private CompanyPlan plan;

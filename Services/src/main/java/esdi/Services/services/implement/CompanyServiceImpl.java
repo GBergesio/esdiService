@@ -48,7 +48,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public ResponseEntity<?> getCurrentCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         CompanyDTO companyDTO = companyMapper.toDTO(company);
 
         return new ResponseEntity<>(companyDTO, HttpStatus.OK);
@@ -101,7 +101,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public ResponseEntity<?> findByUser(String user) {
-        CompanyDTO companyDTO = companyMapper.toDTO(companyRepository.findByUser(user));
+        CompanyDTO companyDTO = companyMapper.toDTO(companyRepository.findByUsername(user));
 
         if (user.isEmpty() || user.isBlank() || user == null){
             return new ResponseEntity<>("Ingresar dato",HttpStatus.BAD_REQUEST);
@@ -141,7 +141,7 @@ public class CompanyServiceImpl implements CompanyService {
         company.setPlan(null);
         company.setActive(false);
         company.setUserType(UserType.COMPANY);
-        company.setUser(null);
+        company.setUsername(null);
         company.setPassword(null);
         company.setName(companyRequest.getName());
         company.setCuit(companyRequest.getCuit());

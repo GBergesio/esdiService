@@ -72,7 +72,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public ResponseEntity<?> allBrandsByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Brand> brandsByCompany = brandRepository.findAllByCompany(company);
         List<Brand> brandsAvailable = brandsByCompany.stream().filter(brand -> brand.getDeleted().equals(false)).collect(Collectors.toList());
 
@@ -81,7 +81,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public ResponseEntity<?> createBrand(BrandDTO brandDTO, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Brand> brands = brandRepository.findAllByCompany(company);
         Boolean brandExists = brands.stream().anyMatch(brand -> brand.getNameBrand().equals(brandDTO.getNameBrand()));
 
@@ -107,7 +107,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public ResponseEntity<?> renameBrand(Long id, String name, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Brand> brands = brandRepository.findAllByCompany(company);
         Boolean brandExists = brands.stream().anyMatch(brand -> brand.getNameBrand().equals(name));
 
@@ -131,7 +131,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public ResponseEntity<?> deleteBrand(Long id, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Brand brand  = brandRepository.findById(id).orElse(null);
         List<Brand> brands = brandRepository.findAllByCompany(company);
         List<Product> products = productRepository.findAllByCompany(company);

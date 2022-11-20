@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/companies")
 public class CompanyController {
@@ -47,7 +48,6 @@ public class CompanyController {
     }
 
     @Transactional
-    @CrossOrigin
     @GetMapping("/current")
     ResponseEntity<?> getCurrentCompany(Authentication authentication) {
         return companyService.getCurrentCompany(authentication);

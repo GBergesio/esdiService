@@ -71,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ResponseEntity<?> allCommentsByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Comment> CommentsByCompany = commentRepository.findAllByCompany(company);
 
         return new ResponseEntity<>(commentMapper.toDTO(CommentsByCompany), HttpStatus.OK);
@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseEntity<?> allActiveCommentsByCompany(Authentication authentication) {
 
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
 
         List<CommentDTO> listActiveComments = commentMapper.toDTO(commentRepository.findAllByCompany(company).stream().filter(comment -> comment.getEdited() == false && comment.getDeleted() == false).collect(Collectors.toList()));
 
@@ -139,7 +139,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ResponseEntity<?> deleteCommentCompany(Long idComment, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
 
         Comment comment = commentRepository.findById(idComment).orElse(null);
 

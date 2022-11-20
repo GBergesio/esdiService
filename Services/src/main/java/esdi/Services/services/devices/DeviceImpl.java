@@ -79,7 +79,7 @@ public class DeviceImpl implements DeviceService {
 
     @Override
     public ResponseEntity<?> allDevicesByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Device> devicesByCompany = deviceRepository.findAllByCompany(company);
         List<Device> devicesAvailables = devicesByCompany.stream().filter(device -> device.getDeleted().equals(false)).collect(Collectors.toList());
 
@@ -102,7 +102,7 @@ public class DeviceImpl implements DeviceService {
 
     @Override
     public ResponseEntity<?> createDevice(DeviceRequest deviceRequest, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         DeviceModel deviceModel = deviceModelRepository.findById(deviceRequest.getModelId()).orElse(null);
         DeviceCategory deviceCategory = deviceCategoryRepository.findById(deviceRequest.getCategoryId()).orElse(null);
         Brand brand = brandRepository.findById(deviceRequest.getBrandId()).orElse(null);
@@ -145,7 +145,7 @@ public class DeviceImpl implements DeviceService {
 
     @Override
     public ResponseEntity<?> updateDevice(Long id, DeviceRequest deviceRequest, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Device deviceDB = deviceRepository.findById(id).orElse(null);
         DeviceModel deviceModel = deviceModelRepository.findById(deviceRequest.getModelId()).orElse(null);
         DeviceCategory deviceCategory = deviceCategoryRepository.findById(deviceRequest.getCategoryId()).orElse(null);
@@ -188,7 +188,7 @@ public class DeviceImpl implements DeviceService {
 
     @Override
     public ResponseEntity<?> deleteDevice(Long id, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Device deviceDB = deviceRepository.findById(id).orElse(null);
         List<Device> devices = deviceRepository.findAllByCompany(company);
 

@@ -62,7 +62,7 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
 
     @Override
     public ResponseEntity<?> allDeviceCategoryByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<DeviceCategory> categories = deviceCategoryRepository.findAllByCompany(company);
         List<DeviceCategory> categoriesAvailables = categories.stream().filter(category -> category.getDeleted().equals(false)).collect(Collectors.toList());
 
@@ -84,7 +84,7 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
 
     @Override
     public ResponseEntity<?> createDeviceCategory(DeviceCategoryDTO deviceCategoryDTO, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<DeviceCategory> deviceCategories = deviceCategoryRepository.findAllByCompany(company);
         Boolean modelExists = deviceCategories.stream().anyMatch(model -> model.getNameCategory().equals(deviceCategoryDTO.getNameCategory()));
 
@@ -111,7 +111,7 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
 
     @Override
     public ResponseEntity<?> renameDeviceCategory(Long id, String name, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<DeviceCategory> deviceCategories = deviceCategoryRepository.findAllByCompany(company);
         Boolean modelExists = deviceCategories.stream().anyMatch(model -> model.getNameCategory().equals(name));
 
@@ -137,7 +137,7 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
 
     @Override
     public ResponseEntity<?> deleteDeviceCategory(Long id, Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         DeviceCategory deviceCategory = deviceCategoryRepository.findById(id).orElse(null);
         List<DeviceCategory> categories = deviceCategoryRepository.findAllByCompany(company);
 

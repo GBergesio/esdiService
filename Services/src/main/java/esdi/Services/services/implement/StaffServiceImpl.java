@@ -39,7 +39,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public ResponseEntity<?> getAllStaffsByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Staff> staffList = staffRepository.findAllByCompany(company);
         List<Staff> staffAvailable = staffList.stream().filter(staff -> staff.getDeleted().equals(false)).collect(Collectors.toList());
 
@@ -185,7 +185,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public ResponseEntity<?> createStaffByCompany(Authentication authentication, StaffRequest staffRequest ) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Staff> staffList = staffRepository.findAllByCompany(company);
         List<Staff> admins = staffList.stream().filter(staff -> staff.getUserType().equals(UserType.ADMIN)).collect(Collectors.toList());
         List<Staff> technicians = staffList.stream().filter(staff -> staff.getUserType().equals(UserType.TECHNICIAN)).collect(Collectors.toList());
@@ -253,7 +253,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public ResponseEntity<?> updateStaffByCompany(Authentication authentication,Long id, StaffRequest staffRequest) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Staff staff = staffRepository.findById(id).orElse(null);
         List<Staff> staffList = staffRepository.findAllByCompany(company);
 

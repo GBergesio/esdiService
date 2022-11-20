@@ -42,14 +42,14 @@ public class DolarServiceImpl implements DolarService {
 
     @Override
     public ResponseEntity<?> dollarByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Dolar dolarCompany = dolarRepository.findByCompany(company);
         return new ResponseEntity<>(dolarMapper.toDTO(dolarCompany), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> newDollarByCompany(Authentication authentication, DolarDTO dolarDTO) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Dolar dolarCompany = dolarRepository.findByCompany(company);
 
         dolarCompany.setPrice(dolarDTO.getPrice());

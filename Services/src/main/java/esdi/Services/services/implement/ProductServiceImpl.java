@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<?> allProductsByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Product> productList = productRepository.findAllByCompany(company);
         List<Product> productsAvailable = productList.stream().filter(product -> product.getDeleted().equals(false)).collect(Collectors.toList());
 
@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<?> deleteProductByCompany(Authentication authentication, Long id) {
         Product product = productRepository.findById(id).orElse(null);
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<Product> productList = company.getProducts();
 
         if (productList.indexOf(product) == -1)
@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<?> createProductByCompany(Authentication authentication, ProductRequest productRequest) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
 
         try{
             Iva iva = ivaRepository.findById(productRequest.getIvaId()).orElse(null);
@@ -205,7 +205,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<?> updateProductByCompany(Authentication authentication, Long id, ProductRequest productRequest) {
 
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Product product = productRepository.findById(id).orElse(null);
         List<Product> productList = productRepository.findAllByCompany(company);
         Dolar dolarCompany = dolarRepository.findByCompany(company);

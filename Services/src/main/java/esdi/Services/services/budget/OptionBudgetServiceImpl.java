@@ -52,7 +52,7 @@ public class OptionBudgetServiceImpl implements OptionBudgetService{
 
     @Override
     public ResponseEntity<?> allOptionBudgetsByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<OptionBudget> optionsBudget = optionBudgetRepository.findAllByCompany(company);
         List<OptionBudget> optionsBudgetAvailables = optionsBudget.stream().filter(optionBudget -> !optionBudget.getDeleted()).collect(Collectors.toList());
 
@@ -76,7 +76,7 @@ public class OptionBudgetServiceImpl implements OptionBudgetService{
 
     @Override
     public ResponseEntity<?> optionsByBudget(Authentication authentication, Long id) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         Budget budget = budgetRepository.findById(id).orElse(null);
         List<Budget> budgets = budgetRepository.findAllByCompany(company);
 
@@ -93,7 +93,7 @@ public class OptionBudgetServiceImpl implements OptionBudgetService{
 
     @Override
     public ResponseEntity<?> createOptionBudget(Authentication authentication, OptionRequest optionRequest, Long idBudget) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         OptionBudget newOption = new OptionBudget();
         Budget budget = budgetRepository.findById(idBudget).orElse(null);
         List<Budget> budgets = budgetRepository.findAllByCompany(company);
@@ -126,7 +126,7 @@ public class OptionBudgetServiceImpl implements OptionBudgetService{
 
     @Override
     public ResponseEntity<?> updateOptionBudget(Authentication authentication, OptionRequest optionRequest,Long id) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         OptionBudget optionBudget = optionBudgetRepository.findById(id).orElse(null);
         List<OptionBudget> optionBudgets = optionBudgetRepository.findAllByCompany(company);
 
@@ -145,7 +145,7 @@ public class OptionBudgetServiceImpl implements OptionBudgetService{
 
     @Override
     public ResponseEntity<?> updateTotalOptionBudget(Authentication authentication, OptionRequest optionRequest,Long id) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         OptionBudget optionBudget = optionBudgetRepository.findById(id).orElse(null);
         List<OptionBudget> optionBudgets = optionBudgetRepository.findAllByCompany(company);
 
@@ -182,7 +182,7 @@ public class OptionBudgetServiceImpl implements OptionBudgetService{
 
     @Override
     public ResponseEntity<?> deleteOptionBudget(Authentication authentication,Long id) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         OptionBudget optionBudget = optionBudgetRepository.findById(id).orElse(null);
         List<OptionBudget> optionBudgets = optionBudgetRepository.findAllByCompany(company);
 

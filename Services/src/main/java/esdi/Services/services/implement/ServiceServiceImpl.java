@@ -69,7 +69,7 @@ public class  ServiceServiceImpl implements ServiceService {
 
     @Override
     public ResponseEntity<?> allServicesByCompany(Authentication authentication) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<ServiceArt> serviceArts = serviceRepository.findAllByCompany(company);
         List<ServiceArt> serviceAvailables = serviceArts.stream().filter(s -> s.getDeleted().equals(false)).collect(Collectors.toList());
 
@@ -119,7 +119,7 @@ public class  ServiceServiceImpl implements ServiceService {
 
     @Override
     public ResponseEntity<?> createServiceByCompany(Authentication authentication, ServiceArtRequest serviceArtRequest) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
 
         try {
             Iva iva = ivaRepository.findById(serviceArtRequest.getIvaId()).orElse(null);
@@ -172,7 +172,7 @@ public class  ServiceServiceImpl implements ServiceService {
 
     @Override
     public ResponseEntity<?> updateServiceByCompany(Authentication authentication, Long id, ServiceArtRequest serviceArtRequest) {
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         ServiceArt service = serviceRepository.findById(id).orElse(null);
         List<ServiceArt> servicesList = serviceRepository.findAllByCompany(company);
         Iva iva = ivaRepository.findById(serviceArtRequest.getIvaId()).orElse(null);
@@ -230,7 +230,7 @@ public class  ServiceServiceImpl implements ServiceService {
     @Override
     public ResponseEntity<?> deleteServiceByCompany(Authentication authentication, Long id) {
         ServiceArt serviceArt = serviceRepository.findById(id).orElse(null);
-        Company company = companyRepository.findByUser(authentication.getName());
+        Company company = companyRepository.findByUsername(authentication.getName());
         List<ServiceArt> serviceArtList = company.getServiceArts();
 
         if (serviceArtList.indexOf(serviceArt) == -1)
