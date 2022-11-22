@@ -292,7 +292,7 @@ public class SystemServiceApplication {
             order3.setStatus(Status.ON_HOLD);
             order3.setOrderType(OrderType.NORMAL);
             order3.setPriority(Priority.EXPRESS);
-            order3.setJoinDate(LocalDateTime.now());
+            order3.setJoinDate(LocalDateTime.now().minusDays(1));
             order3.setOutDate(null);
             order3.setPasswordDevice("");
             order3.setOrderDetails("Chocado,");
@@ -323,7 +323,7 @@ public class SystemServiceApplication {
             order5.setStatus(Status.WITHDRAWN_WR);
             order5.setOrderType(OrderType.NORMAL);
             order5.setPriority(Priority.HIGH);
-            order5.setJoinDate(LocalDateTime.now());
+            order5.setJoinDate(LocalDateTime.now().minusDays(3));
             order5.setOutDate(null);
             order5.setPasswordDevice("aggggg");
             order5.setOrderDetails("pantalla rota, limpiar");
@@ -332,6 +332,21 @@ public class SystemServiceApplication {
             order5.setCompany(esdi);
             order5.setStaff(null);
             orderRepository.save(order5);
+
+            Order order6 = new Order();
+            order6.setOrderNumber(9988);
+            order6.setStatus(Status.WITHDRAWN_WR);
+            order6.setOrderType(OrderType.NORMAL);
+            order6.setPriority(Priority.HIGH);
+            order6.setJoinDate(LocalDateTime.now().minusDays(1));
+            order6.setOutDate(null);
+            order6.setPasswordDevice("aggaaaaggg");
+            order6.setOrderDetails("limpiar virus");
+            order6.setClient(client2);
+            order6.setDevice(device2);
+            order6.setCompany(esdi);
+            order6.setStaff(null);
+            orderRepository.save(order6);
 
             clientRepository.save(client);
             clientRepository.save(client2);

@@ -1,8 +1,10 @@
 package esdi.Services.services.implement;
 
+import esdi.Services.dtos.stats.StatsMore;
 import esdi.Services.dtos.stats.StatsOBT;
 import esdi.Services.dtos.stats.StatsOBW;
 import esdi.Services.enums.Status;
+import esdi.Services.enums.StatusBudget;
 import esdi.Services.mappers.OrderMapper;
 import esdi.Services.models.Order;
 import esdi.Services.models.users.Client;
@@ -13,6 +15,7 @@ import esdi.Services.repositories.CompanyRepository;
 import esdi.Services.repositories.OrderRepository;
 import esdi.Services.repositories.StaffRepository;
 import esdi.Services.services.StatsService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -211,6 +214,82 @@ public class StatsServiceImpl implements StatsService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
+        @Override
+    public ResponseEntity<?> ordersByWeekT(Authentication authentication) {
+        return null;
+    }
+
+//    @Override
+//    public ResponseEntity<?> ordersByWeekT(Authentication authentication) {
+//
+//        try {
+//            Company company = companyRepository.findByUsername(authentication.getName());
+//            Staff staff = staffRepository.findByUser(authentication.getName());
+//
+//            LocalDateTime now = LocalDateTime.now();
+//            LocalDateTime mon = now.minusDays(1);
+//            DayOfWeek tue = now.with((DayOfWeek.TUESDAY)).getDayOfWeek();
+//            DayOfWeek wed = now.with((DayOfWeek.WEDNESDAY)).getDayOfWeek();
+//            DayOfWeek thu = now.with((DayOfWeek.THURSDAY)).getDayOfWeek();
+//            DayOfWeek fri = now.with((DayOfWeek.FRIDAY)).getDayOfWeek();
+//            DayOfWeek sat = now.with((DayOfWeek.SATURDAY)).getDayOfWeek();
+//            DayOfWeek sun = now.with((DayOfWeek.SUNDAY)).getDayOfWeek();
+//
+//
+//            if (company != null) {
+//                List<Order> orders = orderRepository.findAllByCompany(company);
+//
+//                int obdmo = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(mon)).collect(Collectors.toList()).size();
+//                int obdtu = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(tue)).collect(Collectors.toList()).size();
+//                int obdwe = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(wed)).collect(Collectors.toList()).size();
+//                int obdth = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(thu)).collect(Collectors.toList()).size();
+//                int obdfr = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(fri)).collect(Collectors.toList()).size();
+//                int obdsa = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(sat)).collect(Collectors.toList()).size();
+//                int obdsu = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(sun)).collect(Collectors.toList()).size();
+//
+//                StatsOBW statsOBW = new StatsOBW();
+//                statsOBW.setMo(obdmo);
+//                statsOBW.setTu(obdtu);
+//                statsOBW.setWe(obdwe);
+//                statsOBW.setTh(obdth);
+//                statsOBW.setFr(obdfr);
+//                statsOBW.setSa(obdsa);
+//                statsOBW.setSu(obdsu);
+//
+//                return new ResponseEntity<>(statsOBW, HttpStatus.OK);
+//            }
+//
+//            if (staff != null) {
+//                List<Order> orders = orderRepository.findAllByCompany(staff.getCompany());
+//
+//                int obdmo = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(mon)).collect(Collectors.toList()).size();
+//                int obdtu = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(tue)).collect(Collectors.toList()).size();
+//                int obdwe = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(wed)).collect(Collectors.toList()).size();
+//                int obdth = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(thu)).collect(Collectors.toList()).size();
+//                int obdfr = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(fri)).collect(Collectors.toList()).size();
+//                int obdsa = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(sat)).collect(Collectors.toList()).size();
+//                int obdsu = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(sun)).collect(Collectors.toList()).size();
+//
+//                StatsOBW statsOBW = new StatsOBW();
+//                statsOBW.setMo(obdmo);
+//                statsOBW.setTu(obdtu);
+//                statsOBW.setWe(obdwe);
+//                statsOBW.setTh(obdth);
+//                statsOBW.setFr(obdfr);
+//                statsOBW.setSa(obdsa);
+//                statsOBW.setSu(obdsu);
+//
+//                return new ResponseEntity<>(statsOBW, HttpStatus.OK);
+//            }
+//            else{
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            }
+//
+//        } catch (Exception e) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+//        }
+//
+//    }
 
     @Override
     public ResponseEntity<?> ordersByWeek(Authentication authentication) {
@@ -219,61 +298,54 @@ public class StatsServiceImpl implements StatsService {
             Company company = companyRepository.findByUsername(authentication.getName());
             Staff staff = staffRepository.findByUser(authentication.getName());
 
-            LocalDateTime now = LocalDateTime.now();
-            LocalDateTime mon = now.minusDays(1);
-            DayOfWeek tue = now.with((DayOfWeek.TUESDAY)).getDayOfWeek();
-            DayOfWeek wed = now.with((DayOfWeek.WEDNESDAY)).getDayOfWeek();
-            DayOfWeek thu = now.with((DayOfWeek.THURSDAY)).getDayOfWeek();
-            DayOfWeek fri = now.with((DayOfWeek.FRIDAY)).getDayOfWeek();
-            DayOfWeek sat = now.with((DayOfWeek.SATURDAY)).getDayOfWeek();
-            DayOfWeek sun = now.with((DayOfWeek.SUNDAY)).getDayOfWeek();
-
+            int now = LocalDateTime.now().getDayOfYear();
+            int yesterday = LocalDateTime.now().minusDays(3).getDayOfYear();
 
             if (company != null) {
                 List<Order> orders = orderRepository.findAllByCompany(company);
 
-                int obdmo = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(mon)).collect(Collectors.toList()).size();
-                int obdtu = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(tue)).collect(Collectors.toList()).size();
-                int obdwe = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(wed)).collect(Collectors.toList()).size();
-                int obdth = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(thu)).collect(Collectors.toList()).size();
-                int obdfr = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(fri)).collect(Collectors.toList()).size();
-                int obdsa = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(sat)).collect(Collectors.toList()).size();
-                int obdsu = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(sun)).collect(Collectors.toList()).size();
+                int ontoday = orders.stream().filter(o -> o.getJoinDate().equals(now)).collect(Collectors.toList()).size();
+                int onYesterday = orders.stream().filter(o -> o.getJoinDate().equals(now)).collect(Collectors.toList()).size();
+//                int onTwo = orders.stream().filter(o -> o.getJoinDate().equals(now.minusDays(2))).collect(Collectors.toList()).size();
+//                int onThree = orders.stream().filter(o ->o.getJoinDate().equals(now.minusDays(3))).collect(Collectors.toList()).size();
+//                int onFour = orders.stream().filter(o -> o.getJoinDate().equals(now.minusDays(4))).collect(Collectors.toList()).size();
+//                int onFive = orders.stream().filter(o -> o.getJoinDate().equals(now.minusDays(5))).collect(Collectors.toList()).size();
+//                int onSix = orders.stream().filter(o -> o.getJoinDate().equals(now.minusDays(6))).collect(Collectors.toList()).size();
 
                 StatsOBW statsOBW = new StatsOBW();
-                statsOBW.setMo(obdmo);
-                statsOBW.setTu(obdtu);
-                statsOBW.setWe(obdwe);
-                statsOBW.setTh(obdth);
-                statsOBW.setFr(obdfr);
-                statsOBW.setSa(obdsa);
-                statsOBW.setSu(obdsu);
+                statsOBW.setToday(ontoday);
+                statsOBW.setYesterday(onYesterday);
+//                statsOBW.setTwo(3);
+//                statsOBW.setThree(onThree);
+//                statsOBW.setFour(onFour);
+//                statsOBW.setFive(onFive);
+//                statsOBW.setSix(onSix);
 
                 return new ResponseEntity<>(statsOBW, HttpStatus.OK);
             }
 
-            if (staff != null) {
-                List<Order> orders = orderRepository.findAllByCompany(staff.getCompany());
-
-                int obdmo = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(mon)).collect(Collectors.toList()).size();
-                int obdtu = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(tue)).collect(Collectors.toList()).size();
-                int obdwe = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(wed)).collect(Collectors.toList()).size();
-                int obdth = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(thu)).collect(Collectors.toList()).size();
-                int obdfr = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(fri)).collect(Collectors.toList()).size();
-                int obdsa = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(sat)).collect(Collectors.toList()).size();
-                int obdsu = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(sun)).collect(Collectors.toList()).size();
-
-                StatsOBW statsOBW = new StatsOBW();
-                statsOBW.setMo(obdmo);
-                statsOBW.setTu(obdtu);
-                statsOBW.setWe(obdwe);
-                statsOBW.setTh(obdth);
-                statsOBW.setFr(obdfr);
-                statsOBW.setSa(obdsa);
-                statsOBW.setSu(obdsu);
-
-                return new ResponseEntity<>(statsOBW, HttpStatus.OK);
-            }
+//            if (staff != null) {
+//                List<Order> orders = orderRepository.findAllByCompany(staff.getCompany());
+//
+//                int ontoday = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(now)).collect(Collectors.toList()).size();
+//                int onYesterday = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(yesterday)).collect(Collectors.toList()).size();
+//                int onTwo = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(two)).collect(Collectors.toList()).size();
+//                int onThree = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(three)).collect(Collectors.toList()).size();
+//                int onFour = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(fo)).collect(Collectors.toList()).size();
+//                int onFive = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(fi)).collect(Collectors.toList()).size();
+//                int onSix = orders.stream().filter(o -> o.getJoinDate().getDayOfWeek().equals(six)).collect(Collectors.toList()).size();
+//
+//                StatsOBW statsOBW = new StatsOBW();
+//                statsOBW.setToday(ontoday);
+//                statsOBW.setYesterday(onYesterday);
+//                statsOBW.setTwo(onTwo);
+//                statsOBW.setThree(onThree);
+//                statsOBW.setFour(onFour);
+//                statsOBW.setFive(onFive);
+//                statsOBW.setSix(onSix);
+//
+//                return new ResponseEntity<>(statsOBW, HttpStatus.OK);
+//            }
             else{
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -283,5 +355,47 @@ public class StatsServiceImpl implements StatsService {
         }
 
     }
+
+    @Override
+    public ResponseEntity<?> moreStats(Authentication authentication) {
+        try {
+            Company company = companyRepository.findByUsername(authentication.getName());
+            Staff staff = staffRepository.findByUser(authentication.getName());
+
+            if(company != null){
+                int pendingBudgets = orderRepository.findAllByCompany(company).stream().filter(o->o.getBudget().getStatusBudget().equals(StatusBudget.ON_HOLD)).collect(Collectors.toList()).size();
+                int rejectedBudgets = orderRepository.findAllByCompany(company).stream().filter(o->o.getBudget().getStatusBudget().equals(StatusBudget.REJECTED)).collect(Collectors.toList()).size();
+                int approvedBudgets = orderRepository.findAllByCompany(company).stream().filter(o->o.getBudget().getStatusBudget().equals(StatusBudget.APPROVED)).collect(Collectors.toList()).size();
+                int pendingOrders = orderRepository.findAllByCompany(company).stream().filter(o->o.getStatus().equals(Status.ON_HOLD)).collect(Collectors.toList()).size();
+
+                StatsMore stats = new StatsMore();
+
+                stats.setPendingBudgets(pendingBudgets);
+                stats.setRejectedBudgets(rejectedBudgets);
+                stats.setApprovedBudgets(approvedBudgets);
+                stats.setPendingOrders(1);
+
+
+                return new ResponseEntity<>(stats, HttpStatus.OK);
+            }
+
+            if(staff !=null){
+                Company companyStaff = companyRepository.findByStaffs(staff);
+                List<Order> ordersReady = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.READY_R)).collect(Collectors.toList());
+                List<Order> ordersWR = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_R)).collect(Collectors.toList());
+                double size = ordersReady.size() + ordersWR.size();
+                return new ResponseEntity<>(size, HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+        } catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
+    }
+
+
+
 
 }

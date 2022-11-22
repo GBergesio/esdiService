@@ -11,15 +11,15 @@ import java.util.List;
 @NoArgsConstructor
 public class StatsOBW {
 
-    private int mo;
-    private int tu;
-    private int we;
-    private int th;
-    private int fr;
-    private int sa;
-    private int su;
+    private int today;
+    private int yesterday;
+    private int two;
+    private int three;
+    private int four;
+    private int five;
+    private int six;
 
-//    private List<Integer> days;
+
 
 }
 

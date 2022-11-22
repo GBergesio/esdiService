@@ -3,7 +3,7 @@ package esdi.Services.enums;
 public enum StatusBudget {
     ON_HOLD,
     APPROVED,
-    REFUSED,
+    REJECTED,
     NOREP,
     NOCHARGES,
     APPROVED_WAITING_PARTS

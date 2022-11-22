@@ -15,7 +15,9 @@ public interface StatsService {
     ResponseEntity<?> totalClients(Authentication authentication);
 
     ResponseEntity<?> totalOrdersByTechnician(Authentication authentication);
+    ResponseEntity<?> ordersByWeekT(Authentication authentication);
 
     ResponseEntity<?> ordersByWeek(Authentication authentication);
 
+    ResponseEntity<?> moreStats(Authentication authentication);
 }
