@@ -24,7 +24,7 @@ public interface OrderService {
     ResponseEntity<?> findById(Long id);
     ResponseEntity<?> findByIdAuth(Long id, Authentication authentication);
     ResponseEntity<?> findByNumber(int orderNumber);
-    ResponseEntity<?> createOrder(OrderRequest orderRequest, String dni, Long device);
+    ResponseEntity<?> createOrder(OrderRequest orderRequest, Long idClient, Long device);
     ResponseEntity<?> updateOrder(Long idOrder,Long idDevice, Long idTechnician, OrderRequest orderRequest);
     ResponseEntity<?> releaseOrder(Authentication authentication, Long id);
     ResponseEntity<?> switchPriority(Authentication authentication, Long idOrder);

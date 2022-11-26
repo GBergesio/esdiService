@@ -17,5 +17,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     public Client findByEmail(String email);
 
     public List<Client> findAllByCompany(Company Company);
-
+    public Client findByCompany(Company company);
 }

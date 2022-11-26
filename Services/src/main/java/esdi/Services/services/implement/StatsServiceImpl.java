@@ -3,29 +3,34 @@ package esdi.Services.services.implement;
 import esdi.Services.dtos.stats.StatsMore;
 import esdi.Services.dtos.stats.StatsOBT;
 import esdi.Services.dtos.stats.StatsOBW;
+import esdi.Services.dtos.stats.StatsTopDevice;
+import esdi.Services.enums.OrderType;
 import esdi.Services.enums.Status;
 import esdi.Services.enums.StatusBudget;
+import esdi.Services.enums.UserType;
 import esdi.Services.mappers.OrderMapper;
 import esdi.Services.models.Order;
+import esdi.Services.models.budgets.Budget;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Staff;
-import esdi.Services.repositories.ClientRepository;
-import esdi.Services.repositories.CompanyRepository;
-import esdi.Services.repositories.OrderRepository;
-import esdi.Services.repositories.StaffRepository;
+import esdi.Services.repositories.*;
+import esdi.Services.services.JwtUserDetailsService;
 import esdi.Services.services.StatsService;
 import org.apache.tomcat.jni.Local;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,6 +45,9 @@ public class StatsServiceImpl implements StatsService {
     OrderMapper orderMapper;
 
     @Autowired
+    private JwtUserDetailsService userDetailsService;
+
+    @Autowired
     CompanyRepository companyRepository;
 
     @Autowired
@@ -48,114 +56,83 @@ public class StatsServiceImpl implements StatsService {
     @Autowired
     ClientRepository clientRepository;
 
+    @Autowired
+    BudgetRepository budgetRepository;
 
     @Override
-    public ResponseEntity<?> totalOrders(Authentication authentication) {
-
+    public ResponseEntity<?> stats(Authentication authentication) {
         try {
             Company company = companyRepository.findByUsername(authentication.getName());
             Staff staff = staffRepository.findByUser(authentication.getName());
 
-            if(company != null){
-                List<Order> orders = orderRepository.findAllByCompany(company);
-                double size = orders.size();
+            StatsMore statsMore = new StatsMore();
 
-                return new ResponseEntity<>(size, HttpStatus.OK);
+            if(company != null){
+                int pb = budgetRepository.findAllByCompany(company).stream().filter(b -> b.getStatusBudget().equals(StatusBudget.ON_HOLD)).collect(Collectors.toList()).size();
+                int ab = budgetRepository.findAllByCompany(company).stream().filter(b -> b.getStatusBudget().equals(StatusBudget.APPROVED)).collect(Collectors.toList()).size();
+                int rb = budgetRepository.findAllByCompany(company).stream().filter(b -> b.getStatusBudget().equals(StatusBudget.REJECTED)).collect(Collectors.toList()).size();
+                int po = orderRepository.findAllByCompany(company).stream().filter(b -> b.getStatus().equals(Status.ON_HOLD)).collect(Collectors.toList()).size();
+                int orReady = orderRepository.findAllByCompany(company).stream().filter(order -> order.getStatus().equals(Status.READY_R)).collect(Collectors.toList()).size();
+                int orWR = orderRepository.findAllByCompany(company).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_R)).collect(Collectors.toList()).size();
+                int oWr = orderRepository.findAllByCompany(company).stream().filter(order -> order.getStatus().equals(Status.READY_WR)).collect(Collectors.toList()).size();
+                int oWWR = orderRepository.findAllByCompany(company).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_WR)).collect(Collectors.toList()).size();
+                int cl  = clientRepository.findAllByCompany(company).size();
+                int to = orderRepository.findAllByCompany(company).size();
+                int rep = orReady + orWR;
+                int toUn = oWr + oWWR;
+                String name = company.getName();
+                String role = company.getUserType().toString();
+                String sector = company.getSector();
+
+                statsMore.setPendingBudgets(pb);
+                statsMore.setApprovedBudgets(ab);
+                statsMore.setRejectedBudgets(rb);
+                statsMore.setPendingOrders(po);
+                statsMore.setClients(cl);
+                statsMore.setTotalOrders(to);
+                statsMore.setRepaired(rep);
+                statsMore.setUnrepaired(toUn);
+                statsMore.setUserName(name);
+                statsMore.setRole(role);
+                statsMore.setSector(sector);
+                return new ResponseEntity<>(statsMore, HttpStatus.OK);
+
             }
 
             if(staff !=null){
                 Company companyStaff = companyRepository.findByStaffs(staff);
-                List<Order> orders = orderRepository.findAllByCompany(companyStaff);
-                double size = orders.size();
-                return new ResponseEntity<>(size, HttpStatus.OK);
-            }
-            else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
 
-        } catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-        }
+                int pb = budgetRepository.findAllByCompany(companyStaff).stream().filter(b -> b.getStatusBudget().equals(StatusBudget.ON_HOLD)).collect(Collectors.toList()).size();
+                int ab = budgetRepository.findAllByCompany(companyStaff).stream().filter(b -> b.getStatusBudget().equals(StatusBudget.APPROVED)).collect(Collectors.toList()).size();
+                int rb = budgetRepository.findAllByCompany(companyStaff).stream().filter(b -> b.getStatusBudget().equals(StatusBudget.REJECTED)).collect(Collectors.toList()).size();
+                int po = orderRepository.findAllByCompany(companyStaff).stream().filter(b -> b.getStatus().equals(Status.ON_HOLD)).collect(Collectors.toList()).size();
+                int orReady = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.READY_R)).collect(Collectors.toList()).size();
+                int orWR = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_R)).collect(Collectors.toList()).size();
+                int oWr = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.READY_WR)).collect(Collectors.toList()).size();
+                int oWWR = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_WR)).collect(Collectors.toList()).size();
+                int cl  = clientRepository.findAllByCompany(companyStaff).size();
+                int to = orderRepository.findAllByCompany(companyStaff).size();
+                int rep = orReady + orWR;
+                int toUn = oWr + oWWR;
+                String name = staff.getFirstName();
+                String role = staff.getUserType().toString();
+                String sector = companyStaff.getSector();
 
-    }
+                statsMore.setPendingBudgets(pb);
+                statsMore.setApprovedBudgets(ab);
+                statsMore.setRejectedBudgets(rb);
+                statsMore.setPendingOrders(po);
+                statsMore.setClients(cl);
+                statsMore.setTotalOrders(to);
+                statsMore.setRepaired(rep);
+                statsMore.setUnrepaired(toUn);
+                statsMore.setUserName(name);
+                statsMore.setRole(role);
+                statsMore.setSector(sector);
 
-    @Override
-    public ResponseEntity<?> totalRepairs(Authentication authentication) {
-        try {
-            Company company = companyRepository.findByUsername(authentication.getName());
-            Staff staff = staffRepository.findByUser(authentication.getName());
-
-            if(company != null){
-                List<Order> ordersReady = orderRepository.findAllByCompany(company).stream().filter(order -> order.getStatus().equals(Status.READY_R)).collect(Collectors.toList());
-                List<Order> ordersWR = orderRepository.findAllByCompany(company).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_R)).collect(Collectors.toList());
-                double size = ordersReady.size() + ordersWR.size();
-                return new ResponseEntity<>(size, HttpStatus.OK);
-            }
-
-            if(staff !=null){
-                Company companyStaff = companyRepository.findByStaffs(staff);
-                List<Order> ordersReady = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.READY_R)).collect(Collectors.toList());
-                List<Order> ordersWR = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_R)).collect(Collectors.toList());
-                double size = ordersReady.size() + ordersWR.size();
-                return new ResponseEntity<>(size, HttpStatus.OK);
-            }
-            else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(statsMore, HttpStatus.OK);
             }
 
-        } catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> totalWr(Authentication authentication) {
-        try {
-            Company company = companyRepository.findByUsername(authentication.getName());
-            Staff staff = staffRepository.findByUser(authentication.getName());
-
-            if(company != null){
-                List<Order> ordersReady = orderRepository.findAllByCompany(company).stream().filter(order -> order.getStatus().equals(Status.READY_WR)).collect(Collectors.toList());
-                List<Order> ordersWWR = orderRepository.findAllByCompany(company).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_WR)).collect(Collectors.toList());
-                double size = ordersReady.size() + ordersWWR.size();
-                return new ResponseEntity<>(size, HttpStatus.OK);
-            }
-
-            if(staff !=null){
-                Company companyStaff = companyRepository.findByStaffs(staff);
-                List<Order> ordersReady = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.READY_WR)).collect(Collectors.toList());
-                List<Order> ordersWWR = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_WR)).collect(Collectors.toList());
-                double size = ordersReady.size() + ordersWWR.size();
-                return new ResponseEntity<>(size, HttpStatus.OK);
-            }
-            else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-
-        } catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> totalClients(Authentication authentication) {
-        try {
-            Company company = companyRepository.findByUsername(authentication.getName());
-            Staff staff = staffRepository.findByUser(authentication.getName());
-
-            if(company != null){
-                List<Client> clients = clientRepository.findAllByCompany(company);
-                double size = clients.size();
-                return new ResponseEntity<>(size, HttpStatus.OK);
-            }
-
-            if(staff !=null){
-                Company companyStaff = companyRepository.findByStaffs(staff);
-                List<Client> clients = clientRepository.findAllByCompany(companyStaff);
-                double size = clients.size();
-
-                return new ResponseEntity<>(size, HttpStatus.OK);
-            }
             else{
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -166,55 +143,6 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public ResponseEntity<?> totalOrdersByTechnician(Authentication authentication) {
-        try {
-            Company company = companyRepository.findByUsername(authentication.getName());
-            Staff staff = staffRepository.findByUser(authentication.getName());
-
-            if(company != null){
-                List<StatsOBT> statsOBTS = new ArrayList<>();
-                List<Staff> staffList = company.getStaffs();
-                List<String> names = staffList.stream().map(s-> s.getFirstName()).collect(Collectors.toList());
-                List<Integer> qtyOrders = staffList.stream().map(s-> s.getOrders().size()).collect(Collectors.toList());
-
-                for(String name : names){
-                    StatsOBT statsOBT = new StatsOBT();
-                    statsOBT.setTechnician(name);
-                    for(int q : qtyOrders){
-                        statsOBT.setQty(q);
-                    }
-                    statsOBTS.add(statsOBT);
-                }
-                return new ResponseEntity<>(statsOBTS,HttpStatus.OK);
-            }
-
-            if(staff !=null){
-                Company companyStaff = companyRepository.findByStaffs(staff);
-
-                List<StatsOBT> statsOBTS = new ArrayList<>();
-                List<Staff> staffList = companyStaff.getStaffs();
-                List<String> names = staffList.stream().map(s-> s.getFirstName()).collect(Collectors.toList());
-                List<Integer> qtyOrders = staffList.stream().map(s-> s.getOrders().size()).collect(Collectors.toList());
-
-                for(String name : names){
-                    StatsOBT statsOBT = new StatsOBT();
-                    statsOBT.setTechnician(name);
-                    for(int q : qtyOrders){
-                        statsOBT.setQty(q);
-                    }
-                    statsOBTS.add(statsOBT);
-                }
-                return new ResponseEntity<>(statsOBTS,HttpStatus.OK);
-            }
-            else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-
-        } catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-        }
-    }
-        @Override
     public ResponseEntity<?> ordersByWeekT(Authentication authentication) {
         return null;
     }
@@ -357,45 +285,103 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public ResponseEntity<?> moreStats(Authentication authentication) {
+    public ResponseEntity<?> oBt(Authentication authentication) {
         try {
             Company company = companyRepository.findByUsername(authentication.getName());
             Staff staff = staffRepository.findByUser(authentication.getName());
+            StatsOBT statsOBTS = new StatsOBT();
 
             if(company != null){
-                int pendingBudgets = orderRepository.findAllByCompany(company).stream().filter(o->o.getBudget().getStatusBudget().equals(StatusBudget.ON_HOLD)).collect(Collectors.toList()).size();
-                int rejectedBudgets = orderRepository.findAllByCompany(company).stream().filter(o->o.getBudget().getStatusBudget().equals(StatusBudget.REJECTED)).collect(Collectors.toList()).size();
-                int approvedBudgets = orderRepository.findAllByCompany(company).stream().filter(o->o.getBudget().getStatusBudget().equals(StatusBudget.APPROVED)).collect(Collectors.toList()).size();
-                int pendingOrders = orderRepository.findAllByCompany(company).stream().filter(o->o.getStatus().equals(Status.ON_HOLD)).collect(Collectors.toList()).size();
+                List<Staff> staffList = staffRepository.findAllByCompany(company).stream().filter(s->s.getUserType().equals(UserType.TECHNICIAN)).collect(Collectors.toList());
 
-                StatsMore stats = new StatsMore();
+                Set<Integer> qtyOrders = staffList.stream().map(s-> s.getOrders().size()).collect(Collectors.toSet());
+                List<String> staffNames = staffList.stream().map(s-> s.getFirstName()).collect(Collectors.toList());
 
-                stats.setPendingBudgets(pendingBudgets);
-                stats.setRejectedBudgets(rejectedBudgets);
-                stats.setApprovedBudgets(approvedBudgets);
-                stats.setPendingOrders(1);
+                statsOBTS.setStaffName(staffNames);
+                statsOBTS.setQty(qtyOrders);
 
-
-                return new ResponseEntity<>(stats, HttpStatus.OK);
+                return new ResponseEntity<>(statsOBTS,HttpStatus.OK);
             }
+            if(staff != null){
+                Company companyStaff = staff.getCompany();
+                List<Staff> staffList = staffRepository.findAllByCompany(companyStaff).stream().filter(s->s.getUserType().equals(UserType.TECHNICIAN)).collect(Collectors.toList());
 
-            if(staff !=null){
-                Company companyStaff = companyRepository.findByStaffs(staff);
-                List<Order> ordersReady = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.READY_R)).collect(Collectors.toList());
-                List<Order> ordersWR = orderRepository.findAllByCompany(companyStaff).stream().filter(order -> order.getStatus().equals(Status.WITHDRAWN_R)).collect(Collectors.toList());
-                double size = ordersReady.size() + ordersWR.size();
-                return new ResponseEntity<>(size, HttpStatus.OK);
+                Set<Integer> qtyOrders = staffList.stream().map(s-> s.getOrders().size()).collect(Collectors.toSet());
+                List<String> staffNames = staffList.stream().map(s-> s.getFirstName()).collect(Collectors.toList());
+
+                statsOBTS.setStaffName(staffNames);
+                statsOBTS.setQty(qtyOrders);
+
+                return new ResponseEntity<>(statsOBTS,HttpStatus.OK);
             }
             else{
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-
-        } catch(Exception e){
+        }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
 
+    @Override
+    public ResponseEntity<?> owBt(Authentication authentication) {
+        try {
+            Company company = companyRepository.findByUsername(authentication.getName());
+            Staff staff = staffRepository.findByUser(authentication.getName());
+            StatsOBT statsOBTS = new StatsOBT();
 
+            if(company != null){
+                List<Staff> staffList = staffRepository.findAllByCompany(company).stream().filter(s->s.getUserType().equals(UserType.TECHNICIAN)).collect(Collectors.toList());
+
+                List<String> staffNames = staffList.stream().map(s-> s.getFirstName()).collect(Collectors.toList());
+                Set<Integer> qtyOrders = staffList.stream().map(s-> s.getOrders().stream().filter(o->o.getOrderType().equals(OrderType.WARRANTY)).collect(Collectors.toList()).size()).collect(Collectors.toSet());
+
+                statsOBTS.setStaffName(staffNames);
+                statsOBTS.setQty(qtyOrders);
+
+                return new ResponseEntity<>(statsOBTS,HttpStatus.OK);
+            }
+            if(staff != null){
+                Company companyStaff = staff.getCompany();
+                List<Staff> staffList = staffRepository.findAllByCompany(companyStaff).stream().filter(s->s.getUserType().equals(UserType.TECHNICIAN)).collect(Collectors.toList());
+
+                List<String> staffNames = staffList.stream().map(s-> s.getFirstName()).collect(Collectors.toList());
+                Set<Integer> qtyOrders = staffList.stream().map(s-> s.getOrders().stream().filter(o->o.getOrderType().equals(OrderType.WARRANTY)).collect(Collectors.toList()).size()).collect(Collectors.toSet());
+
+                statsOBTS.setStaffName(staffNames);
+                statsOBTS.setQty(qtyOrders);
+
+                return new ResponseEntity<>(statsOBTS,HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> topDevice(Authentication authentication) {
+        try {
+            Company company = companyRepository.findByUsername(authentication.getName());
+            Staff staff = staffRepository.findByUser(authentication.getName());
+            StatsTopDevice topDevices = new StatsTopDevice();
+
+            if(company != null){
+                List<Order> orders = orderRepository.findAllByCompany(company);
+                List<String> devOr = orders.stream().map(o->o.getDevice().getCategory().getNameCategory()).collect(Collectors.toList());
+
+
+                return new ResponseEntity<>(devOr,HttpStatus.OK);
+            }
+
+            else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
+    }
 
 
 }

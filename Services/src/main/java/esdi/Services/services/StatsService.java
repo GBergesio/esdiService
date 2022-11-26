@@ -5,19 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 public interface StatsService {
+    ResponseEntity<?> stats(Authentication authentication);
 
-    ResponseEntity<?> totalOrders(Authentication authentication);
-
-    ResponseEntity<?> totalRepairs(Authentication authentication);
-
-    ResponseEntity<?> totalWr(Authentication authentication);
-
-    ResponseEntity<?> totalClients(Authentication authentication);
-
-    ResponseEntity<?> totalOrdersByTechnician(Authentication authentication);
     ResponseEntity<?> ordersByWeekT(Authentication authentication);
 
     ResponseEntity<?> ordersByWeek(Authentication authentication);
 
-    ResponseEntity<?> moreStats(Authentication authentication);
+    ResponseEntity<?> oBt(Authentication authentication);
+    ResponseEntity<?> owBt(Authentication authentication);
+    ResponseEntity<?> topDevice(Authentication authentication);
 }

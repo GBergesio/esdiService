@@ -19,6 +19,11 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
+    @PostMapping()
+    ResponseEntity<?> createOrder(OrderRequest orderRequest, Long idClient, Long device) {
+        return orderService.createOrder(orderRequest, idClient, device);
+    }
+
     @GetMapping("/current/forClient")
     ResponseEntity<?> getOrdersByClient(Authentication authentication) {
         return orderService.allOrdersByClient(authentication);

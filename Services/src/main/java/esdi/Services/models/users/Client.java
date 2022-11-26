@@ -35,6 +35,8 @@ public class Client {
     private String password;
     private UserType userType;
 
+    private String moreDetails;
+
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private Set<Order> orders = new HashSet<>();
 

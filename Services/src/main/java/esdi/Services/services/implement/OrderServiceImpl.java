@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -145,11 +146,11 @@ public class OrderServiceImpl implements OrderService {
     }
 //    @Transactional
     @Override
-    public ResponseEntity<?> createOrder(OrderRequest orderRequest, String dni, Long idDevice) {
+    public ResponseEntity<?> createOrder(OrderRequest orderRequest, Long idClient, Long idDevice) {
 
-        Client client = clientRepository.findByDni(dni);
+        Client client = clientRepository.findById(idClient).orElse(null);
+
         Device device = deviceRepository.findById(idDevice).orElse(null);
-
 
         if(client == null){
             return new ResponseEntity<>("Cliente no encontrado / Ingrese un cliente",HttpStatus.BAD_REQUEST);

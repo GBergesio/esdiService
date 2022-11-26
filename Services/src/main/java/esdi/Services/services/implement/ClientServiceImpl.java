@@ -9,6 +9,7 @@ import esdi.Services.models.devices.Device;
 import esdi.Services.models.users.Client;
 import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Neighborhood;
+import esdi.Services.models.users.Staff;
 import esdi.Services.repositories.*;
 import esdi.Services.services.ClientService;
 import esdi.Services.services.CompanyService;
@@ -33,6 +34,8 @@ public class ClientServiceImpl implements ClientService {
     DeviceRepository deviceRepository;
     @Autowired
     CompanyRepository companyRepository;
+    @Autowired
+    StaffRepository staffRepository;
 
     @Autowired
     OrderRepository orderRepository;
@@ -60,8 +63,20 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ResponseEntity<?> getAllClientsAuth(Authentication authentication) {
         Company company = companyRepository.findByUsername(authentication.getName());
-        List<Client> clients = clientRepository.findAllByCompany(company);
-        return new ResponseEntity<>(clientMapper.toDTO(clients), HttpStatus.OK);
+        Staff staff = staffRepository.findByUser(authentication.getName());
+
+        if(company != null){
+            List<Client> clients = clientRepository.findAllByCompany(company);
+            return new ResponseEntity<>(clientMapper.toDTO(clients), HttpStatus.OK);
+        }
+        if(staff !=null){
+            Company companyStaff = staff.getCompany();
+            List<Client> clients = clientRepository.findAllByCompany(companyStaff);
+            return new ResponseEntity<>(clientMapper.toDTO(clients), HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
@@ -138,10 +153,12 @@ public class ClientServiceImpl implements ClientService {
         newClient.setEmail(clientRequest.getEmail().toLowerCase());
         newClient.setUser(clientRequest.getDni());
         newClient.setPassword(passwordEncoder.encode(clientRequest.getDni()));
+        newClient.setMoreDetails(clientRequest.getMoreDetails());
         newClient.setUserType(UserType.CLIENT);
         newClient.setCompany(company);
         clientRepository.save(newClient);
         return new ResponseEntity<>(clientMapper.toDTO(newClient), HttpStatus.CREATED);
+
     }
 
     @Override

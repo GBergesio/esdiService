@@ -6,13 +6,11 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Set;
-
 @Setter
 @Getter
 @NoArgsConstructor
-public class StatsOBT {
+public class StatsTopF {
 
-    private List<String> staffName;
+    private List<String> f;
     private Set<Integer> qty;
-
 }

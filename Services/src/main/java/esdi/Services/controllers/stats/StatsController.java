@@ -17,34 +17,31 @@ public class StatsController {
     @Autowired
     StatsService statsService;
 
-    @GetMapping("/orders")
-    ResponseEntity<?> sizeOrders(Authentication authentication) {
-        return statsService.totalOrders(authentication);
+    @GetMapping()
+    ResponseEntity<?> moreStats(Authentication authentication) {
+        return statsService.stats(authentication);
     }
 
-    @GetMapping("/ordersR")
-    ResponseEntity<?> sizeOrdersR(Authentication authentication) {
-        return statsService.totalRepairs(authentication);
-    }
-
-    @GetMapping("/ordersWR")
-    ResponseEntity<?> sizeOrdersWR(Authentication authentication) {
-        return statsService.totalWr(authentication);
-    }
-
-    @GetMapping("/clients")
-    ResponseEntity<?> clients(Authentication authentication) {
-        return statsService.totalClients(authentication);
-    }
-
-    @GetMapping("/obt")
-    ResponseEntity<?> obt(Authentication authentication) {
-        return statsService.totalOrdersByTechnician(authentication);
-    }
 
     @GetMapping("/obw")
     ResponseEntity<?> obw(Authentication authentication) {
         return statsService.ordersByWeek(authentication);
+    }
+
+
+    @GetMapping("/obt")
+    ResponseEntity<?> ordersByTechnician(Authentication authentication) {
+        return statsService.oBt(authentication);
+    }
+
+    @GetMapping("/oWbt")
+    ResponseEntity<?> warrantyByTechnician(Authentication authentication) {
+        return statsService.owBt(authentication);
+    }
+
+    @GetMapping("/topDevices")
+    ResponseEntity<?> topDevices(Authentication authentication) {
+        return statsService.topDevice(authentication);
     }
 
 }

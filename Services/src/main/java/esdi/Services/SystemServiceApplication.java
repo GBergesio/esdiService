@@ -64,7 +64,7 @@ public class SystemServiceApplication {
             Company esdi = new Company();
             esdi.setName("Electro Service");
             esdi.setCuit("20286986669");
-            esdi.setSector("Informatica");
+            esdi.setSector("Computacion");
             esdi.setEmail("ventas@altaoferta.com");
             esdi.setUsername("C-electro001");
             esdi.setPassword(passwordEncoder.encode("123"));
@@ -76,7 +76,7 @@ public class SystemServiceApplication {
             Company tallerChapa = new Company();
             tallerChapa.setName("Taller chapa y pintura");
             tallerChapa.setCuit("2023233133");
-            tallerChapa.setSector("Automoviles");
+            tallerChapa.setSector("Mecanica");
             tallerChapa.setEmail("taller@chapa.com");
             tallerChapa.setUsername("C-taller001");
             tallerChapa.setPassword(passwordEncoder.encode("123"));
@@ -85,13 +85,17 @@ public class SystemServiceApplication {
             tallerChapa.setActive(true);
             companyRepository.save(tallerChapa);
 
-            Staff admin = new Staff("001", "Javi", "Crespi", "crespijavier1@gmail.com", "admin1", passwordEncoder.encode("123"), UserType.ADMIN,false);
+            Staff admin = new Staff("001", "Admin", "admin", "admin@gmail.com", "admin1", passwordEncoder.encode("123"), UserType.ADMIN,false);
             admin.setCompany(esdi);
             staffRepository.save(admin);
 
             Staff technician = new Staff("55", "Gonza", "Bustamante", "bsmg@tt.com", "electro002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN,false);
             technician.setCompany(esdi);
             staffRepository.save(technician);
+
+            Staff techJavi = new Staff("55", "Javi", "Crespi", "jav@tt.com", "javiC", passwordEncoder.encode("123"), UserType.TECHNICIAN,false);
+            techJavi.setCompany(esdi);
+            staffRepository.save(techJavi);
 
             Staff tecnicoAuto = new Staff("5335", "Tecnico", "Autos", "bergesiog1@tt.com", "tecniAuto002tt", passwordEncoder.encode("123"), UserType.TECHNICIAN,false);
             tecnicoAuto.setCompany(tallerChapa);
@@ -107,11 +111,11 @@ public class SystemServiceApplication {
             sur.setCompany(esdi);
             neighborhoodRepository.save(sur);
 
-            Client client = new Client("001", "Cliente", "Bergesio", "Santillan 35", Norte, "", "3547654824", "bergesiog1@gmail.com", "cliente1", passwordEncoder.encode("123"), UserType.CLIENT);
+            Client client = new Client("32115620", "Juan", "Perez", "Lv Cordoba 351", Norte, "", "3547654824", "juanpe@gmail.com", "cliente1", passwordEncoder.encode("123"), UserType.CLIENT);
             client.setCompany(esdi);
             clientRepository.save(client);
 
-            Client client2 = new Client("002", "Cliente2", "Bergesio2", "Santillan 35", sur, "", "3814052408", "santiago.aragon.99@gmail.com", "cliente2", passwordEncoder.encode("123"), UserType.CLIENT);
+            Client client2 = new Client("20251523215", "Pedro", "Sanchez", "Liniers 99", sur, "", "3814052408", "pepo.sa.99@gmail.com", "cliente2", passwordEncoder.encode("123"), UserType.CLIENT);
             client2.setCompany(esdi);
             clientRepository.save(client2);
 
@@ -267,7 +271,7 @@ public class SystemServiceApplication {
             order1.setClient(client);
             order1.setDevice(device1);
             order1.setOrderDetails("Agregar SSD");
-            order1.setStaff(technician);
+            order1.setStaff(techJavi);
             order1.setCompany(esdi);
             technician.addOrder(order1);
             orderRepository.save(order1);
@@ -284,7 +288,7 @@ public class SystemServiceApplication {
             order2.setClient(client2);
             order2.setDevice(device2);
             order2.setCompany(esdi);
-			order2.setStaff(null);
+			order2.setStaff(techJavi);
             orderRepository.save(order2);
 
             Order order3 = new Order();
@@ -330,13 +334,13 @@ public class SystemServiceApplication {
             order5.setClient(client2);
             order5.setDevice(device2);
             order5.setCompany(esdi);
-            order5.setStaff(null);
+            order5.setStaff(technician);
             orderRepository.save(order5);
 
             Order order6 = new Order();
             order6.setOrderNumber(9988);
             order6.setStatus(Status.WITHDRAWN_WR);
-            order6.setOrderType(OrderType.NORMAL);
+            order6.setOrderType(OrderType.WARRANTY);
             order6.setPriority(Priority.HIGH);
             order6.setJoinDate(LocalDateTime.now().minusDays(1));
             order6.setOutDate(null);
@@ -345,7 +349,7 @@ public class SystemServiceApplication {
             order6.setClient(client2);
             order6.setDevice(device2);
             order6.setCompany(esdi);
-            order6.setStaff(null);
+            order6.setStaff(technician);
             orderRepository.save(order6);
 
             clientRepository.save(client);
