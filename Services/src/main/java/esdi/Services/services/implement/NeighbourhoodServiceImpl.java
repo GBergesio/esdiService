@@ -1,5 +1,7 @@
 package esdi.Services.services.implement;
 
+import esdi.Services.dtos.NeighborhoodDTO;
+import esdi.Services.dtos.request.NbhRequest;
 import esdi.Services.mappers.NbhMapper;
 import esdi.Services.models.users.Company;
 import esdi.Services.models.users.Neighborhood;
@@ -56,6 +58,52 @@ public class NeighbourhoodServiceImpl implements NeighbourhoodService {
         }
         catch(Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<?> newNbh(Authentication authentication, NbhRequest nbhRequest) {
+        Company company = companyRepository.findByUsername(authentication.getName());
+        Staff staff = staffRepository.findByUser(authentication.getName());
+
+        if(company != null){
+             List<Neighborhood> nbhs = neighborhoodRepository.findAllByCompany(company);
+             Boolean nbExists = nbhs.stream().anyMatch(nbh -> nbh.getName().toUpperCase().equals(nbhRequest.getName().toUpperCase()));
+             if (nbhRequest.getName().equals(null) || nbhRequest.getName().isEmpty() || nbhRequest.getName().isBlank()){
+                 return new ResponseEntity<>("Ingrese un nombre para el barrio",HttpStatus.BAD_REQUEST);
+             }
+             if(nbExists){
+                 return new ResponseEntity<>("Nombre de barrio en uso",HttpStatus.BAD_REQUEST);
+             }
+             Neighborhood neighborhood = new Neighborhood();
+             neighborhood.setCompany(company);
+             neighborhood.setName(nbhRequest.getName());
+             neighborhood.setDeleted(false);
+             neighborhoodRepository.save(neighborhood);
+             return new ResponseEntity<>(nbhMapper.toDTO(neighborhood),HttpStatus.CREATED);
+            }
+
+        if(staff != null){
+              Company companyStaff = staff.getCompany();
+              List<Neighborhood> nbhs = neighborhoodRepository.findAllByCompany(companyStaff);
+              Boolean nbExists = nbhs.stream().anyMatch(nbh -> nbh.getName().equals(nbhRequest.getName()));
+
+              if (nbhRequest.getName().equals(null) || nbhRequest.getName().isEmpty() || nbhRequest.getName().isBlank()){
+                  return new ResponseEntity<>("Ingrese un nombre para el barrio",HttpStatus.BAD_REQUEST);
+              }
+              if(nbExists){
+                  return new ResponseEntity<>("Nombre de barrio en uso",HttpStatus.BAD_REQUEST);
+              }
+              Neighborhood neighborhood = new Neighborhood();
+              neighborhood.setCompany(company);
+              neighborhood.setName(nbhRequest.getName());
+              neighborhood.setDeleted(false);
+              neighborhoodRepository.save(neighborhood);
+              return new ResponseEntity<>(nbhMapper.toDTO(neighborhood),HttpStatus.CREATED);
+           }
+        else{
+            return new ResponseEntity<>("Error al crear el barrio",HttpStatus.BAD_REQUEST);
         }
 
     }

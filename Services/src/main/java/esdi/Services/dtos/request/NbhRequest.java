@@ -1,6 +1,5 @@
-package esdi.Services.dtos;
+package esdi.Services.dtos.request;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,8 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class NeighborhoodDTO {
-    private long id;
+public class NbhRequest {
     private String name;
-    private boolean deleted;
 }
