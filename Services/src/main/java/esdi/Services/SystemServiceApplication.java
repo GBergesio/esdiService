@@ -402,22 +402,26 @@ public class SystemServiceApplication {
 
             // CATEGORIAS //
 
-            Category category1 = new Category("Microprocesadores");
+            Category category1 = new Category();
+            category1.setName("Microprocesadores");
             category1.setCompany(esdi);
             category1.setDeleted(false);
             categoryRepository.save(category1);
 
-            Category category2 = new Category("Servicio tecnico PC De Escritorio");
+            Category category2 = new Category();
+            category2.setName("Servicio tecnico PC De Escritorio");
             category2.setCompany(esdi);
             category2.setDeleted(false);
             categoryRepository.save(category2);
 
-            Category category3 = new Category("Servicio tecnico Notebooks");
+            Category category3 = new Category();
+            category3.setName("Servicio tecnico Notebooks");
             category3.setCompany(esdi);
             category3.setDeleted(false);
             categoryRepository.save(category3);
 
-            Category category4 = new Category("Cambio de aceite motor");
+            Category category4 = new Category();
+            category4.setName("Placas madres");
             category4.setCompany(tallerChapa);
             category4.setDeleted(false);
             categoryRepository.save(category4);

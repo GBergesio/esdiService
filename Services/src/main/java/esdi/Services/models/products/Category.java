@@ -14,14 +14,14 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    private String nameCategory;
+    private String name;
     private Boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id")
     private Company company;
 
-    public Category(String nameCategory) {
-        this.nameCategory = nameCategory;
-    }
+//    public Category(String nameCategory) {
+//        this.name = name;
+//    }
 }

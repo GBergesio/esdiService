@@ -85,10 +85,10 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> createCategory(CategoryDTO categoryDTO, Authentication authentication) {
         Company company = companyRepository.findByUsername(authentication.getName());
         List<Category> categories = categoryRepository.findAllByCompany(company);
-        Boolean categoryExists = categories.stream().anyMatch(c -> c.getNameCategory().equals(categoryDTO.getNameCategory()));
+        Boolean categoryExists = categories.stream().anyMatch(c -> c.getName().equals(categoryDTO.getName()));
         try{
 
-            if (categoryDTO.getNameCategory().equals(null) || categoryDTO.getNameCategory().isEmpty() || categoryDTO.getNameCategory().isBlank()) {
+            if (categoryDTO.getName().equals(null) || categoryDTO.getName().isEmpty() || categoryDTO.getName().isBlank()) {
                 return new ResponseEntity<>("Ingrese un nombre para la categoria", HttpStatus.BAD_REQUEST);
             }
             if(categoryExists){
@@ -96,7 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
             }
 
             Category category = new Category();
-            category.setNameCategory(categoryDTO.getNameCategory());
+            category.setName(categoryDTO.getName());
             category.setDeleted(false);
             category.setCompany(company);
 
@@ -112,7 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> renameCategory(Long id, String name, Authentication authentication) {
         Company company = companyRepository.findByUsername(authentication.getName());
         List<Category> categories = categoryRepository.findAllByCompany(company);
-        Boolean categoryExists = categories.stream().anyMatch(c -> c.getNameCategory().equals(name));
+        Boolean categoryExists = categories.stream().anyMatch(c -> c.getName().equals(name));
 
         if (name.isEmpty() || name.isBlank() || name.equals(null))
             return new ResponseEntity<>("Ingrese un nombre valido",HttpStatus.BAD_REQUEST);
@@ -126,7 +126,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (categories.indexOf(category) == -1)
             return new ResponseEntity<>("Categoria no encontrada",HttpStatus.BAD_REQUEST);
 
-        category.setNameCategory(name);
+        category.setName(name);
         categoryRepository.save(category);
 
         return new ResponseEntity<>("Categoria modificada correctamente",HttpStatus.OK);

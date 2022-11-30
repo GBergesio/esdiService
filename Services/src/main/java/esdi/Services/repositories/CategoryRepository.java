@@ -8,7 +8,7 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface CategoryRepository extends JpaRepository<Category,Long> {
-    Category findByNameCategory(String name);
+    Category findByName(String name);
 
     public List<Category> findAllByCompany(Company company);
 

@@ -10,6 +10,6 @@ import lombok.Setter;
 public class CategoryDTO {
 
     private long id;
-    private String nameCategory;
+    private String name;
     private Boolean deleted;
 }
