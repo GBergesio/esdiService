@@ -11,4 +11,5 @@ public class DeviceModelDTO {
 
     private long id;
     private String model;
+    private Boolean deleted;
 }

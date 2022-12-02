@@ -1,15 +1,17 @@
 package esdi.Services.dtos;
 
+
+import esdi.Services.dtos.budget.BudgetDTO;
+import esdi.Services.dtos.devices.DeviceForOrderDTO;
 import esdi.Services.enums.OrderType;
 import esdi.Services.enums.Priority;
 import esdi.Services.enums.Status;
-import esdi.Services.models.Order;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,10 +25,12 @@ public class OrderDTO {
     private OrderType orderType;
     private LocalDateTime joinDate;
     private LocalDateTime outDate;
-    private String comments;
-
-    private ClientDTO clientDTO;
-
-    private TechnicianDTO technicianDTO;
+    private String orderDetails;
+    private String passwordDevice;
+    private DeviceForOrderDTO device;
+    private ClientDTO client;
+    private StaffDTO staff;
+    private Set<CommentDTO> comments;
+    private BudgetDTO budget;
 
 }

@@ -1,11 +1,11 @@
 package esdi.Services.controllers.articleControllers;
+import esdi.Services.dtos.BrandDTO;
 import esdi.Services.services.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/brands")
@@ -14,11 +14,25 @@ public class BrandController {
     @Autowired
     BrandService brandService;
 
-    @GetMapping()
-    ResponseEntity<?> getAllBrands(){
-        return new ResponseEntity<>(brandService.findAllDTO(), HttpStatus.OK);
+    @PostMapping("/current")
+    ResponseEntity<?> createBrand(@RequestBody BrandDTO brandDTO, Authentication authentication) {
+        return brandService.createBrand(brandDTO, authentication);
     }
 
 
+    @GetMapping("/current")
+    ResponseEntity<?> getBrandsByCompany(Authentication authentication) {
+        return brandService.allBrandsByCompany(authentication);
+    }
+
+    @PatchMapping("/current/{id}")
+    ResponseEntity<?> renameBrand(@PathVariable Long id, @RequestParam String name, Authentication authentication) {
+        return brandService.renameBrand(id, name, authentication);
+    }
+
+    @DeleteMapping("/current/{id}")
+    ResponseEntity<?> deleteBrand(@PathVariable Long id, Authentication authentication) {
+        return brandService.deleteBrand(id,authentication);
+    }
 
 }

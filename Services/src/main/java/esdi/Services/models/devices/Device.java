@@ -1,7 +1,9 @@
 package esdi.Services.models.devices;
 
+import esdi.Services.models.Order;
 import esdi.Services.models.products.Brand;
 import esdi.Services.models.users.Client;
+import esdi.Services.models.users.Company;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +23,18 @@ public class Device {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
+    private String serial;
+    private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    private Boolean deleted;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="client_id")
     private Client client;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="device_id")
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private DeviceCategory category;
@@ -35,16 +45,18 @@ public class Device {
     @ManyToOne(fetch = FetchType.LAZY)
     private DeviceModel model;
 
-    private String serial;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 
-    private String description;
-
-    public Device(Client client, DeviceCategory category, Brand brand, DeviceModel model, String serial, String description) {
-        this.client = client;
+    public Device(String serial, String description, DeviceCategory category, Brand brand, DeviceModel model, Boolean deleted) {
+        this.serial = serial;
+        this.description = description;
         this.category = category;
         this.brand = brand;
         this.model = model;
-        this.serial = serial;
-        this.description = description;
+        this.deleted = deleted;
     }
+
+
 }

@@ -17,7 +17,5 @@ public class ClientRequest {
     private String phone;
     private String cellphone;
     private String email;
-    private String user;
-    private String password;
-    private UserType userType;
+    private String moreDetails;
 }

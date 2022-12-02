@@ -1,14 +1,20 @@
 package esdi.Services.services.implement;
 import esdi.Services.dtos.CategoryDTO;
 import esdi.Services.mappers.CategoryMapper;
+import esdi.Services.models.products.Brand;
 import esdi.Services.models.products.Category;
+import esdi.Services.models.products.Product;
+import esdi.Services.models.products.ServiceArt;
+import esdi.Services.models.users.Company;
 import esdi.Services.repositories.CategoryRepository;
+import esdi.Services.repositories.CompanyRepository;
 import esdi.Services.repositories.ProductRepository;
 import esdi.Services.repositories.ServiceRepository;
 import esdi.Services.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,6 +35,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     ServiceRepository serviceRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Override
     public Category saveCategory(Category category) {
@@ -65,60 +74,85 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<?> createCategory(CategoryDTO categoryDTO) {
+    public ResponseEntity<?> allCategoriesByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUsername(authentication.getName());
+        List<Category> categoriesByCompany = categoryRepository.findAllByCompany(company);
+        List<Category> categoriesAvailable = categoriesByCompany.stream().filter(c -> c.getDeleted().equals(false)).collect(Collectors.toList());
+        return new ResponseEntity<>(categoryMapper.toDTO(categoriesAvailable), HttpStatus.OK);
+    }
 
+    @Override
+    public ResponseEntity<?> createCategory(CategoryDTO categoryDTO, Authentication authentication) {
+        Company company = companyRepository.findByUsername(authentication.getName());
+        List<Category> categories = categoryRepository.findAllByCompany(company);
+        Boolean categoryExists = categories.stream().anyMatch(c -> c.getName().equals(categoryDTO.getName()));
         try{
 
-            if (categoryDTO.getNameCategory().equals(null) || categoryDTO.getNameCategory().isEmpty() || categoryDTO.getNameCategory().isBlank())
-                return new ResponseEntity<>("Ingrese un nombre para la categoria",HttpStatus.BAD_REQUEST);
+            if (categoryDTO.getName().equals(null) || categoryDTO.getName().isEmpty() || categoryDTO.getName().isBlank()) {
+                return new ResponseEntity<>("Ingrese un nombre para la categoria", HttpStatus.BAD_REQUEST);
+            }
+            if(categoryExists){
+                return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
+            }
 
-        Category category = new Category();
-        category.setNameCategory(categoryDTO.getNameCategory());
+            Category category = new Category();
+            category.setName(categoryDTO.getName());
+            category.setDeleted(false);
+            category.setCompany(company);
 
-        return new ResponseEntity<>(this.saveCategory(category),HttpStatus.CREATED);
+            categoryRepository.save(category);
+            return new ResponseEntity<>("Categoria creada correctamente",HttpStatus.CREATED);
 
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
-
     }
 
     @Override
-    public ResponseEntity<?> renameCategory(Long id, String name) {
+    public ResponseEntity<?> renameCategory(Long id, String name, Authentication authentication) {
+        Company company = companyRepository.findByUsername(authentication.getName());
+        List<Category> categories = categoryRepository.findAllByCompany(company);
+        Boolean categoryExists = categories.stream().anyMatch(c -> c.getName().equals(name));
 
         if (name.isEmpty() || name.isBlank() || name.equals(null))
             return new ResponseEntity<>("Ingrese un nombre valido",HttpStatus.BAD_REQUEST);
 
-        if (categoryRepository.findByNameCategory(name) != null)
-            return new ResponseEntity<>("Nombre de categoria en uso",HttpStatus.BAD_REQUEST);
+        if(categoryExists){
+            return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
+        }
 
         Category category = categoryRepository.findById(id).orElse(null);
 
-        if (category == null)
+        if (categories.indexOf(category) == -1)
             return new ResponseEntity<>("Categoria no encontrada",HttpStatus.BAD_REQUEST);
 
-        if (category.getNameCategory().equals(name))
-            return new ResponseEntity<>("Asignar un nombre distinto",HttpStatus.BAD_REQUEST);
+        category.setName(name);
+        categoryRepository.save(category);
 
-        category.setNameCategory(name);
-
-        return new ResponseEntity<>(this.saveCategory(category),HttpStatus.OK);
+        return new ResponseEntity<>("Categoria modificada correctamente",HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> deleteCategory(Long id) {
-
+    public ResponseEntity<?> deleteCategory(Long id, Authentication authentication) {
+        Company company = companyRepository.findByUsername(authentication.getName());
         Category category = categoryRepository.findById(id).orElse(null);
+        List<Category> categories = categoryRepository.findAllByCompany(company);
+        List<Product> products = productRepository.findAllByCompany(company);
+        Boolean existInProduct = products.stream().anyMatch(product -> product.getCategory().equals(category));
 
-//        if (productRepository.findByCategory(category).size() > 0 || serviceRepository.findByCategory(category).size() > 0)
-//            return new ResponseEntity<>("Categoria asignada a un producto o servicio",HttpStatus.BAD_REQUEST);
+        if (categories.indexOf(category) == -1)
+            return new ResponseEntity<>("Categoria no encontrada",HttpStatus.BAD_REQUEST);
 
-        if (category == null)
-            return new ResponseEntity<>("No existe categoria",HttpStatus.BAD_REQUEST);
+        if (existInProduct){
+            category.setDeleted(true);
+            categoryRepository.save(category);
+            return new ResponseEntity<>("La categoria existe en algún producto. Categoria desactivada correctamente",HttpStatus.OK);
+        }
 
+        category.setDeleted(true);
+        categoryRepository.save(category);
 
-        categoryRepository.delete(category);
-        return new ResponseEntity<>("Eliminado exitosamente",HttpStatus.OK);
+        return new ResponseEntity<>("Categoria eliminada correctamente",HttpStatus.OK);
     }
 
 }

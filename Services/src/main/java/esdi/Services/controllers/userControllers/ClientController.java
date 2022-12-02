@@ -7,6 +7,7 @@ import esdi.Services.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,34 +19,34 @@ public class ClientController {
     ClientService clientService;
 
     //  TODOS LOS CLIENTES
-    @GetMapping()
-    ResponseEntity<?> getAllUsers() {
-        return clientService.getAllClients();
+    @GetMapping("/current")
+    ResponseEntity<?> getAllClients(Authentication authentication) {
+        return clientService.getAllClientsAuth(authentication);
     }
 
-    @GetMapping("/id/{id}")
-    ResponseEntity<?> getClientById(@PathVariable Long id) {
-        return clientService.getClientById(id);
+    @GetMapping("/current/id/{id}")
+    ResponseEntity<?> getClientById(@PathVariable Long id, Authentication authentication) {
+        return clientService.getClientByIdCC(id,authentication);
     }
 
-
-    @GetMapping("/dni/{dni}")
-    ResponseEntity<?> getClientByDni(@PathVariable String dni) {
-        return clientService.getClientByDni(dni);
+    @GetMapping("/current/dni/{dni}")
+    ResponseEntity<?> getClientByDni(@PathVariable String dni, Authentication authentication) {
+        return clientService.getClientByDni(dni,authentication);
     }
 
-    @PostMapping()
-    ResponseEntity<?> createNewClient(@RequestBody ClientRequest clientRequest) {
-        return clientService.createNewClient(clientRequest);
+    @PostMapping("/current")
+    ResponseEntity<?> createNewClient(@RequestBody ClientRequest clientRequest, Authentication authentication) {
+        return clientService.createNewClient(clientRequest,authentication);
     }
 
-    @PatchMapping("/id/{id}")
-    ResponseEntity<?> updateClient(@PathVariable Long id, @RequestBody ClientRequest clientRequest) {
-        return clientService.updateClient(id, clientRequest);
+    @PatchMapping("/current/id/{id}")
+    ResponseEntity<?> updateClient(@PathVariable Long id, @RequestBody ClientRequest clientRequest,Authentication authentication) {
+        return clientService.updateClient(id, clientRequest, authentication);
     }
 
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<?> deleteStaff(@PathVariable Long id) {
-        return clientService.deleteStaff(id);
+    @DeleteMapping("/current/id/{id}")
+    public ResponseEntity<?> deleteClient(@PathVariable Long id, Authentication authentication) {
+        return clientService.deleteClient(id,authentication);
     }
+
 }

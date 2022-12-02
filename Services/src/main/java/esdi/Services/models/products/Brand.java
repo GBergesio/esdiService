@@ -1,4 +1,5 @@
 package esdi.Services.models.products;
+import esdi.Services.models.users.Company;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -17,8 +18,15 @@ public class Brand{
     private long id;
 
     private String nameBrand;
+    private Boolean deleted;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 
     public Brand(String nameBrand) {
         this.nameBrand = nameBrand;
     }
+
+
 }

@@ -1,9 +1,6 @@
 package esdi.Services.dtos;
 
-import esdi.Services.models.users.Neighborhood;
 import esdi.Services.enums.UserType;
-import esdi.Services.models.users.Client;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ClientDTO {
+
     private long id;
     private String dni;
     private String firstName;
@@ -24,6 +22,6 @@ public class ClientDTO {
     private String user;
     private String password;
     private UserType userType;
-
+    private String passwordOrd;
 
 }

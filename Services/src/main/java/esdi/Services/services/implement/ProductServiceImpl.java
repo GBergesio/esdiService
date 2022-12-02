@@ -4,18 +4,18 @@ import esdi.Services.dtos.request.ProductRequest;
 import esdi.Services.mappers.ProductMapper;
 import esdi.Services.models.Currency;
 import esdi.Services.models.Dolar;
-import esdi.Services.models.products.Brand;
-import esdi.Services.models.products.Category;
-import esdi.Services.models.products.Iva;
-import esdi.Services.models.products.Product;
+import esdi.Services.models.products.*;
+import esdi.Services.models.users.Company;
 import esdi.Services.repositories.*;
 import esdi.Services.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -37,6 +37,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     DolarRepository dolarRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Override
     public Product saveProduct(Product product) {
@@ -60,6 +63,31 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ResponseEntity<?> allProductsByCompany(Authentication authentication) {
+        Company company = companyRepository.findByUsername(authentication.getName());
+        List<Product> productList = productRepository.findAllByCompany(company);
+        List<Product> productsAvailable = productList.stream().filter(product -> product.getDeleted().equals(false)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(productMapper.toDTO(productsAvailable), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteProductByCompany(Authentication authentication, Long id) {
+        Product product = productRepository.findById(id).orElse(null);
+        Company company = companyRepository.findByUsername(authentication.getName());
+        List<Product> productList = company.getProducts();
+
+        if (productList.indexOf(product) == -1)
+            return new ResponseEntity<>("No se encuentra producto con el id seleccionado", HttpStatus.BAD_REQUEST);
+        else{
+            product.setDeleted(true);
+        }
+        productRepository.save(product);
+
+        return new ResponseEntity<>("Producto eliminado exitosamente",HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<?> findPN(String productNumber) {
         try{
             ProductDTO product =  getProductByPN(productNumber);
@@ -74,13 +102,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> createProduct(ProductRequest productRequest) {
+    public ResponseEntity<?> createProductByCompany(Authentication authentication, ProductRequest productRequest) {
+        Company company = companyRepository.findByUsername(authentication.getName());
 
         try{
             Iva iva = ivaRepository.findById(productRequest.getIvaId()).orElse(null);
             Category category = categoryRepository.findById(productRequest.getCategoryId()).orElse(null);
             Brand brand = brandRepository.findById(productRequest.getBrandId()).orElse(null);
-            Dolar dolar = dolarRepository.findById(productRequest.getDolarId()).orElse(null);
+            Dolar dolar = dolarRepository.findByCompany(company);
+            Product product = new Product();
+            List<Product> productList = productRepository.findAllByCompany(company);
 
             if (iva == null)
                 return new ResponseEntity<>("Ingrese Iva",HttpStatus.BAD_REQUEST);
@@ -91,29 +122,63 @@ public class ProductServiceImpl implements ProductService {
             if (brand == null)
                 return new ResponseEntity<>("Ingrese marca",HttpStatus.BAD_REQUEST);
 
-            if (productRequest.getCurrency().equals(Currency.DOLAR)){
-                assert dolar != null;
-                productRequest.setSalePrice(((productRequest.getCostPrice() * dolar.getPrice()) * iva.getIva()) * productRequest.getUtility());
+            if (productRequest.getProductNumber().isBlank() || productRequest.getProductNumber().isEmpty()){
+                return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
             }
 
-            if (productRequest.getCurrency().equals(Currency.PESO)){
-                productRequest.setSalePrice((productRequest.getCostPrice() * iva.getIva()) * productRequest.getUtility());
+            if (productRequest.getProductNumber() != null) {
+                for (Product productE : productList) {
+                    if (productE.getProductNumber().equals(productRequest.getProductNumber())) {
+                        return new ResponseEntity<>("PN en uso", HttpStatus.BAD_REQUEST);
+                    }
+                    else{
+                        product.setProductNumber(productRequest.getProductNumber().toUpperCase());
+                    }
+                }
             }
 
-            Product product = new Product();
-            product.setProductNumber(productRequest.getProductNumber().toUpperCase());
-            product.setDescription(productRequest.getDescription());
-            product.setCostPrice(productRequest.getCostPrice());
-            product.setSalePrice(productRequest.getSalePrice());
-            product.setUtility(productRequest.getUtility());
-            product.setCurrency(productRequest.getCurrency());
+            if (productRequest.getCurrency().equals(null)){
+                return new ResponseEntity<>("Ingrese un tipo de moneda",HttpStatus.BAD_REQUEST);
+            }
+            if(productRequest.getCurrency().equals(Currency.DOLAR)){
+                product.setCurrency(Currency.DOLAR);
+                product.setDolar(dolar.getPrice());
+            }
+            if(productRequest.getCurrency().equals(Currency.PESO)){
+                product.setCurrency(Currency.PESO);
+                product.setDolar(null);
+            }
+
+            if(productRequest.getCostPrice() == 0){
+                return new ResponseEntity<>("Ingrese un monto mayor a 0",HttpStatus.BAD_REQUEST);
+            }
+            if(productRequest.getCostPrice() > 0){
+                product.setCostPrice(productRequest.getCostPrice());
+            }
+            if(productRequest.getSalePrice() == 0){
+                return new ResponseEntity<>("Ingrese un monto mayor a 0",HttpStatus.BAD_REQUEST);
+            }
+            if(productRequest.getSalePrice() > 0){
+                product.setSalePrice(productRequest.getSalePrice());
+            }
+            if(productRequest.getUtility() == 0){
+                return new ResponseEntity<>("Ingrese una utilidad mayor a 0",HttpStatus.BAD_REQUEST);
+            }
+            if(productRequest.getUtility() > 0){
+                product.setUtility(productRequest.getUtility());
+            }
+
+            if (productRequest.getDescription().isEmpty() || productRequest.getDescription().isBlank() || productRequest.getDescription() == null){
+                return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
+            } else {
+                product.setDescription(productRequest.getDescription());
+            }
 
             product.setIva(iva);
             product.setCategory(category);
             product.setBrand(brand);
-
-            if (dolar != null)
-                product.setDolar(dolar.getPrice());
+            product.setCompany(company);
+            product.setDeleted(false);
 
             return new ResponseEntity<>(this.saveProductDTO(product),HttpStatus.CREATED);
 
@@ -138,112 +203,100 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> updateProduct(Long id, ProductRequest productRequest) {
-        Product product = productRepository.findById(id).orElse(null);
+    public ResponseEntity<?> updateProductByCompany(Authentication authentication, Long id, ProductRequest productRequest) {
 
-        if (product == null){
+        Company company = companyRepository.findByUsername(authentication.getName());
+        Product product = productRepository.findById(id).orElse(null);
+        List<Product> productList = productRepository.findAllByCompany(company);
+        Dolar dolarCompany = dolarRepository.findByCompany(company);
+        Double valueDolarCompany = dolarCompany.getPrice();
+        Iva iva = ivaRepository.findById(productRequest.getIvaId()).orElse(null);
+        Category category = categoryRepository.findById(productRequest.getCategoryId()).orElse(null);
+        Brand brand = brandRepository.findById(productRequest.getBrandId()).orElse(null);
+
+        if (productList.indexOf(product) == -1){
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.BAD_REQUEST);
         }
 
-        Iva iva = ivaRepository.findById(productRequest.getIvaId()).orElse(null);
-        Long ivaId = product.getIva().getId();
-        double ivaProduct = product.getIva().getIva();
-        double dolarProduct = product.getDolar();
-        double precioVenta = productRequest.getSalePrice();
-        double utilidad = productRequest.getSalePrice() - (product.getCostPrice() * ivaProduct);
-        double utilidadDolar = productRequest.getSalePrice() - ((product.getCostPrice() * ivaProduct) * dolarProduct);
-        double margenDeGanancia = utilidad / precioVenta;
-        double margenDeGananciaDolar = utilidadDolar / precioVenta;
-        double nuevoPrecioCambioIva = (productRequest.getCostPrice() * iva.getIva() * productRequest.getUtility());
-
-        if (productRequest.getProductNumber() != null){
-            if (productRepository.findByProductNumber(productRequest.getProductNumber().toUpperCase()) != null)
-                return new ResponseEntity<>("Codigo de producto en uso", HttpStatus.BAD_REQUEST);
-            if (productRequest.getProductNumber().isBlank() || productRequest.getProductNumber().isEmpty())
-                return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
-            if (!product.getProductNumber().equals(productRequest.getProductNumber().toUpperCase()))
-                product.setProductNumber(productRequest.getProductNumber().toUpperCase());
+        if (productRequest.getProductNumber().isBlank() || productRequest.getProductNumber().isEmpty()){
+            return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
         }
 
-        if (productRequest.getDescription() != null)
-            if (productRequest.getDescription().isEmpty() || productRequest.getDescription().isBlank() || productRequest.getDescription() == null)
-                return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
-            if (!product.getDescription().equals(productRequest.getDescription()))
-                product.setDescription(productRequest.getDescription());
-
-        if (productRequest.getCostPrice() > 0){
-            if (product.getCostPrice() != productRequest.getCostPrice())
-                if (product.getCurrency().equals(Currency.DOLAR)) {
-                    product.setCostPrice(productRequest.getCostPrice());
-                    product.setSalePrice(((productRequest.getCostPrice() * ivaProduct) * dolarProduct) * productRequest.getUtility());
-                    product.setUtility(productRequest.getUtility());
+        if (productRequest.getProductNumber() != null) {
+            for (Product productE : productList) {
+                if (productE.getProductNumber().equals(productRequest.getProductNumber())) {
+                    return new ResponseEntity<>("PN en uso", HttpStatus.BAD_REQUEST);
                 }
-                else {
-                    product.setCostPrice(productRequest.getCostPrice());
-                    product.setSalePrice(((productRequest.getCostPrice() * ivaProduct)) * productRequest.getUtility());
-                    product.setUtility(productRequest.getUtility());
+                else{
+                    product.setProductNumber(productRequest.getProductNumber().toUpperCase());
                 }
-        }
-        else return new ResponseEntity<>("Ingrese un monto mayor a 0",HttpStatus.BAD_REQUEST);
-
-        if (productRequest.getUtility() > 0){
-            if (product.getUtility() != productRequest.getUtility())
-                if (product.getCurrency().equals(Currency.DOLAR)) {
-                    product.setUtility(productRequest.getUtility());
-                    product.setSalePrice(((productRequest.getCostPrice() * ivaProduct) * dolarProduct) * productRequest.getUtility());
-                }
-                if (product.getCurrency().equals(Currency.PESO)) {
-                    product.setUtility(productRequest.getUtility());
-                    product.setSalePrice((productRequest.getCostPrice() * ivaProduct) * productRequest.getUtility());
-                }
-        }
-        else return new ResponseEntity<>("Ingrese un valor mayor a 0",HttpStatus.BAD_REQUEST);
-
-//        if (productRequest.getSalePrice() > 0){
-//            if (product.getSalePrice() != productRequest.getSalePrice())
-//                if (product.getCurrency().equals(Currency.DOLAR)) {
-////                    product.setUtility(margenDeGananciaDolar);
-//                    product.setSalePrice(productRequest.getSalePrice());
-//                }
-////            if (product.getCurrency().equals(Currency.PESO)) {
-////                product.setSalePrice(productRequest.getSalePrice());
-////                product.setUtility(margenDeGanancia);
-////            }
-//        }
-//        else return new ResponseEntity<>("Ingrese un valor mayor a 0",HttpStatus.BAD_REQUEST);
-//
-
-        if (product.getCurrency() != productRequest.getCurrency()){
-            if (productRequest.getCurrency().equals(Currency.PESO)){
-                product.setCurrency(productRequest.getCurrency());
-                product.setUtility(productRequest.getUtility());
-                product.setSalePrice((productRequest.getCostPrice() * ivaProduct) * productRequest.getUtility());
-            }
-            if (productRequest.getCurrency().equals(Currency.DOLAR)){
-                product.setCurrency(productRequest.getCurrency());
-                product.setUtility(productRequest.getUtility());
-                product.setSalePrice(((productRequest.getCostPrice() * ivaProduct) * dolarProduct) * productRequest.getUtility());
             }
         }
 
-// verificar xq tira 500 cuando pongo null
+        if (productRequest.getDescription().isEmpty() || productRequest.getDescription().isBlank() || productRequest.getDescription() == null){
+            return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
+        } else {
+            product.setDescription(productRequest.getDescription());
+        }
+
+        if(productRequest.getCurrency().equals(null)){
+            return new ResponseEntity<>("Seleccione una moneda",HttpStatus.BAD_REQUEST);
+        }
+        if(productRequest.getCurrency() != null){
+            if(productRequest.getCurrency().equals(Currency.DOLAR)){
+                product.setDolar(valueDolarCompany);
+                product.setCurrency(Currency.DOLAR);
+            }
+            else{
+                product.setDolar(null);
+                product.setCurrency(Currency.PESO);
+            }
+        }
+
+        if(productRequest.getCostPrice() == 0){
+            return new ResponseEntity<>("Ingrese un monto mayor a 0",HttpStatus.BAD_REQUEST);
+        }
+        if(productRequest.getCostPrice() > 0){
+            product.setCostPrice(productRequest.getCostPrice());
+        }
+        if(productRequest.getSalePrice() == 0){
+            return new ResponseEntity<>("Ingrese un monto mayor a 0",HttpStatus.BAD_REQUEST);
+        }
+        if(productRequest.getSalePrice() > 0){
+            product.setSalePrice(productRequest.getSalePrice());
+        }
+        if(productRequest.getUtility() == 0){
+            return new ResponseEntity<>("Ingrese una utilidad mayor a 0",HttpStatus.BAD_REQUEST);
+        }
+        if(productRequest.getUtility() > 0){
+            product.setUtility(productRequest.getUtility());
+        }
+        if(productRequest.getIvaId().equals(null) || productRequest.getIvaId() == null){
+            return new ResponseEntity<>("Debe seleccionar un valor de IVA para el producto",HttpStatus.BAD_REQUEST);
+        }
         if (iva != null){
             if (product.getIva() != iva){
-                if (product.getCurrency().equals(Currency.DOLAR)){
                     product.setIva(iva);
-                    product.setSalePrice(((productRequest.getCostPrice() * iva.getIva() * dolarProduct) * productRequest.getUtility()));
-                }
-                if (product.getCurrency().equals(Currency.PESO)){
-                    product.setIva(iva);
-                    product.setSalePrice((productRequest.getCostPrice() * iva.getIva() * productRequest.getUtility()));
-                }
+            }
+        }
+        if(productRequest.getCategoryId().equals(null) || productRequest.getCategoryId() == null){
+            return new ResponseEntity<>("Debe seleccionar una categoria para el producto",HttpStatus.BAD_REQUEST);
+        }
+        if (category!= null){
+            if (product.getCategory() != category){
+                product.setCategory(category);
+            }
+        }
+        if(productRequest.getBrandId().equals(null) || productRequest.getBrandId() == null){
+            return new ResponseEntity<>("Debe seleccionar una marca para el producto",HttpStatus.BAD_REQUEST);
+        }
+        if (brand!= null){
+            if (product.getBrand() != brand){
+                product.setBrand(brand);
             }
         }
         productRepository.save(product);
         return new ResponseEntity<>(productMapper.toDTO(product),HttpStatus.OK);
     }
 
-
 }
-
-

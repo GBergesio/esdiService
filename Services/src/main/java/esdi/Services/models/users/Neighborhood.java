@@ -22,5 +22,10 @@ public class Neighborhood {
     private long id;
 
     private String name;
+    private boolean deleted;
+
+    @ManyToOne
+    @JoinColumn(name="company_id")
+    private Company company;
 
 }

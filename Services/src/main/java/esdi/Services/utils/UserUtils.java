@@ -19,7 +19,6 @@ public final class UserUtils {
         return sb.toString();
     }
 
-
     private static List<Integer> ordenercreadas = new ArrayList<>();
 
     public static int newOrder(){

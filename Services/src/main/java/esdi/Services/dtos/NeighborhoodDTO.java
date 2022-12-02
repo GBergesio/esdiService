@@ -11,4 +11,5 @@ import lombok.Setter;
 public class NeighborhoodDTO {
     private long id;
     private String name;
+    private boolean deleted;
 }

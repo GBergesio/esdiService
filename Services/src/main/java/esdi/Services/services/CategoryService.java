@@ -2,6 +2,7 @@ package esdi.Services.services;
 import esdi.Services.dtos.CategoryDTO;
 import esdi.Services.models.products.Category;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
@@ -15,12 +16,13 @@ public interface CategoryService {
         List<CategoryDTO> findAllDTO();
 
         ResponseEntity<?> allCategories();
-
         ResponseEntity<?> findById(Long id);
 
-        ResponseEntity<?> createCategory(CategoryDTO categoryDTO);
+        ResponseEntity<?> allCategoriesByCompany(Authentication authentication);
 
-        ResponseEntity<?> renameCategory(Long id, String name);
+        ResponseEntity<?> createCategory(CategoryDTO categoryDTO, Authentication authentication);
 
-        ResponseEntity<?> deleteCategory(Long id);
+        ResponseEntity<?> renameCategory(Long id, String name, Authentication authentication);
+
+        ResponseEntity<?> deleteCategory(Long id, Authentication authentication);
 }

@@ -1,4 +1,5 @@
 package esdi.Services.models;
+import esdi.Services.models.users.Company;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -19,6 +20,14 @@ public class Dolar{
     private double price;
 
     private LocalDateTime date;
+
+    private String description;
+
+    private String companyName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    private Company company;
 
     public Dolar(double price, LocalDateTime date) {
         this.price = price;

@@ -10,24 +10,15 @@ import lombok.Setter;
 public class ProductDTO {
 
     private Long id;
-
     private String productNumber;
-
     private String description;
-
     private double costPrice;
-
     private double salePrice;
-
     private double utility;
-
     private Currency currency;
-
     private IvaDTO iva;
-
     private CategoryDTO category;
-
     private Double dolar;
-
     private BrandDTO brand;
+    private Boolean deleted;
 }
