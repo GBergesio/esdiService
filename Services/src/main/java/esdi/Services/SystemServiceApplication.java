@@ -150,22 +150,22 @@ public class SystemServiceApplication {
             //DEVICES MODELS//
 
             DeviceModel deviceModel1 = new DeviceModel();
-            deviceModel1.setModel("X541HJ");
+            deviceModel1.setName("X541HJ");
             deviceModel1.setCompany(esdi);
             deviceModel1.setDeleted(false);
 
             DeviceModel deviceModel2 = new DeviceModel();
-            deviceModel2.setModel("TUF GAMING 22X");
+            deviceModel2.setName("TUF GAMING 22X");
             deviceModel2.setCompany(esdi);
             deviceModel2.setDeleted(false);
 
             DeviceModel deviceModel3 = new DeviceModel();
-            deviceModel3.setModel("dy2061la");
+            deviceModel3.setName("dy2061la");
             deviceModel3.setCompany(esdi);
             deviceModel3.setDeleted(true);
 
             DeviceModel deviceModel4 = new DeviceModel();
-            deviceModel4.setModel("Corolla 2.0");
+            deviceModel4.setName("Corolla 2.0");
             deviceModel4.setCompany(tallerChapa);
             deviceModel4.setDeleted(false);
 

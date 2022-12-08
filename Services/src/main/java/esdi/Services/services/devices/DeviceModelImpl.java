@@ -80,10 +80,10 @@ public class DeviceModelImpl implements DeviceModelService {
     public ResponseEntity<?> createDeviceModel(DeviceModelDTO deviceModelDTO, Authentication authentication) {
         Company company = companyRepository.findByUsername(authentication.getName());
         List<DeviceModel> allDevices = deviceModelRepository.findAllByCompany(company);
-        Boolean modelExists = allDevices.stream().anyMatch(model -> model.getModel().equals(deviceModelDTO.getModel()));
+        Boolean modelExists = allDevices.stream().anyMatch(model -> model.getName().equals(deviceModelDTO.getName()));
 
         try{
-            if (deviceModelDTO.getModel().equals(null) || deviceModelDTO.getModel().isEmpty() || deviceModelDTO.getModel().isBlank()){
+            if (deviceModelDTO.getName().equals(null) || deviceModelDTO.getName().isEmpty() || deviceModelDTO.getName().isBlank()){
                 return new ResponseEntity<>("Ingrese un nombre para el modelo",HttpStatus.BAD_REQUEST);
             }
             if(modelExists){
@@ -91,7 +91,7 @@ public class DeviceModelImpl implements DeviceModelService {
             }
 
         DeviceModel deviceModel = new DeviceModel();
-        deviceModel.setModel(deviceModelDTO.getModel());
+        deviceModel.setName(deviceModelDTO.getName());
         deviceModel.setDeleted(false);
         deviceModel.setCompany(company);
         deviceModelRepository.save(deviceModel);
@@ -107,7 +107,7 @@ public class DeviceModelImpl implements DeviceModelService {
     public ResponseEntity<?> renameDeviceModel(Long id, String name, Authentication authentication) {
         Company company = companyRepository.findByUsername(authentication.getName());
         List<DeviceModel> allDevices = deviceModelRepository.findAllByCompany(company);
-        Boolean modelExists = allDevices.stream().anyMatch(model -> model.getModel().equals(name));
+        Boolean modelExists = allDevices.stream().anyMatch(model -> model.getName().equals(name));
         DeviceModel deviceModel = deviceModelRepository.findById(id).orElse(null);
 
         if(allDevices.indexOf(deviceModel) == -1){
@@ -122,7 +122,7 @@ public class DeviceModelImpl implements DeviceModelService {
             return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
         }
 
-        deviceModel.setModel(name);
+        deviceModel.setName(name);
         deviceModelRepository.save(deviceModel);
 
         return new ResponseEntity<>("Modelo renombrado correctamente",HttpStatus.OK);

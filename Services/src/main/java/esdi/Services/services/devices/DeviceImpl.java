@@ -126,8 +126,8 @@ public class DeviceImpl implements DeviceService {
         }
         if (deviceRequest.getDescription() == null || deviceRequest.getDescription().isEmpty() || deviceRequest.getDescription().isBlank())
             return new ResponseEntity<>("Descripción requerida", HttpStatus.BAD_REQUEST);
-        if (deviceRequest.getSerial() == null || deviceRequest.getSerial().isEmpty() || deviceRequest.getSerial().isBlank())
-            return new ResponseEntity<>(HttpStatus.OK);
+//        if (deviceRequest.getSerial() == null || deviceRequest.getSerial().isEmpty() || deviceRequest.getSerial().isBlank())
+//            return new ResponseEntity<>(HttpStatus.OK);
 
         Device newDevice = new Device();
         newDevice.setClient(client);

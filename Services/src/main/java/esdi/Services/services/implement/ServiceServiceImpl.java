@@ -133,26 +133,26 @@ public class  ServiceServiceImpl implements ServiceService {
             if (category == null)
                 return new ResponseEntity<>("Ingrese categoria", HttpStatus.BAD_REQUEST);
 
-            if(serviceArtRequest.getCostPrice() == 0){
+            if(serviceArtRequest.getCostPrice() <= 0){
                 return new ResponseEntity<>("Ingrese un monto mayor a 0",HttpStatus.BAD_REQUEST);
             }
             if(serviceArtRequest.getCostPrice() > 0){
                 service.setCostPrice(serviceArtRequest.getCostPrice());
             }
-            if(serviceArtRequest.getSalePrice() == 0){
+            if(serviceArtRequest.getSalePrice() <= 0){
                 return new ResponseEntity<>("Ingrese un monto mayor a 0",HttpStatus.BAD_REQUEST);
             }
             if(serviceArtRequest.getSalePrice() > 0){
                 service.setSalePrice(serviceArtRequest.getSalePrice());
             }
-            if(serviceArtRequest.getUtility() == 0){
+            if(serviceArtRequest.getUtility() <= 0){
                 return new ResponseEntity<>("Ingrese una utilidad mayor a 0",HttpStatus.BAD_REQUEST);
             }
             if(serviceArtRequest.getUtility() > 0){
                 service.setUtility(serviceArtRequest.getUtility());
             }
             if (serviceArtRequest.getDescription().isEmpty() || serviceArtRequest.getDescription().isBlank() || serviceArtRequest.getDescription() == null){
-                return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Verifique campo vacio", HttpStatus.BAD_REQUEST);
             } else {
                 service.setDescription(serviceArtRequest.getDescription());
             }
@@ -183,7 +183,7 @@ public class  ServiceServiceImpl implements ServiceService {
         }
 
         if (serviceArtRequest.getDescription().isEmpty() || serviceArtRequest.getDescription().isBlank() || serviceArtRequest.getDescription() == null){
-            return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Verifique campo vacio", HttpStatus.BAD_REQUEST);
         } else {
             service.setDescription(serviceArtRequest.getDescription());
         }

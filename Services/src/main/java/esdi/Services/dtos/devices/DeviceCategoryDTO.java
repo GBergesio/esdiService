@@ -10,5 +10,5 @@ import lombok.Setter;
 public class DeviceCategoryDTO {
 
     private long id;
-    private String nameCategory;
+    private String name;
 }

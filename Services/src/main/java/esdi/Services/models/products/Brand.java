@@ -17,15 +17,15 @@ public class Brand{
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    private String nameBrand;
+    private String name;
     private Boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id")
     private Company company;
 
-    public Brand(String nameBrand) {
-        this.nameBrand = nameBrand;
+    public Brand(String name) {
+        this.name = name;
     }
 
 

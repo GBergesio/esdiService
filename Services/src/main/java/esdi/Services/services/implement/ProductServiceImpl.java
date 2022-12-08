@@ -117,13 +117,13 @@ public class ProductServiceImpl implements ProductService {
                 return new ResponseEntity<>("Ingrese Iva",HttpStatus.BAD_REQUEST);
 
             if (category == null)
-                return new ResponseEntity<>("Ingrese categoria",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Ingrese categoría",HttpStatus.BAD_REQUEST);
 
             if (brand == null)
                 return new ResponseEntity<>("Ingrese marca",HttpStatus.BAD_REQUEST);
 
             if (productRequest.getProductNumber().isBlank() || productRequest.getProductNumber().isEmpty()){
-                return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Verifique campo vacio", HttpStatus.BAD_REQUEST);
             }
 
             if (productRequest.getProductNumber() != null) {
@@ -148,7 +148,6 @@ public class ProductServiceImpl implements ProductService {
                 product.setCurrency(Currency.PESO);
                 product.setDolar(null);
             }
-
             if(productRequest.getCostPrice() == 0){
                 return new ResponseEntity<>("Ingrese un monto mayor a 0",HttpStatus.BAD_REQUEST);
             }
@@ -169,7 +168,7 @@ public class ProductServiceImpl implements ProductService {
             }
 
             if (productRequest.getDescription().isEmpty() || productRequest.getDescription().isBlank() || productRequest.getDescription() == null){
-                return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Verifique campo vacio", HttpStatus.BAD_REQUEST);
             } else {
                 product.setDescription(productRequest.getDescription());
             }
@@ -219,7 +218,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (productRequest.getProductNumber().isBlank() || productRequest.getProductNumber().isEmpty()){
-            return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Verifique campo vacio", HttpStatus.BAD_REQUEST);
         }
 
         if (productRequest.getProductNumber() != null) {
@@ -234,7 +233,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (productRequest.getDescription().isEmpty() || productRequest.getDescription().isBlank() || productRequest.getDescription() == null){
-            return new ResponseEntity<>("Este campo no puede estar vacio", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Verifique campo vacio", HttpStatus.BAD_REQUEST);
         } else {
             product.setDescription(productRequest.getDescription());
         }

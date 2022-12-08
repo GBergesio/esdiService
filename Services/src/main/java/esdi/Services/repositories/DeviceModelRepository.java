@@ -10,6 +10,6 @@ import java.util.List;
 @RepositoryRestResource
 public interface DeviceModelRepository extends JpaRepository<DeviceModel, Long> {
 
-    DeviceModel findByModel(String model);
+    DeviceModel findByName(String name);
     public List<DeviceModel> findAllByCompany(Company company);
 }

@@ -103,7 +103,7 @@ public class CommentServiceImpl implements CommentService {
         if(order != null){
 
             if (commentRequest.getComment().isBlank() || commentRequest.getComment().isEmpty() || commentRequest.getComment() == null)
-                return new ResponseEntity<>("El comentario no puede enviarse vacio", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Verifique campo vacio", HttpStatus.BAD_REQUEST);
 
             Comment newComment = new Comment();
             newComment.setComment(commentRequest.getComment());
@@ -163,7 +163,7 @@ public class CommentServiceImpl implements CommentService {
             return new ResponseEntity<>("No se puede editar ya que no se encuentra el comentario",HttpStatus.BAD_REQUEST);
 
         if (commentRequest.getComment().isBlank() || commentRequest.getComment().isEmpty() || commentRequest.getComment() == null)
-            return new ResponseEntity<>("El comentario no puede enviarse vacio", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Verifique campo vacio", HttpStatus.BAD_REQUEST);
 
         // Solo quien creo el comentario puede editarlo ↓
 //        if(commentToUpdate.getIdUser() != idActiveUser)

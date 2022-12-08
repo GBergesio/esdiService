@@ -17,11 +17,11 @@ public class DeviceModel {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    private String model;
+    private String name;
     private Boolean deleted;
 
-    public DeviceModel(String model) {
-        this.model = model;
+    public DeviceModel(String name) {
+        this.name = name;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

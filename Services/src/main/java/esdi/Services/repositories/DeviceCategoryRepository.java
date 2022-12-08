@@ -10,6 +10,6 @@ import java.util.List;
 @RepositoryRestResource
 public interface DeviceCategoryRepository extends JpaRepository<DeviceCategory, Long> {
 
-    DeviceCategory findByNameCategory(String nameCategory);
+    DeviceCategory findByName(String name);
     public List<DeviceCategory> findAllByCompany(Company company);
 }

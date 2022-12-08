@@ -20,12 +20,12 @@ public class DeviceCategory {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    private String nameCategory;
+    private String name;
 
     private Boolean deleted;
 
-    public DeviceCategory(String nameCategory) {
-        this.nameCategory = nameCategory;
+    public DeviceCategory(String name) {
+        this.name = name;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

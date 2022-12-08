@@ -86,10 +86,10 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
     public ResponseEntity<?> createDeviceCategory(DeviceCategoryDTO deviceCategoryDTO, Authentication authentication) {
         Company company = companyRepository.findByUsername(authentication.getName());
         List<DeviceCategory> deviceCategories = deviceCategoryRepository.findAllByCompany(company);
-        Boolean modelExists = deviceCategories.stream().anyMatch(model -> model.getNameCategory().equals(deviceCategoryDTO.getNameCategory()));
+        Boolean modelExists = deviceCategories.stream().anyMatch(model -> model.getName().equals(deviceCategoryDTO.getName()));
 
         try{
-            if (deviceCategoryDTO.getNameCategory().equals(null) || deviceCategoryDTO.getNameCategory().isEmpty() || deviceCategoryDTO.getNameCategory().isBlank()){
+            if (deviceCategoryDTO.getName().equals(null) || deviceCategoryDTO.getName().isEmpty() || deviceCategoryDTO.getName().isBlank()){
                 return new ResponseEntity<>("Ingrese un nombre para el modelo",HttpStatus.BAD_REQUEST);
             }
             if(modelExists){
@@ -97,7 +97,7 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
             }
 
             DeviceCategory deviceCategory = new DeviceCategory();
-            deviceCategory.setNameCategory(deviceCategoryDTO.getNameCategory());
+            deviceCategory.setName(deviceCategoryDTO.getName());
             deviceCategory.setDeleted(false);
             deviceCategory.setCompany(company);
             deviceCategoryRepository.save(deviceCategory);
@@ -113,7 +113,7 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
     public ResponseEntity<?> renameDeviceCategory(Long id, String name, Authentication authentication) {
         Company company = companyRepository.findByUsername(authentication.getName());
         List<DeviceCategory> deviceCategories = deviceCategoryRepository.findAllByCompany(company);
-        Boolean modelExists = deviceCategories.stream().anyMatch(model -> model.getNameCategory().equals(name));
+        Boolean modelExists = deviceCategories.stream().anyMatch(model -> model.getName().equals(name));
 
         if (name.isEmpty() || name.isBlank() || name.equals(null))
             return new ResponseEntity<>("Ingrese un nombre valido",HttpStatus.BAD_REQUEST);
@@ -129,7 +129,7 @@ public class DeviceCategoryImpl implements DeviceCategoryService {
             return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
         }
 
-        deviceCategory.setNameCategory(name);
+        deviceCategory.setName(name);
         deviceCategoryRepository.save(deviceCategory);
 
         return new ResponseEntity<>("Renombrado exitosamente",HttpStatus.OK);

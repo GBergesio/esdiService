@@ -10,6 +10,6 @@ import lombok.Setter;
 public class DeviceModelDTO {
 
     private long id;
-    private String model;
+    private String name;
     private Boolean deleted;
 }

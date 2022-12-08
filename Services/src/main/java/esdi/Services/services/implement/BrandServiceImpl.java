@@ -83,17 +83,17 @@ public class BrandServiceImpl implements BrandService {
     public ResponseEntity<?> createBrand(BrandDTO brandDTO, Authentication authentication) {
         Company company = companyRepository.findByUsername(authentication.getName());
         List<Brand> brands = brandRepository.findAllByCompany(company);
-        Boolean brandExists = brands.stream().anyMatch(brand -> brand.getNameBrand().equals(brandDTO.getNameBrand()));
+        Boolean brandExists = brands.stream().anyMatch(brand -> brand.getName().equals(brandDTO.getName()));
 
         try{
-            if (brandDTO.getNameBrand().equals(null) || brandDTO.getNameBrand().isEmpty() || brandDTO.getNameBrand().isBlank()){
+            if (brandDTO.getName().equals(null) || brandDTO.getName().isEmpty() || brandDTO.getName().isBlank()){
                 return new ResponseEntity<>("Ingrese un nombre para la categoria",HttpStatus.BAD_REQUEST);
             }
             if(brandExists){
                 return new ResponseEntity<>("Nombre en uso",HttpStatus.BAD_REQUEST);
             }
             Brand brand = new Brand();
-            brand.setNameBrand(brandDTO.getNameBrand());
+            brand.setName(brandDTO.getName());
             brand.setDeleted(false);
             brand.setCompany(company);
 
@@ -109,7 +109,7 @@ public class BrandServiceImpl implements BrandService {
     public ResponseEntity<?> renameBrand(Long id, String name, Authentication authentication) {
         Company company = companyRepository.findByUsername(authentication.getName());
         List<Brand> brands = brandRepository.findAllByCompany(company);
-        Boolean brandExists = brands.stream().anyMatch(brand -> brand.getNameBrand().equals(name));
+        Boolean brandExists = brands.stream().anyMatch(brand -> brand.getName().equals(name));
 
         if (name.isEmpty() || name.isBlank() || name.equals(null))
             return new ResponseEntity<>("Ingrese un nombre valido",HttpStatus.BAD_REQUEST);
@@ -123,7 +123,7 @@ public class BrandServiceImpl implements BrandService {
         if (brands.indexOf(brand) == -1)
             return new ResponseEntity<>("Marca no encontrada",HttpStatus.BAD_REQUEST);
 
-        brand.setNameBrand(name);
+        brand.setName(name);
         brandRepository.save(brand);
 
         return new ResponseEntity<>("Marca modificada correctamente",HttpStatus.OK);

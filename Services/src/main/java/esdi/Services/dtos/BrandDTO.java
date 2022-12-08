@@ -8,6 +8,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BrandDTO {
     private Long id;
-    private String nameBrand;
+    private String name;
     private Boolean deleted;
 }

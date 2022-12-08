@@ -10,7 +10,7 @@ import java.util.List;
 @RepositoryRestResource
 public interface BrandRepository extends JpaRepository<Brand,Long> {
 
-    Brand findByNameBrand(String name);
+    Brand findByName(String name);
 
     public List<Brand> findAllByCompany(Company company);
 }

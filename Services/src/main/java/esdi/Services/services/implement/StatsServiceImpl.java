@@ -369,7 +369,7 @@ public class StatsServiceImpl implements StatsService {
 
             if(company != null){
                 List<Order> orders = orderRepository.findAllByCompany(company);
-                List<String> devOr = orders.stream().map(o->o.getDevice().getCategory().getNameCategory()).collect(Collectors.toList());
+                List<String> devOr = orders.stream().map(o->o.getDevice().getCategory().getName()).collect(Collectors.toList());
 
 
                 return new ResponseEntity<>(devOr,HttpStatus.OK);
